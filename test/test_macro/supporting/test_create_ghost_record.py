@@ -8,7 +8,6 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "create_ghost_record"
 
-os.chdir(test.TEST_PROJECT_ROOT)
 dbt_init = dbtRunner()
 
 
@@ -26,7 +25,7 @@ def test_create_ghost_record_with_all_string_and_no_extra_columns(request, gener
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -49,7 +48,7 @@ def test_create_ghost_record_with_all_string_with_extra_columns_not_provided(req
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -73,7 +72,7 @@ def test_create_ghost_record_with_payload_and_extra_columns_as_lists(request, ge
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -97,7 +96,7 @@ def test_create_ghost_record_with_all_string_hashing_with_sha(request, generate_
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -122,7 +121,7 @@ def test_create_ghost_record_with_payload_and_extra_columns_as_lists_hashing_wit
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -146,7 +145,7 @@ def test_create_ghost_record_with_all_string_and_different_source_system(request
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -169,7 +168,7 @@ def test_create_ghost_record_with_hashdiff_using_alias(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)

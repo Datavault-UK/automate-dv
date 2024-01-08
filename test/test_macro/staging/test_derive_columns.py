@@ -8,7 +8,6 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "derive_columns"
 
-os.chdir(test.TEST_PROJECT_ROOT)
 dbt_init = dbtRunner()
 
 
@@ -24,7 +23,7 @@ def test_derive_columns_correctly_generates_sql_with_source_columns(request, gen
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -44,7 +43,7 @@ def test_derive_columns_correctly_generates_sql_without_source_columns(request, 
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -59,8 +58,8 @@ def test_derive_columns_raises_error_with_only_source_columns(request, generate_
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, logs_required=True)
 
     assert "Invalid column configuration:" in dbt_logs
 
@@ -78,7 +77,7 @@ def test_derive_columns_correctly_generates_sql_with_source_columns_concat(reque
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -100,7 +99,7 @@ def test_derive_columns_correctly_generates_sql_with_source_columns_concat_inclu
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -121,7 +120,7 @@ def test_derive_columns_correctly_generates_sql_without_source_columns_concat(re
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -145,7 +144,7 @@ def test_derive_columns_correctly_generates_sql_without_source_columns_concat_es
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -168,7 +167,7 @@ def test_derive_columns_correctly_generates_sql_without_source_columns_concat_es
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -192,7 +191,7 @@ def test_derive_columns_correctly_generates_sql_without_source_columns_concat_es
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -213,7 +212,7 @@ def test_derive_columns_correctly_generates_sql_with_escaped_column1(request, ge
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -234,7 +233,7 @@ def test_derive_columns_correctly_generates_sql_with_escaped_column2(request, ge
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -255,7 +254,7 @@ def test_derive_columns_correctly_generates_sql_without_escaped_column(request, 
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -276,7 +275,7 @@ def test_derive_columns_correctly_generates_sql_mixed_escaped_column(request, ge
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)

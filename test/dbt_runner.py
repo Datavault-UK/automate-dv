@@ -48,7 +48,7 @@ def run_dbt_command(dbt_class, command, logs_required=False) -> bool | bytes:
         return logs
 
 
-def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, logs_required=False) -> bool:
+def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, logs_required=False) -> bool | str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -68,7 +68,7 @@ def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, logs_requ
     return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_seed_model(dbt_class, seed_model_name=None, logs_required=False) -> bool:
+def run_dbt_seed_model(dbt_class, seed_model_name=None, logs_required=False) -> bool | str:
     """
     Run seed model files in dbt
         :return: dbt logs
@@ -82,7 +82,7 @@ def run_dbt_seed_model(dbt_class, seed_model_name=None, logs_required=False) -> 
     return run_dbt_command(dbt_class, command, logs_required)
 
 
-def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False, logs_required=False) -> bool:
+def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False, logs_required=False) -> bool | str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
@@ -101,12 +101,15 @@ def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, f
 
     if args:
         args = json.dumps(args)
-        command.extend(['--vars', str(args)])
+        if logs_required:
+            command.extend([f"--vars '{args}'"])
+        else:
+            command.extend(['--vars', str(args)])
 
     return run_dbt_command(dbt_class, command, logs_required)
 
 
-def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None, logs_required=False) -> bool:
+def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None, logs_required=False) -> bool | str:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation

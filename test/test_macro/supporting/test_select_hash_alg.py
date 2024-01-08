@@ -8,7 +8,6 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "select_hash_alg"
 
-os.chdir(test.TEST_PROJECT_ROOT)
 dbt_init = dbtRunner()
 
 
@@ -18,15 +17,17 @@ def test_select_hash_alg_is_successful_md5_with_upper(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
+    dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert dbt_logs
     assert actual_sql == expected_sql
 
-    assert "Configured hash ('md5') not recognised. Must be one of: md5, sha (case insensitive)" not in dbt_logs
+    assert "Configured hash ('md5') not recognised. Must be one of: md5, sha (case insensitive)" not in dbt_logs_logs
 
 
 @pytest.mark.macro
@@ -35,7 +36,7 @@ def test_select_hash_alg_is_successful_md5_with_lower(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -50,15 +51,17 @@ def test_select_hash_alg_is_successful_sha_with_upper(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
+    dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert dbt_logs
     assert actual_sql == expected_sql
 
-    assert "Configured hash ('sha') not recognised. Must be one of: md5, sha (case insensitive)" not in dbt_logs
+    assert "Configured hash ('sha') not recognised. Must be one of: md5, sha (case insensitive)" not in dbt_logs_logs
 
 
 @pytest.mark.macro
@@ -67,7 +70,7 @@ def test_select_hash_alg_is_successful_sha_with_lower(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -82,15 +85,17 @@ def test_select_hash_alg_is_successful_empty_defaults_to_md5(request, generate_m
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
+    dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert dbt_logs
     assert actual_sql == expected_sql
 
-    assert "Configured hash ('') not recognised. Must be one of: md5, sha (case insensitive)" in dbt_logs
+    assert "Configured hash ('') not recognised. Must be one of: md5, sha (case insensitive)" in dbt_logs_logs
 
 
 @pytest.mark.macro
@@ -99,7 +104,7 @@ def test_select_hash_alg_is_successful_none_defaults_to_md5(request, generate_mo
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     assert "Configured hash ('sha1') not recognised. Must be one of: md5, sha (case insensitive)" in dbt_logs
@@ -111,7 +116,7 @@ def test_select_hash_alg_is_successful_none_defaults_to_md5(request, generate_mo
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, logs_required=True)
 
     assert "Configured hash ('sha1') not recognised. Must be one of: md5, sha (case insensitive)" in dbt_logs

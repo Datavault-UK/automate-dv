@@ -8,7 +8,6 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "process_columns_to_escape"
 
-os.chdir(test.TEST_PROJECT_ROOT)
 dbt_init = dbtRunner()
 
 
@@ -27,7 +26,7 @@ def test_process_columns_to_escape_with_list_is_successful(request, generate_mod
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
@@ -52,7 +51,7 @@ def test_process_columns_to_escape_with_string_is_successful(request, generate_m
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
@@ -78,7 +77,7 @@ def test_process_columns_to_escape_with_not_string_is_successful(request, genera
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
@@ -100,7 +99,7 @@ def test_process_columns_to_escape_with_multiple_not_string_is_successful(reques
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)

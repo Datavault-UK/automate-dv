@@ -8,7 +8,6 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "sat"
 
-os.chdir(test.TEST_PROJECT_ROOT)
 dbt_init = dbtRunner()
 
 
@@ -33,7 +32,7 @@ def test_sat_correctly_generates_sql_for_payload_with_exclude_flag(request, gene
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -62,17 +61,17 @@ def test_sat_correctly_generates_sql_for_apply_source_filter_true(request, gener
 
     generate_model(metadata)
 
-    dbt_logs_first_run = dbt_runner.run_dbt_models(mode='run',
+    dbt_logs_first_run = dbt_runner.run_dbt_models(dbt_init, mode='run',
                                                    model_names=[request.node.name],
                                                    full_refresh=True)
 
-    dbt_logs_inc_run = dbt_runner.run_dbt_models(model_names=[request.node.name])
+    dbt_logs_inc_run = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs_first_run)
-    assert macro_test_helpers.is_successful_run(dbt_logs_inc_run)
+    assert dbt_logs_first_run
+    assert dbt_logs_inc_run
     assert actual_sql == expected_sql
 
 
@@ -98,7 +97,7 @@ def test_sat_correctly_generates_sql_when_hashdiff_columns_is_added_to_excluded(
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -133,7 +132,7 @@ def test_sat_correctly_generates_sql_when_all_required_columns_are_added_to_excl
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -170,7 +169,7 @@ def test_sat_correctly_generates_sql_when_all_columns_are_added_to_excluded(requ
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -195,7 +194,7 @@ def test_sat_correctly_generates_sql_when_no_columns_added_all_excluded(request,
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -220,8 +219,8 @@ def test_sat_correctly_generates_sql_when_no_columns_added_all_excluded_incremen
 
     generate_model(metadata)
 
-    dbt_runner.run_dbt_models(mode='run', model_names=[request.node.name])
-    dbt_logs = dbt_runner.run_dbt_models(mode='run', model_names=[request.node.name])
+    dbt_runner.run_dbt_models(dbt_init, mode='run', model_names=[request.node.name])
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, mode='run', model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
