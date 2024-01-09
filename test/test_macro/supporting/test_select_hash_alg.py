@@ -20,7 +20,7 @@ def test_select_hash_alg_is_successful_md5_with_upper(request, generate_model):
     dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict, logs_required=True)
+                                              args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -54,7 +54,7 @@ def test_select_hash_alg_is_successful_sha_with_upper(request, generate_model):
     dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict, logs_required=True)
+                                              args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -88,7 +88,7 @@ def test_select_hash_alg_is_successful_empty_defaults_to_md5(request, generate_m
     dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict, logs_required=True)
+                                              args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 

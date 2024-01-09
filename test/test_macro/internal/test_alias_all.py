@@ -19,7 +19,7 @@ def test_alias_all_correctly_generates_sql_for_full_alias_list_with_prefix(reque
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init,  model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
@@ -38,7 +38,7 @@ def test_alias_all_correctly_generates_sql_for_partial_alias_list_with_prefix(re
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init,  model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
@@ -56,7 +56,7 @@ def test_alias_all_correctly_generates_sql_for_full_alias_list_without_prefix(re
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init,  model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
@@ -74,7 +74,7 @@ def test_alias_all_correctly_generates_sql_for_partial_alias_list_without_prefix
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init,  model_names=[request.node.name],
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)

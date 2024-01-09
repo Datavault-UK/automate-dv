@@ -45,7 +45,7 @@ extends:
   parameters:
     platforms:
       - 'snowflake'
-      - 'sqlserver'
+#      - 'sqlserver'
       - 'postgres'
       - 'bigquery'
       - 'databricks'

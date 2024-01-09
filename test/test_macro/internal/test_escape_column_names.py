@@ -562,9 +562,9 @@ def test_escape_string_with_both_empty_string_is_successful(request, generate_mo
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                        args=var_dict)
+                                         args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict, logs_required=True)
+                                              args=var_dict, logs_required=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
