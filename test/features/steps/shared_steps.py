@@ -274,7 +274,7 @@ def load_populated_table(context, model_name, vault_structure):
         context.target_model_name = model_name
         model_name_unhashed = f"{model_name}_unhashed"
 
-        hashed_columns = context_utils.context_table_to_database_table(table=context.table,
+        hashed_columns = context_utils.context_table_to_database_table(dbt=context.dbt, table=context.table,
                                                                        model_name=model_name_unhashed)
 
         payload_columns = []
