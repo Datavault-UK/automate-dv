@@ -20,7 +20,7 @@
 {%- endmacro -%}
 
 {%- macro bigquery__type_binary() -%}
-    STRING
+    BYTES
 {%- endmacro -%}
 
 {%- macro postgres__type_binary() -%}
