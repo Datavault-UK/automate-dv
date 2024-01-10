@@ -6,7 +6,7 @@ WITH source_data AS (
 
 latest_records AS (
     SELECT current_records.CUSTOMER_PK, current_records.HASHDIFF, current_records.TEST_COLUMN_1, current_records.TEST_COLUMN_2, current_records.EFFECTIVE_FROM, current_records.LOAD_DATE, current_records.RECORD_SOURCE,
-        RANK() OVER (
+        ROW_NUMBER() OVER (
            PARTITION BY current_records.CUSTOMER_PK
            ORDER BY current_records.LOAD_DATE DESC
         ) AS rank_num
@@ -34,7 +34,7 @@ valid_stg AS (
 first_record_in_set AS (
     SELECT
     sd.CUSTOMER_PK, sd.HASHDIFF, sd.TEST_COLUMN_1, sd.TEST_COLUMN_2, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE,
-    RANK() OVER (
+    ROW_NUMBER() OVER (
             PARTITION BY sd.CUSTOMER_PK
             ORDER BY sd.LOAD_DATE ASC
         ) as asc_rank
