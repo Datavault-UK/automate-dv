@@ -1368,7 +1368,7 @@ Feature: [STG] Staging
       | sha('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
 
   @fixture.staging_null_columns
-  Scenario: [STG-43] Staging with null columns configuration where there is a required and optional key using custom null key values
+  Scenario: [STG-42] Staging with null columns configuration where there is a required and optional key using custom null key values
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
