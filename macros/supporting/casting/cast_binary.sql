@@ -38,3 +38,5 @@
     {{ automate_dv.default__cast_binary(column_str=column_str, alias=alias, quote=quote) }}
 
 {%- endmacro -%}
+
+

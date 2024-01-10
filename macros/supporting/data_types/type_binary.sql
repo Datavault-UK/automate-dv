@@ -28,5 +28,5 @@
 {%- endmacro -%}
 
 {%- macro databricks__type_binary() -%}
-    STRING
+    BINARY
 {%- endmacro -%}
