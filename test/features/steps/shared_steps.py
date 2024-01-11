@@ -67,7 +67,7 @@ def check_exists(context, model_name):
 
     context.target_model_name = model_name
 
-    assert not operation_success
+    assert operation_success
 
 
 @given("the {schema_name} schema does not exist")

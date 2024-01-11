@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-dbt-core = "==1.5.*"
+dbt-core = "==1.7.*"
 dbt-snowflake = "*"
-dbt-bigquery = "==1.5.7"
+dbt-bigquery = "~=1.7"
 #dbt-sqlserver = "==1.4.3"
-dbt-databricks = "==1.5.7"
-dbt-postgres = "==1.5.9"
+dbt-databricks = "~=1.7"
+dbt-postgres = "~=1.7"
 
 [dev-packages]
 pytest = "*"
