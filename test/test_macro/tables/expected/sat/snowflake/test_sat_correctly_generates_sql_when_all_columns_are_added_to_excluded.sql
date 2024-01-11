@@ -7,7 +7,7 @@ WITH source_data AS (
 first_record_in_set AS (
     SELECT
     sd.CUSTOMER_PK, sd.HASHDIFF, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE,
-    RANK() OVER (
+    ROW_NUMBER() OVER (
             PARTITION BY sd.CUSTOMER_PK
             ORDER BY sd.LOAD_DATE ASC
         ) as asc_rank
