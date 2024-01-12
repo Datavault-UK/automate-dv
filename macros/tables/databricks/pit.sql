@@ -14,9 +14,6 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{#- Setting ghost values to replace NULLS -#}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1900-01-01 00:00:00.000' %}
 {%- set hash = var('hash', 'MD5') -%}
 
 {%- if not enable_ghost_record -%}
