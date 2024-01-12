@@ -13,6 +13,8 @@
         {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
     {%- elif hash | lower == 'sha' -%}
         {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 64) | join (''), alias=alias, quote=true) }}
+    {%- elif hash | lower == 'sha1' -%}
+        {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 40) | join (''), alias=alias, quote=true) }}
     {%- else -%}
         {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
     {%- endif -%}
@@ -23,6 +25,8 @@
         CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(16)), 16) AS BINARY(16))
 	{%- elif hash | lower == 'sha' -%}
         CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(32)), 32) AS BINARY(32))
+    {%- elif hash | lower == 'sha1' -%}
+        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(20)), 20) AS BINARY(20))
     {%- else -%}
         CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(16)), 16) AS BINARY(16))
     {%- endif -%}

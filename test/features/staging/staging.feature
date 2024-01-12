@@ -1545,3 +1545,115 @@ Feature: [STG] Staging
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215\|\|1993-01-01\|\|*')   | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216\|\|1993-01-01\|\|*')  | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217\|\|1993-01-01\|\|*')   | *      |
+
+    @not_postgres
+  @fixture.staging_null_columns
+  @fixture.enable_sha1
+  Scenario: [STG-48] Staging with null columns configuration where there is a required and optional key, using SHA1 hash algorithm
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL      |
+      | CUSTOMER_ID | CUSTOMER_NAME |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK  | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                     |
+      | sha1('1001') | 1001                 | 1001        | <null>                 | -2            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('1997-04-24\|\|-2\|\|17-214-233-1214')  |
+      | sha1('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | sha1('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('2013-02-04\|\|-2\|\|17-214-233-1216')  |
+      | sha1('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+
+      @not_postgres
+  @fixture.staging_null_columns
+  @fixture.enable_sha1
+  Scenario: [STG-49] Staging with null columns configuration where there is a required and optional key, using SHA1 hash algorithm and custom null key values
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have null columns in the STG_CUSTOMER model and null_key_required is -6 and null_key_optional is -9
+      | REQUIRED    | OPTIONAL      |
+      | CUSTOMER_ID | CUSTOMER_NAME |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                     |
+      | sha1('-1')  | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('1997-04-24\|\|-9\|\|17-214-233-1214')  |
+      | sha1('-2')  | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | sha1('-6')  | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('2013-02-04\|\|-9\|\|17-214-233-1216')  |
+      | sha1('-6')  | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha1('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+
+        @not_postgres
+  @fixture.staging
+  @fixture.enable_sha1
+  Scenario: [STG-50] Staging with derived, hashed, ranked and source columns, using SHA1 hash algorithm, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                  |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME             | PARTITION_BY | ORDER_BY  |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK  | HASHDIFF      | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha1('1001') | sha1('ALICE') | 1993-01-01     | RAW_STAGE | 1                |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha1('1002') | sha1('BOB')   | 1993-01-01     | RAW_STAGE | 1                |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha1('1003') | sha1('CHAD')  | 1993-01-01     | RAW_STAGE | 1                |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha1('1004') | sha1('DOM')   | 1993-01-01     | RAW_STAGE | 1                |
+
+@not_postgres
+  @fixture.staging
+  @fixture.enable_sha1
+  Scenario: [STG-51] Staging with derived, hashed, ranked and source columns, using SHA1 hash algorithm, multiple PK column, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK                 | HASHDIFF                  |
+      | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME             | PARTITION_BY | ORDER_BY  |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK           | HASHDIFF      | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha1('1001\|\|ALICE') | sha1('ALICE') | 1993-01-01     | RAW_STAGE | 1                |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha1('1002\|\|BOB')   | sha1('BOB')   | 1993-01-01     | RAW_STAGE | 1                |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha1('1003\|\|CHAD')  | sha1('CHAD')  | 1993-01-01     | RAW_STAGE | 1                |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha1('1004\|\|DOM')   | sha1('DOM')   | 1993-01-01     | RAW_STAGE | 1                |
