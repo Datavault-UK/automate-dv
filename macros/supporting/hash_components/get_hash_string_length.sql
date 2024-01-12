@@ -3,7 +3,7 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro get_hash_length(hash) -%}
+{%- macro get_hash_string_length(hash) -%}
 
     {%- if hash | lower == 'md5' -%}
         {%- do return(32) -%}

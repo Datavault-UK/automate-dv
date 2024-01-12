@@ -49,7 +49,7 @@
     {#- Setting ghost values to replace NULLS -#}
     {%- set ghost_date = '1900-01-01 00:00:00.000' %}
     {%- do exceptions.warn("The string length of a ghost record has been updated in version 0.10.2. Please consult the docs on how to fix this.") -%}
-    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_length(hash)) -%}
+    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
 {%- endif -%}
 
 
