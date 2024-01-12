@@ -125,6 +125,6 @@ def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None, logs
 
     if dbt_vars:
         vargs = json.dumps(dbt_vars)
-        command.extend([f"--vars '{vargs}'"])
+        command.extend(['--vars', f"{vargs}"])
 
     return run_dbt_command(dbt_class, command, logs_required)
