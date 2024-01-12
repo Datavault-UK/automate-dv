@@ -100,7 +100,7 @@ backfill AS (
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=true) }})
+                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
@@ -164,7 +164,7 @@ new_rows AS (
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=true) }})
+                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
