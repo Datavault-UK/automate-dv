@@ -17,13 +17,13 @@ def test_expand_column_list_correctly_generates_list_with_nesting(request, gener
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -33,13 +33,13 @@ def test_expand_column_list_correctly_generates_list_with_extra_nesting(request,
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -49,11 +49,11 @@ def test_expand_column_list_correctly_generates_list_with_no_nesting(request, ge
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql

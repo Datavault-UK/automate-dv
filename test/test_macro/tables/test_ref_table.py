@@ -18,14 +18,14 @@ from dbt.cli.main import dbtRunner
 # def test_ref_table_macro_correctly_generates_sql_for_single_source(request, generate_model):
 #     generate_model()
 #
-#     dbt_logs = dbt_runner.run_dbt_models(dbt_init, mode='run',
+#     dbt_result = dbt_runner.run_dbt_models(dbt_init, mode='run',
 #                                          model_names=[request.node.name],
 #                                          full_refresh=True)
 #
 #     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
 #     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 #
-#     assert dbt_logs
+#     assert dbt_result is True
 #     assert actual_sql == expected_sql
 #
 #

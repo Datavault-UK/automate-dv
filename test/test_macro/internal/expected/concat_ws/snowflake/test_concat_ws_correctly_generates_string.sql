@@ -1,4 +1,5 @@
-CONCAT(
+CONCAT
+(
     BOOKING_DATE, '||',
     STG_BOOKING, '||',
     CUSTOMER_ID, '||',

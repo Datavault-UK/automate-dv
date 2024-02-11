@@ -26,13 +26,13 @@ def test_process_columns_to_escape_with_list_is_successful(request, generate_mod
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -51,13 +51,13 @@ def test_process_columns_to_escape_with_string_is_successful(request, generate_m
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -77,13 +77,13 @@ def test_process_columns_to_escape_with_not_string_is_successful(request, genera
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -99,11 +99,11 @@ def test_process_columns_to_escape_with_multiple_not_string_is_successful(reques
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql

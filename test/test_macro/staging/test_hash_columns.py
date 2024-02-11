@@ -22,12 +22,12 @@ def test_hash_columns_correctly_generates_hashed_columns_for_single_columns(requ
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -46,12 +46,12 @@ def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns_h
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -66,12 +66,12 @@ def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns_n
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -99,12 +99,12 @@ def test_hash_columns_correctly_generates_hashed_columns_for_multiple_composite_
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -122,12 +122,12 @@ def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -164,12 +164,12 @@ def test_hash_columns_correctly_generates_sql_from_yaml(request, generate_model)
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -204,12 +204,12 @@ def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(request, 
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -239,13 +239,13 @@ def test_hash_columns_raises_warning_if_mapping_without_hashdiff(request, genera
 
     generate_model(metadata)
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], logs_required=True)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_logs
+    assert dbt_result is True
     assert actual_sql == expected_sql
     warning_message = "You provided a list of columns under a 'columns' key, " \
                       "but did not provide the 'is_hashdiff' flag. Use list syntax for PKs."

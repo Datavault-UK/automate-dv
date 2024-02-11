@@ -1,12 +1,11 @@
-SELECT
-    CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY(32)) AS CUSTOMER_PK,
-    TO_DATE('1900-01-01') AS LOAD_DATE,
-    CAST('AUTOMATE_DV_SYSTEM' AS VARCHAR) AS RECORD_SOURCE,
-    NULL AS TEST_COLUMN_1,
-    NULL AS TEST_COLUMN_2,
-    NULL AS TEST_COLUMN_3,
-    NULL AS TEST_COLUMN_4,
-    NULL AS TEST_COLUMN_5,
-    NULL AS TEST_COLUMN_6,
-    CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY(32)) AS HASHDIFF,
-    TO_DATE('1900-01-01') AS EFFECTIVE_FROM
+SELECT CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY (32)) AS CUSTOMER_PK,
+       TO_DATE('1900-01-01')                                                                   AS LOAD_DATE,
+       CAST('AUTOMATE_DV_SYSTEM' AS VARCHAR)                                                   AS RECORD_SOURCE,
+       NULL                                                                                    AS TEST_COLUMN_1,
+       NULL                                                                                    AS TEST_COLUMN_2,
+       NULL                                                                                    AS TEST_COLUMN_3,
+       NULL                                                                                    AS TEST_COLUMN_4,
+       NULL                                                                                    AS TEST_COLUMN_5,
+       NULL                                                                                    AS TEST_COLUMN_6,
+       CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY (32)) AS HASHDIFF,
+       TO_DATE('1900-01-01')                                                                   AS EFFECTIVE_FROM
