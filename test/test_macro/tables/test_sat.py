@@ -1,10 +1,7 @@
 import pytest
-
-import test
-import os
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
-from dbt.cli.main import dbtRunner
 
 macro_name = "sat"
 
@@ -61,17 +58,17 @@ def test_sat_correctly_generates_sql_for_apply_source_filter_true(request, gener
 
     generate_model(metadata)
 
-    dbt_logs_first_run = dbt_runner.run_dbt_models(dbt_init, mode='run',
+    dbt_result_first_run = dbt_runner.run_dbt_models(dbt_init, mode='run',
                                                    model_names=[request.node.name],
                                                    full_refresh=True)
 
-    dbt_logs_inc_run = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result_inc_run = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbt_result is True_first_run
-    assert dbt_result is True_inc_run
+    assert dbt_result_first_run is True
+    assert dbt_result_inc_run is True
     assert actual_sql == expected_sql
 
 
