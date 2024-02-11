@@ -59,7 +59,7 @@ def test_derive_columns_raises_error_with_only_source_columns(request, generate_
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
     assert "Invalid column configuration:" in dbt_logs
 

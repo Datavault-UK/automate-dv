@@ -147,9 +147,9 @@ def test_escape_empty_column_string_raises_error(request, generate_model):
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
-    assert "Expected a column name or a list of column names, got an empty string" in dbt_logs
+    assert "Expected a column name or a list of column names, got an empty string" in dbt_result
 
 
 @pytest.mark.macro
@@ -171,10 +171,10 @@ def test_escape_string_not_a_string_raises_error(request, generate_model):
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
     assert "Invalid column name(s) provided. Must be a string," \
-           " a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
+           " a list of strings, or a dictionary of hashdiff metadata." in dbt_result
 
 
 @pytest.mark.macro
@@ -184,9 +184,9 @@ def test_escape_column_list_not_strings_raises_error(request, generate_model):
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
-    assert "Invalid columns object provided. Must be a list of lists, dictionaries or strings." in dbt_logs
+    assert "Invalid columns object provided. Must be a list of lists, dictionaries or strings." in dbt_result
 
 
 @pytest.mark.macro
@@ -521,10 +521,10 @@ def test_escape_partial_dictionary_raises_error_1(request, generate_model):
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
     assert "Invalid column name(s) provided. " \
-           "Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
+           "Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_result
 
 
 @pytest.mark.macro
@@ -534,10 +534,10 @@ def test_escape_partial_dictionary_raises_error_2(request, generate_model):
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
     assert "Invalid column name(s) provided. " \
-           "Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
+           "Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_result
 
 
 @pytest.mark.macro
@@ -564,7 +564,7 @@ def test_escape_string_with_both_empty_string_is_successful(request, generate_mo
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                              args=var_dict, logs_required=True)
+                                              args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -582,7 +582,7 @@ def test_escape_string_with_left_empty_string_is_successful(request, generate_mo
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                              args=var_dict, logs_required=True)
+                                              args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -600,7 +600,7 @@ def test_escape_string_with_right_empty_string_is_successful(request, generate_m
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict)
     dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                              args=var_dict, logs_required=True)
+                                              args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 

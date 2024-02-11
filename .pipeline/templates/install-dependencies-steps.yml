@@ -1,4 +1,12 @@
 steps:
+  - task: Cache@2
+    inputs:
+      key: 'python | "$(Agent.OS)" | Pipfile'
+      restoreKeys: | 
+        python | "$(Agent.OS)"
+        python
+      path: $(PIP_CACHE_DIR)
+    displayName: Cache Python packages
   - script: pip install --upgrade pipenv
     displayName: 'Install pipenv'
   - script: python -m pipenv requirements --dev > requirements.txt

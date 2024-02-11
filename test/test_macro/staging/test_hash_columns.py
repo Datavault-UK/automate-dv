@@ -240,7 +240,7 @@ def test_hash_columns_raises_warning_if_mapping_without_hashdiff(request, genera
     generate_model(metadata)
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
-    dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], logs_required=True)
+    dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], return_logs=True)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)

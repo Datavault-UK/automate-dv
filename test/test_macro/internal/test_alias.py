@@ -33,9 +33,9 @@ def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(requ
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
-    assert 'Invalid alias configuration:' in dbt_logs
+    assert 'Invalid alias configuration:' in dbt_result
 
 
 @pytest.mark.macro
@@ -45,9 +45,9 @@ def test_alias_single_with_missing_column_metadata_raises_error(request, generat
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
-    assert 'Invalid alias configuration:' in dbt_logs
+    assert 'Invalid alias configuration:' in dbt_result
 
 
 @pytest.mark.macro
@@ -57,6 +57,6 @@ def test_alias_single_with_undefined_column_metadata_raises_error(request, gener
     generate_model()
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, logs_required=True)
+                                           args=var_dict, return_logs=True)
 
-    assert 'Invalid alias configuration:' in dbt_logs
+    assert 'Invalid alias configuration:' in dbt_result
