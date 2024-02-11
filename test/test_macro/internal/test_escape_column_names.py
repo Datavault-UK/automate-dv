@@ -1,10 +1,7 @@
 import pytest
-
-import test
-import os
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
-from dbt.cli.main import dbtRunner
 
 macro_name = "escape_column_names"
 
@@ -563,14 +560,14 @@ def test_escape_string_with_both_empty_string_is_successful(request, generate_mo
 
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict)
-    dbt_logs_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                              args=var_dict, return_logs=True)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert dbt_result is True
     assert actual_sql == expected_sql
-    assert "Invalid escape_char_left and escape_char_right value provided. Using platform defaults (\"\")" in dbt_logs_logs
+    assert "Invalid escape_char_left and escape_char_right value provided. Using platform defaults (\"\")" in dbt_logs
 
 
 @pytest.mark.macro

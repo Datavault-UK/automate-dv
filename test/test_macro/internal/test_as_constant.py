@@ -1,10 +1,7 @@
 import pytest
-
-import test
-import os
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
-from dbt.cli.main import dbtRunner
 
 macro_name = "as_constant"
 
@@ -52,7 +49,7 @@ def test_as_constant_column_str_is_empty_string_raises_error(request, generate_m
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict, return_logs=True)
 
-    assert "Invalid columns_str object provided. Must be a string and not null." in dbt_logs
+    assert "Invalid columns_str object provided. Must be a string and not null." in dbt_result
 
 
 @pytest.mark.macro
@@ -64,7 +61,7 @@ def test_as_constant_column_str_is_none_raises_error(request, generate_model):
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict, return_logs=True)
 
-    assert "Invalid columns_str object provided. Must be a string and not null." in dbt_logs
+    assert "Invalid columns_str object provided. Must be a string and not null." in dbt_result
 
 
 @pytest.mark.macro

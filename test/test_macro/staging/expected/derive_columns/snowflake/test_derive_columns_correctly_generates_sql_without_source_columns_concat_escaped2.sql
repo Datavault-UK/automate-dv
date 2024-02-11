@@ -1,5 +1,4 @@
-CONCAT
-(
+CONCAT(
     CUSTOMER_NAME, '||',
     CUSTOMER_DOB, '||',
     PHONE

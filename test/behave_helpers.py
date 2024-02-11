@@ -16,6 +16,15 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
+def clean_dbt_logs():
+    """
+    Deletes content in target folder (compiled SQL)
+    Faster than running dbt clean.
+    """
+
+    shutil.rmtree(test.TEST_PROJECT_ROOT / 'logs', ignore_errors=True)
+
+
 def clean_seeds(model_name=None):
     """
     Deletes csv files in csv folder.

@@ -1,10 +1,7 @@
 import pytest
-
-import test
-import os
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
-from dbt.cli.main import dbtRunner
 
 macro_name = "standard_column_wrapper"
 

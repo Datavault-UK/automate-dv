@@ -1,14 +1,7 @@
 import json
+from pathlib import Path
 import os
-
 from dbt.cli.main import dbtRunnerResult
-import logging
-import sys
-
-import pexpect
-
-import test
-from env import env_utils
 
 
 def run_dbt_command(dbt_class, command, logs_required=False) -> bool | str:
@@ -34,7 +27,14 @@ def run_dbt_command(dbt_class, command, logs_required=False) -> bool | str:
 
         res: dbtRunnerResult = dbt_class.invoke(command)
 
-        return str(res.exception)
+        if res.exception:
+            return str(res.exception)
+        else:
+            log_file_path = Path(f"{res.result.args['log_path']}/dbt.log")
+            if log_file_path.exists():
+                return log_file_path.read_text()
+            else:
+                return ""
 
 
 def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, logs_required=False) -> bool | str:

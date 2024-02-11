@@ -2,13 +2,13 @@ import json
 import os
 
 import pytest
+from dbt.cli.main import dbtRunner
 from filelock import FileLock
 
 import test
 from env import env_utils
 from test import automate_dv_generator, behave_helpers, dbt_runner
 from . import structure_metadata
-from dbt.cli.main import dbtRunner
 
 mark_metadata_mapping = {
     "single_source_hub": structure_metadata.single_source_hub,
@@ -65,6 +65,7 @@ def setup(tmp_path_factory, worker_id):
         env_utils.setup_environment()
         behave_helpers.clean_models()
         behave_helpers.clean_target()
+        behave_helpers.clean_dbt_logs()
         behave_helpers.replace_test_schema(dbt_init)
         dbt_runner.run_dbt_seeds(dbt_init)
 

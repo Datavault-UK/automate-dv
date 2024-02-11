@@ -1,10 +1,7 @@
 import pytest
-
-import test
-import os
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
-from dbt.cli.main import dbtRunner
 
 macro_name = "derive_columns"
 
@@ -61,7 +58,7 @@ def test_derive_columns_raises_error_with_only_source_columns(request, generate_
     dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                            args=var_dict, return_logs=True)
 
-    assert "Invalid column configuration:" in dbt_logs
+    assert "Invalid column configuration:" in dbt_result
 
 
 @pytest.mark.macro

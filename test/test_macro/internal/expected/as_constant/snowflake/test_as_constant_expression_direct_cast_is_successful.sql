@@ -1,2 +1,1 @@
-STATUS
-::INT
+STATUS::INT
