@@ -1,6 +1,3 @@
-variables:
-  PIP_CACHE_DIR: $(Pipeline.Workspace)/.pip
-
 steps:
   - task: Cache@2
     inputs:
