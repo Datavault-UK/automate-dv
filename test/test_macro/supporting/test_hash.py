@@ -44,12 +44,12 @@ def test_hash_single_column_is_successful_sha1(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -121,12 +121,12 @@ def test_hash_multi_column_as_pk_is_successful_sha1(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -215,12 +215,12 @@ def test_hash_multi_column_as_hashdiff_is_successful_sha1(request, generate_mode
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
