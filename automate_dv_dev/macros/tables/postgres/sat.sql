@@ -37,7 +37,7 @@ latest_records AS (
     SELECT {{ automate_dv.prefix(source_cols, 'b', alias_target='target') }}
     FROM (
         SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
-            RANK() OVER (
+            ROW_NUMBER() OVER (
                PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
                ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
             ) AS rank
@@ -72,7 +72,7 @@ first_record_in_set AS (
     SELECT * FROM (
         SELECT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-        RANK() OVER (
+        ROW_NUMBER() OVER (
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
                 ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
             ) as asc_rank

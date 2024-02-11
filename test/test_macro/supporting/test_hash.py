@@ -42,6 +42,21 @@ def test_hash_single_column_is_successful_sha(request, generate_model):
 
 
 @pytest.mark.macro
+def test_hash_single_column_is_successful_sha1(request, generate_model):
+    var_dict = {'columns': "CUSTOMER_ID", 'alias': 'CUSTOMER_PK', 'hash': 'SHA1'}
+
+    generate_model()
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
 def test_hash_single_item_list_column_for_pk_is_successful(request, generate_model):
     var_dict = {'columns': ["CUSTOMER_ID"], 'alias': 'CUSTOMER_PK'}
 
@@ -99,6 +114,22 @@ def test_hash_multi_column_as_pk_is_successful_sha(request, generate_model):
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert dbt_result is True
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_hash_multi_column_as_pk_is_successful_sha1(request, generate_model):
+    var_dict = {'columns': ['CUSTOMER_ID', 'PHONE', 'DOB'],
+                'alias': 'CUSTOMER_PK', 'hash': 'SHA1'}
+
+    generate_model()
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
 
 
@@ -177,6 +208,22 @@ def test_hash_multi_column_as_hashdiff_is_successful_sha(request, generate_model
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert dbt_result is True
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_hash_multi_column_as_hashdiff_is_successful_sha1(request, generate_model):
+    var_dict = {'columns': ['CUSTOMER_ID', 'PHONE', 'DOB'], 'alias': 'HASHDIFF',
+                'is_hashdiff': 'true', 'hash': 'SHA1'}
+
+    generate_model()
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
 
 

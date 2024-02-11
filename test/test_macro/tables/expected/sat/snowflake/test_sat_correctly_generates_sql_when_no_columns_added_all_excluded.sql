@@ -1,27 +1,17 @@
-WITH source_data AS (SELECT a.CUSTOMER_PK,
-                            a.HASHDIFF,
-                            a.TEST_COLUMN_1,
-                            a.TEST_COLUMN_2,
-                            a.TEST_COLUMN_3,
-                            a.TEST_COLUMN_4,
-                            a.TEST_COLUMN_5,
-                            a.TEST_COLUMN_6,
-                            a.TEST_COLUMN_7,
-                            a.TEST_COLUMN_8,
-                            a.TEST_COLUMN_9,
-                            a.EFFECTIVE_FROM,
-                            a.LOAD_DATE,
-                            a.RECORD_SOURCE
-                     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_sat AS a
-WHERE a.CUSTOMER_PK IS NOT NULL
-    )
-    , first_record_in_set AS (
-SELECT
-    sd.CUSTOMER_PK, sd.HASHDIFF, sd.TEST_COLUMN_1, sd.TEST_COLUMN_2, sd.TEST_COLUMN_3, sd.TEST_COLUMN_4, sd.TEST_COLUMN_5, sd.TEST_COLUMN_6, sd.TEST_COLUMN_7, sd.TEST_COLUMN_8, sd.TEST_COLUMN_9, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE, RANK() OVER (
-    PARTITION BY sd.CUSTOMER_PK
-    ORDER BY sd.LOAD_DATE ASC
-    ) as asc_rank
-FROM source_data as sd
+WITH source_data AS (
+    SELECT a.CUSTOMER_PK, a.HASHDIFF, a.TEST_COLUMN_1, a.TEST_COLUMN_2, a.TEST_COLUMN_3, a.TEST_COLUMN_4, a.TEST_COLUMN_5, a.TEST_COLUMN_6, a.TEST_COLUMN_7, a.TEST_COLUMN_8, a.TEST_COLUMN_9, a.EFFECTIVE_FROM, a.LOAD_DATE, a.RECORD_SOURCE
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_sat AS a
+    WHERE a.CUSTOMER_PK IS NOT NULL
+),
+
+first_record_in_set AS (
+    SELECT
+    sd.CUSTOMER_PK, sd.HASHDIFF, sd.TEST_COLUMN_1, sd.TEST_COLUMN_2, sd.TEST_COLUMN_3, sd.TEST_COLUMN_4, sd.TEST_COLUMN_5, sd.TEST_COLUMN_6, sd.TEST_COLUMN_7, sd.TEST_COLUMN_8, sd.TEST_COLUMN_9, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE,
+    ROW_NUMBER() OVER (
+            PARTITION BY sd.CUSTOMER_PK
+            ORDER BY sd.LOAD_DATE ASC
+        ) as asc_rank
+    FROM source_data as sd
     QUALIFY asc_rank = 1
     ), unique_source_records AS (
 SELECT DISTINCT

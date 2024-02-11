@@ -347,9 +347,11 @@ def load_table(context, model_name, vault_structure):
     is_full_refresh = step_helpers.is_full_refresh(context)
     context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
     context.system_record_value = getattr(context, "system_record_value", None)
+    context.hash = getattr(context, "hashing", None)
 
     args = {"enable_ghost_records": context.enable_ghost_records,
-            "system_record_value": context.system_record_value}
+            "system_record_value": context.system_record_value,
+            "hash": context.hash}
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
@@ -580,6 +582,32 @@ def stage_processing(context, processed_stage_name):
                                      args=args)
 
     assert operation_success
+
+
+@step("I stage the {processed_stage_name} data, I get a '{warn_message}' warning.")
+def stage_processing(context, processed_stage_name, warn_message):
+    stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
+
+    args = {k: v for k, v in stage_metadata.items() if
+            ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
+             "hash_content_casing"]}
+    text_args = automate_dv_generator.handle_step_text_dict(context)
+
+    automate_dv_generator.raw_vault_structure(model_name=processed_stage_name,
+                                              config=text_args,
+                                              vault_structure="stage",
+                                              source_model=context.raw_stage_models,
+                                              hashed_columns=context.hashed_columns[processed_stage_name],
+                                              derived_columns=context.derived_columns[processed_stage_name],
+                                              ranked_columns=context.ranked_columns[processed_stage_name],
+                                              null_columns=context.null_columns[processed_stage_name],
+                                              include_source_columns=context.include_source_columns)
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[processed_stage_name],
+                                     args=args)
+
+    assert "Completed successfully" in logs
+    assert warn_message in logs
 
 
 @then("the {model_name} table should contain expected data")
@@ -855,3 +883,7 @@ def step_impl(context, table_name):
     operation_success = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
 
     assert operation_success
+
+@then("if I use sha1 this will warn with {warn_message}' warn message")
+def step_imp(context, warn_message):
+    pass
