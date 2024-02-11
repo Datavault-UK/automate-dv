@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import os
+
 from dbt.cli.main import dbtRunnerResult
 
 

@@ -82,15 +82,15 @@ def test_select_hash_alg_is_successful_sha1_with_upper(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                         args=var_dict, return_logs=True)
+    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                           args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
-    assert "Configured hash ('sha1') not recognised. Must be one of: md5, sha, sha1 (case insensitive)" not in dbt_logs
+    assert "Configured hash ('sha1') not recognised. Must be one of: md5, sha, sha1 (case insensitive)" not in dbt_result
 
 
 @pytest.mark.macro
