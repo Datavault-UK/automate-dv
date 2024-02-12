@@ -14,8 +14,8 @@ def test_as_constant_single_correctly_generates_string(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -30,8 +30,8 @@ def test_as_constant_column_name_correctly_generates_string(request, generate_mo
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -46,8 +46,8 @@ def test_as_constant_column_str_is_empty_string_raises_error(request, generate_m
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, return_logs=True)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict, return_logs=True)
 
     assert "Invalid columns_str object provided. Must be a string and not null." in dbt_result
 
@@ -58,8 +58,8 @@ def test_as_constant_column_str_is_none_raises_error(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, return_logs=True)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict, return_logs=True)
 
     assert "Invalid columns_str object provided. Must be a string and not null." in dbt_result
 
@@ -70,8 +70,8 @@ def test_as_constant_expression_direct_cast_is_successful(request, generate_mode
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -86,8 +86,8 @@ def test_as_constant_expression_func_cast_is_successful(request, generate_model)
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)

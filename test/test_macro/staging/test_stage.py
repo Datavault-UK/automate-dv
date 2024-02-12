@@ -31,7 +31,7 @@ def test_stage_correctly_generates_sql_from_yaml(request, generate_model):
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -66,7 +66,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_escape1(request, generate_
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -101,7 +101,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_escape2(request, generate_
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -133,7 +133,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_escape3(request, generate_
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -165,7 +165,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_concat(request, generate_m
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -199,7 +199,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_source_style(request, gene
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -237,7 +237,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_ranked(request, generate_m
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -270,7 +270,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_composite_pk(request, gene
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -288,7 +288,7 @@ def test_stage_correctly_generates_sql_for_only_source_columns_from_yaml(request
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -305,7 +305,7 @@ def test_stage_correctly_generates_sql_for_only_source_columns_and_missing_flag_
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -334,7 +334,7 @@ def test_stage_correctly_generates_sql_for_only_hashing_from_yaml(request, gener
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -356,7 +356,7 @@ def test_stage_correctly_generates_sql_for_only_derived_from_yaml(request, gener
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -383,7 +383,7 @@ def test_stage_correctly_generates_sql_for_only_ranked_from_yaml(request, genera
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -404,7 +404,7 @@ def test_stage_correctly_generates_sql_for_only_null_required_from_yaml(request,
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -425,7 +425,7 @@ def test_stage_correctly_generates_sql_for_only_null_optional_from_yaml(request,
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -445,7 +445,7 @@ def test_stage_correctly_generates_sql_for_null_and_source_from_yaml(request, ge
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -473,7 +473,7 @@ def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml(request,
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -496,7 +496,7 @@ def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_sing
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -521,7 +521,7 @@ def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_sing
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -551,7 +551,7 @@ def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_mult
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -584,7 +584,7 @@ def test_stage_correctly_generates_sql_for_hashing_and_derived_from_yaml(request
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -605,7 +605,7 @@ def test_stage_correctly_generates_sql_for_derived_and_source_from_yaml(request,
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -639,7 +639,7 @@ def test_stage_correctly_generates_sql_for_hashing_with_exclude_flag(request, ge
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -667,7 +667,7 @@ def test_stage_correctly_generates_sql_for_hashing_with_exclude_flag_no_columns(
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -698,7 +698,7 @@ def test_stage_correctly_generates_sql_for_only_hashing_with_exclude_flag(reques
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -728,7 +728,7 @@ def test_stage_correctly_generates_sql_for_only_source_and_hashing_with_exclude_
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -760,7 +760,7 @@ def test_stage_raises_error_with_missing_source(request, generate_model):
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], return_logs=True)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], return_logs=True)
 
     assert 'Staging error: Missing source_model configuration. ' \
            'A source model name must be provided.' in dbt_result
@@ -783,7 +783,7 @@ def test_stage_correctly_generates_sql_for_only_source_and_derived_columns_with_
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)

@@ -4,7 +4,7 @@ from pathlib import Path
 from dbt.cli.main import dbtRunnerResult
 
 
-def run_dbt_command(dbt_class, command, logs_required=False) -> bool | str:
+def run_dbt_command(dbt_class, command, logs_required=False) -> (bool, str):
     """
     Run a command in dbt and capture dbt logs.
         :param dbt_class: dbt Runner object
@@ -19,7 +19,7 @@ def run_dbt_command(dbt_class, command, logs_required=False) -> bool | str:
 
         res: dbtRunnerResult = dbt_class.invoke(command)
 
-        return res.success
+        return res.success, ''
 
     else:
         if 'dbt' in command and isinstance(command, list):
@@ -28,13 +28,13 @@ def run_dbt_command(dbt_class, command, logs_required=False) -> bool | str:
         res: dbtRunnerResult = dbt_class.invoke(command)
 
         if res.exception:
-            return str(res.exception)
+            return res.success, str(res.exception)
         else:
             log_file_path = Path(f"{res.result.args['log_path']}/dbt.log")
             if log_file_path.exists():
-                return log_file_path.read_text()
+                return res.success, log_file_path.read_text()
             else:
-                return ""
+                return res.success, ""
 
 
 def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, logs_required=False) -> bool | str:

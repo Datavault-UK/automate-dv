@@ -26,7 +26,7 @@ def load_table(context, model_name, vault_structure, period, start_date, stop_da
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    operation_success = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
+    operation_success, logs = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
                                      full_refresh=is_full_refresh)
 
     assert operation_success
@@ -54,7 +54,7 @@ def load_table(context, model_name, vault_structure, period):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    operation_success = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
+    operation_success, logs = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
                                      full_refresh=is_full_refresh)
 
     assert operation_success
@@ -111,7 +111,7 @@ def load_table(context, start_date, period, model_name, vault_structure, timesta
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    operation_success = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
+    operation_success, logs = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
                                      full_refresh=is_full_refresh)
 
     assert operation_success
@@ -138,7 +138,7 @@ def load_table(context, start_date, period, model_name, vault_structure):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    operation_success = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
+    operation_success, logs = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
                                      full_refresh=is_full_refresh)
 
     assert operation_success

@@ -26,7 +26,7 @@
 WITH to_insert AS (
     {%- for src in source_model %}
     SELECT DISTINCT
-    {{ automate_dv.prefix(source_cols, 'a') }}
+        {{ automate_dv.prefix(source_cols, 'a') }}
     FROM {{ ref(src) }} AS a
     WHERE a.{{ src_pk }} IS NOT NULL
     {%- endfor %}
@@ -34,12 +34,12 @@ WITH to_insert AS (
 
 non_historized AS (
     SELECT
-    {{ automate_dv.prefix(source_cols, 'a') }}
+        {{ automate_dv.prefix(source_cols, 'a') }}
     FROM to_insert AS a
     {%- if automate_dv.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON {{ automate_dv.multikey(src_pk, prefix=['a','d'], condition='=') }}
-    WHERE {{ automate_dv.multikey(src_pk, prefix='d', condition='IS NULL') }}
+        ON {{ automate_dv.multikey(src_pk, prefix=['a','d'], condition='=') }}
+        WHERE {{ automate_dv.multikey(src_pk, prefix='d', condition='IS NULL') }}
     {%- endif %}
 )
 

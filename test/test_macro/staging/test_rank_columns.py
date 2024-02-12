@@ -21,7 +21,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns(requ
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -43,7 +43,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_asc(
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -65,7 +65,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_desc
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -88,7 +88,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -110,7 +110,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -133,7 +133,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -158,7 +158,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -181,7 +181,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_dens
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -207,7 +207,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns(re
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -233,7 +233,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_as
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -259,7 +259,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_as
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -286,7 +286,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_mu
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -313,7 +313,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_mu
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -341,7 +341,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_de
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -368,7 +368,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_so
 
     generate_model(metadata)
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)

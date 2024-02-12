@@ -67,6 +67,3 @@ def inject_parameters(file_contents: str, parameters: dict):
 
         return file_contents
 
-
-def is_successful_run(dbt_logs: str):
-    return 'Done' in dbt_logs and 'SQL compilation error' not in dbt_logs

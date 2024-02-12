@@ -14,8 +14,8 @@ def test_hash_single_column_is_successful_md5(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -29,8 +29,8 @@ def test_hash_single_column_is_successful_sha(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -44,8 +44,8 @@ def test_hash_single_column_is_successful_sha1(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -59,8 +59,8 @@ def test_hash_single_item_list_column_for_pk_is_successful(request, generate_mod
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -74,8 +74,8 @@ def test_hash_single_item_list_column_for_hashdiff_is_successful(request, genera
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -89,8 +89,8 @@ def test_hash_multi_column_as_pk_is_successful_md5(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -105,8 +105,8 @@ def test_hash_multi_column_as_pk_is_successful_sha(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -121,8 +121,8 @@ def test_hash_multi_column_as_pk_is_successful_sha1(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -136,8 +136,8 @@ def test_hash_multi_column_as_pk_is_successful_custom_concat(request, generate_m
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -151,8 +151,8 @@ def test_hash_multi_column_as_pk_is_successful_custom_null(request, generate_mod
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -167,8 +167,8 @@ def test_hash_multi_column_as_pk_is_successful_custom_null_concat(request, gener
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -183,8 +183,8 @@ def test_hash_multi_column_as_hashdiff_is_successful_md5(request, generate_model
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -199,8 +199,8 @@ def test_hash_multi_column_as_hashdiff_is_successful_sha(request, generate_model
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -215,8 +215,8 @@ def test_hash_multi_column_as_hashdiff_is_successful_sha1(request, generate_mode
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -230,8 +230,8 @@ def test_hash_single_column_expression3_is_successful_md5(request, generate_mode
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -245,8 +245,8 @@ def test_hash_multi_column_expression4_is_successful_md5(request, generate_model
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -262,8 +262,8 @@ def test_hash_single_column_with_escape_columns_is_successful(request, generate_
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -279,8 +279,8 @@ def test_hash_multi_colum_all_columns_are_escape_columns_is_successful(request, 
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -296,8 +296,8 @@ def test_hash_multi_colum_some_columns_are_escape_columns_is_successful(request,
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 

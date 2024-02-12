@@ -14,8 +14,8 @@ def test_null_expression_is_successful(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -30,8 +30,8 @@ def test_null_expression_with_custom_placeholder_is_successful(request, generate
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict)
+    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
