@@ -560,7 +560,7 @@ def test_escape_string_with_both_empty_string_is_successful(request, generate_mo
 
     dbt_result, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                               args=var_dict)
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+    _, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -578,7 +578,7 @@ def test_escape_string_with_left_empty_string_is_successful(request, generate_mo
 
     dbt_result, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                               args=var_dict)
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+    _, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -596,7 +596,7 @@ def test_escape_string_with_right_empty_string_is_successful(request, generate_m
 
     dbt_result, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                               args=var_dict)
-    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+    _, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                          args=var_dict, return_logs=True)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
