@@ -13,7 +13,7 @@ def test_hub_macro_correctly_generates_sql_for_single_source(request, generate_m
     generate_model()
 
     dbt_result, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                                     full_refresh=True)
+                                              full_refresh=True)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -56,10 +56,10 @@ def test_hub_macro_correctly_generates_sql_for_incremental_single_source(request
 def test_hub_macro_correctly_generates_sql_for_incremental_single_source_multi_nk(request, generate_model):
     generate_model()
 
-    dbt_results_first_run = dbt_runner.run_dbt_models(dbt_init, mode='run',
-                                                      model_names=[request.node.name],
-                                                      full_refresh=True)
-    dbt_results_inc_run = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_results_first_run, _ = dbt_runner.run_dbt_models(dbt_init, mode='run',
+                                                         model_names=[request.node.name],
+                                                         full_refresh=True)
+    dbt_results_inc_run, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -98,10 +98,10 @@ def test_hub_macro_correctly_generates_sql_for_multi_source_multi_nk(request, ge
 def test_hub_macro_correctly_generates_sql_for_incremental_multi_source(request, generate_model):
     generate_model()
 
-    dbt_results_first_run = dbt_runner.run_dbt_models(dbt_init, mode='run',
-                                                      model_names=[request.node.name],
-                                                      full_refresh=True)
-    dbt_results_inc_run = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_results_first_run, _ = dbt_runner.run_dbt_models(dbt_init, mode='run',
+                                                         model_names=[request.node.name],
+                                                         full_refresh=True)
+    dbt_results_inc_run, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -114,10 +114,10 @@ def test_hub_macro_correctly_generates_sql_for_incremental_multi_source(request,
 def test_hub_macro_correctly_generates_sql_for_incremental_multi_source_multi_nk(request, generate_model):
     generate_model()
 
-    dbt_results_first_run = dbt_runner.run_dbt_models(dbt_init, mode='run',
-                                                      model_names=[request.node.name],
-                                                      full_refresh=True)
-    dbt_results_inc_run = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
+    dbt_results_first_run, _ = dbt_runner.run_dbt_models(dbt_init, mode='run',
+                                                         model_names=[request.node.name],
+                                                         full_refresh=True)
+    dbt_results_inc_run, _ = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name])
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
