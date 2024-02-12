@@ -14,8 +14,8 @@ def test_alias_single_correctly_generates_sql(request, generate_model):
 
     generate_model()
 
-    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                                 args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                     args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
@@ -30,10 +30,10 @@ def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(requ
 
     generate_model()
 
-    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                                 args=var_dict, return_logs=True)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                     args=var_dict, return_logs=True)
 
-    assert 'Invalid alias configuration:' in dbt_result
+    assert 'Invalid alias configuration:' in dbt_logs
 
 
 @pytest.mark.macro
@@ -42,10 +42,10 @@ def test_alias_single_with_missing_column_metadata_raises_error(request, generat
 
     generate_model()
 
-    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                                 args=var_dict, return_logs=True)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                     args=var_dict, return_logs=True)
 
-    assert 'Invalid alias configuration:' in dbt_result
+    assert 'Invalid alias configuration:' in dbt_logs
 
 
 @pytest.mark.macro
@@ -54,7 +54,7 @@ def test_alias_single_with_undefined_column_metadata_raises_error(request, gener
 
     generate_model()
 
-    dbt_result, logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                                 args=var_dict, return_logs=True)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                     args=var_dict, return_logs=True)
 
-    assert 'Invalid alias configuration:' in dbt_result
+    assert 'Invalid alias configuration:' in dbt_logs
