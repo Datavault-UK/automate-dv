@@ -763,7 +763,7 @@ def test_stage_raises_error_with_missing_source(request, generate_model):
     dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], return_logs=True)
 
     assert 'Staging error: Missing source_model configuration. ' \
-           'A source model name must be provided.' in dbt_result
+           'A source model name must be provided.' in dbt_logs
 
 
 @pytest.mark.macro
