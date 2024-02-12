@@ -87,8 +87,8 @@ def test_standard_column_wrapper_raises_error_with_invalid_hash_content_value(re
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=var_dict, return_logs=True)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=var_dict, return_logs=True)
 
     assert "Must provide a valid casing config for hash_content_casing. " \
            "'INVALID' was provided. Can be one of upper, disabled (case insensitive)" not in dbt_logs

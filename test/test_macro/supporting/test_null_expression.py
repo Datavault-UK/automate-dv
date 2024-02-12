@@ -43,7 +43,7 @@ def test_null_expression_with_custom_placeholder_is_successful(request, generate
 def test_null_expression_with_no_column_str_raises_errors(request, generate_model):
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
-                                           args=dict(), return_logs=True)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                         args=dict(), return_logs=True)
 
     assert "Must provide a column_str argument to null expression macro!" in dbt_logs

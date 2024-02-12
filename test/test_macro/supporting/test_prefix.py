@@ -92,7 +92,8 @@ def test_prefix_with_no_columns_raises_error(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict, return_logs=True)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict,
+                                           return_logs=True)
 
     assert "Invalid parameters provided to prefix macro. Expected: " \
            "(columns [list/string], prefix_str [string]) got: ([], c)" in dbt_logs
@@ -104,7 +105,7 @@ def test_prefix_with_empty_column_list_raises_error(request, generate_model):
 
     generate_model()
 
-    dbt_result = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict, return_logs=True)
+    dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict, return_logs=True)
 
     assert "Invalid parameters provided to prefix macro. Expected: " \
            "(columns [list/string], prefix_str [string]) got: ([], c)" in dbt_logs
