@@ -146,7 +146,7 @@ def test_escape_empty_column_string_raises_error(request, generate_model):
     dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
                                                      args=var_dict, return_logs=True)
 
-    assert "Expected a column name or a list of column names, got an empty string" in dbt_result
+    assert "Expected a column name or a list of column names, got an empty string" in dbt_logs
 
 
 @pytest.mark.macro
