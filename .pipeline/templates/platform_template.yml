@@ -16,9 +16,9 @@ stages:
             inputs:
               versionSpec: $(PYTHON_VERSION)
           - template: install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
+          - script: pipenv run -- inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-harness-tests -p snowflake
+          - script: pipenv run -- inv run-harness-tests -p snowflake
             displayName: "Run harness tests"
 
       - job: 'macro_tests_sf'
@@ -28,11 +28,11 @@ stages:
             inputs:
               versionSpec: $(PYTHON_VERSION)
           - template: install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
+          - script: pipenv run --inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
+          - script: pipenv run --inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
             displayName: "Drop all custom schemas"
-          - script: inv run-macro-tests -p snowflake
+          - script: pipenv run --inv run-macro-tests -p snowflake
             displayName: "Run macro tests"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -61,9 +61,9 @@ stages:
                               - ${{ if eq(platform, 'sqlserver') }}:
                                   - template: install-deps-setup-sqlserver-steps.yml
                               - template: install-dependencies-steps.yml
-                              - script: inv setup -p ${{ platform }} -e pipeline
+                              - script: pipenv run -- inv setup -p ${{ platform }} -e pipeline
                                 displayName: "Setup harness"
-                              - script: inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
+                              - script: pipenv run -- inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
                                 displayName: "Run feature files"
                                 env:
                                   PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}_${{ upper(subGroup) }}'
@@ -84,10 +84,10 @@ stages:
                           - ${{ if eq(platform, 'sqlserver') }}:
                               - template: install-deps-setup-sqlserver-steps.yml
                           - template: install-dependencies-steps.yml
-                          - script: inv setup -p ${{ platform }} -e pipeline
+                          - script: pipenv run -- inv setup -p ${{ platform }} -e pipeline
                             displayName: "Setup harness"
 
-                          - script: inv run-integration-tests -s ${{ featureGroup.groupName }} -p ${{ platform }}
+                          - script: pipenv run -- inv run-integration-tests -s ${{ featureGroup.groupName }} -p ${{ platform }}
                             displayName: "Run feature files"
                             env:
                               PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}'
