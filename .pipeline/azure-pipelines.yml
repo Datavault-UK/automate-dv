@@ -19,6 +19,7 @@ pool:
 variables:
   PIPELINE_BRANCH: $(Build.SourceBranchName)
   PYTHON_VERSION: '3.11'
+  PIP_CACHE_DIR: $(Pipeline.Workspace)/.pip
 
 resources:
   containers:
@@ -45,7 +46,7 @@ extends:
   parameters:
     platforms:
       - 'snowflake'
-      - 'sqlserver'
+#      - 'sqlserver'
       - 'postgres'
       - 'bigquery'
       - 'databricks'

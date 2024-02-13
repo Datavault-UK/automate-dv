@@ -1,4 +1,6 @@
 from behave.fixture import use_fixture_by_tag
+from dbt.cli.main import dbtRunner
+import os
 
 from env import env_utils
 from test import automate_dv_generator, behave_helpers
@@ -274,6 +276,10 @@ def before_all(context):
     # Backup YAML prior to run
     automate_dv_generator.backup_project_yml()
 
+    # Initialise dbtRunner
+    os.chdir('test/automate_dv_test')
+    context.dbt = dbtRunner()
+
 
 def before_feature(context, feature):
     decide_to_run(feature.tags, feature, 'Feature')
@@ -283,7 +289,7 @@ def before_scenario(context, scenario):
     do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
 
     if do_run:
-        behave_helpers.replace_test_schema()
+        behave_helpers.replace_test_schema(context.dbt)
 
         behave_helpers.clean_seeds()
         behave_helpers.clean_models()

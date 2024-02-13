@@ -28,7 +28,7 @@
 
 {%- endmacro -%}
 
-{% macro check_model_exists(model_name) %}
+{% macro check_model_exists(model_name, drop_table=True) %}
 
     {% set schema_name = automate_dv_test.get_schema_name() %}
 
@@ -45,7 +45,14 @@
     {%- endif -%}
 
     {% if source_relation %}
-        {% do log('Model {} exists.'.format(model_name), true) %}
+        {%- if drop_table -%}
+            {%- set query -%}
+                DROP TABLE {{ source_relation }}
+            {%- endset -%}
+            {%- do run_query(query) -%}
+        {%- else -%}
+            {% do log('Model {} exists.'.format(model_name), true) %}
+        {%- endif -%}
     {% else %}
         {% do log('Model {} does not exist.'.format(model_name), true) %}
     {% endif %}

@@ -1,8 +1,11 @@
 import pytest
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
 
 macro_name = "process_columns_to_escape"
+
+dbt_init = dbtRunner()
 
 
 @pytest.mark.macro
@@ -20,13 +23,13 @@ def test_process_columns_to_escape_with_list_is_successful(request, generate_mod
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -45,13 +48,13 @@ def test_process_columns_to_escape_with_string_is_successful(request, generate_m
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -71,13 +74,13 @@ def test_process_columns_to_escape_with_not_string_is_successful(request, genera
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -93,11 +96,11 @@ def test_process_columns_to_escape_with_multiple_not_string_is_successful(reques
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql

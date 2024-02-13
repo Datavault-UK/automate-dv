@@ -33,8 +33,8 @@ def sample_data_to_database(context, model_name: str):
     else:
         dbt_file_utils.write_seed_properties(input_seed_name, {'column_types': {k: 'VARCHAR' for k in table.headings}})
 
-    seeds_logs = dbt_runner.run_dbt_seeds([input_seed_name], full_refresh=True)
+    operation_success = dbt_runner.run_dbt_seeds(context.dbt, [input_seed_name], full_refresh=True)
 
-    assert "Completed successfully" in seeds_logs
+    assert operation_success
 
     return input_seed_name

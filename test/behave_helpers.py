@@ -16,6 +16,15 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
+def clean_dbt_logs():
+    """
+    Deletes content in target folder (compiled SQL)
+    Faster than running dbt clean.
+    """
+
+    shutil.rmtree(test.TEST_PROJECT_ROOT / 'logs', ignore_errors=True)
+
+
 def clean_seeds(model_name=None):
     """
     Deletes csv files in csv folder.
@@ -50,25 +59,25 @@ def clean_models(model_name=None):
             os.remove(file)
 
 
-def replace_test_schema():
+def replace_test_schema(dbt_class):
     """
     Drop and create the TEST schema
     """
 
-    run_dbt_operation(macro_name='recreate_current_schemas')
+    run_dbt_operation(dbt_class, macro_name='recreate_current_schemas')
 
 
-def create_test_schemas():
+def create_test_schemas(context):
     """
     Create TEST schemas
     """
 
-    run_dbt_operation(macro_name='create_test_schemas')
+    run_dbt_operation(context.dbt, macro_name='create_test_schemas')
 
 
-def drop_test_schemas():
+def drop_test_schemas(context):
     """
     Drop TEST schemas
     """
 
-    run_dbt_operation(macro_name='drop_test_schemas')
+    run_dbt_operation(context.dbt, macro_name='drop_test_schemas')

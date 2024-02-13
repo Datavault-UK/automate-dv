@@ -1,8 +1,11 @@
 import pytest
+from dbt.cli.main import dbtRunner
 
 from test import dbt_runner, macro_test_helpers
 
 macro_name = "prefix"
+
+dbt_init = dbtRunner()
 
 
 @pytest.mark.macro
@@ -11,12 +14,12 @@ def test_prefix_column_in_single_item_list_is_successful(request, generate_model
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -26,12 +29,12 @@ def test_prefix_multiple_columns_is_successful(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -42,12 +45,12 @@ def test_prefix_aliased_column_is_successful(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -58,12 +61,12 @@ def test_prefix_aliased_column_with_alias_target_as_source_is_successful(request
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -74,12 +77,12 @@ def test_prefix_aliased_column_with_alias_target_as_target_is_successful(request
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                         args=var_dict)
+    dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name],
+                                                 args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_result is True
     assert actual_sql == expected_sql
 
 
@@ -89,7 +92,8 @@ def test_prefix_with_no_columns_raises_error(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    _, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict,
+                                                     return_logs=True)
 
     assert "Invalid parameters provided to prefix macro. Expected: " \
            "(columns [list/string], prefix_str [string]) got: ([], c)" in dbt_logs
@@ -101,7 +105,7 @@ def test_prefix_with_empty_column_list_raises_error(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
+    _, dbt_logs = dbt_runner.run_dbt_models(dbt_init, model_names=[request.node.name], args=var_dict, return_logs=True)
 
     assert "Invalid parameters provided to prefix macro. Expected: " \
            "(columns [list/string], prefix_str [string]) got: ([], c)" in dbt_logs
