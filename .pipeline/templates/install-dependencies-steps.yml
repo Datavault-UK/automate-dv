@@ -1,15 +1,15 @@
 steps:
   - task: Cache@2
     inputs:
-      key: 'python | "$(Agent.OS)" | Pipfile | $(cacheKeyVersion)'
+      key: 'python | "$(Agent.OS)" | Pipfile.lock | $(cacheKeyVersion)'
       restoreKeys: | 
         python | "$(Agent.OS)"
         python
-      path: $(PIP_CACHE_DIR)
+      path: $(Pipeline.Workspace)/.pipenv
     displayName: Cache Python packages
-  - script: pip install --upgrade pipenv
-    displayName: 'Install pipenv'
-  - script: python -m pipenv install
+  - script: |
+      pip install --upgrade pipenv
+      pipenv install --dev --deploy
     displayName: 'Install Python dependencies'
   - script: |
       curl -sSfo op.zip \
