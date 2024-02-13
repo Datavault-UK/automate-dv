@@ -28,11 +28,11 @@ stages:
             inputs:
               versionSpec: $(PYTHON_VERSION)
           - template: install-dependencies-steps.yml
-          - script: pipenv run --inv setup -p snowflake -e pipeline
+          - script: pipenv run -- inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: pipenv run --inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
+          - script: pipenv run -- inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
             displayName: "Drop all custom schemas"
-          - script: pipenv run --inv run-macro-tests -p snowflake
+          - script: pipenv run -- inv run-macro-tests -p snowflake
             displayName: "Run macro tests"
             env:
               PIPELINE_JOB: $(Agent.JobName)

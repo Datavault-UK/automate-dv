@@ -13,7 +13,7 @@ steps:
     displayName: 'Install Python dependencies'
   - script: |
       curl -sSfo op.zip \
-        https://cache.agilebits.com/dist/1P/op2/pkg/v2.6.0/op_linux_amd64_v2.6.0.zip \
+        https://cache.agilebits.com/dist/1P/op2/pkg/v2.24.0/op_linux_amd64_v2.24.0.zip \
         && unzip -od /usr/local/bin/ op.zip \
         && rm op.zip
     displayName: "Install 1Password"
