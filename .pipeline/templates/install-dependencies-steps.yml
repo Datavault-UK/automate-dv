@@ -1,7 +1,7 @@
 steps:
   - task: Cache@2
     inputs:
-      key: 'python | "$(Agent.OS)" | Pipfile'
+      key: 'python | "$(Agent.OS)" | Pipfile | $(cacheKeyVersion)'
       restoreKeys: | 
         python | "$(Agent.OS)"
         python
@@ -9,9 +9,7 @@ steps:
     displayName: Cache Python packages
   - script: pip install --upgrade pipenv
     displayName: 'Install pipenv'
-  - script: python -m pipenv requirements --dev > requirements.txt
-    displayName: 'Generate requirements file'
-  - script: pip install -r requirements.txt
+  - script: python -m pipenv install
     displayName: 'Install Python dependencies'
   - script: |
       curl -sSfo op.zip \
