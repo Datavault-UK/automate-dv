@@ -713,9 +713,9 @@ def expect_data(context, model_name):
 
         dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[expected_output_csv_name])
 
-        operation_success, logs = dbt_runner.run_dbt_command(context.dbt, ["test"])
+        dbt_result, _ = dbt_runner.run_dbt_command(context.dbt, ["test"])
 
-        assert operation_success
+        assert dbt_result
 
 
 @then("the {model_name} table should be empty")
