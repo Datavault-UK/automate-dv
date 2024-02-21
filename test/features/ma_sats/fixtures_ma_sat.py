@@ -14,6 +14,19 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "MAS_PL_EXCLUDE": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": {
+                "exclude_columns": [
+                    "CUSTOMER_EMAIL"
+                ]
+            },
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "MAS_TZ": {
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE"],
@@ -133,6 +146,11 @@ def set_staging_definition(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
+        "STG_CUSTOMER_PL_EXCLUDE": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_EMAIL", "CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
         "STG_CUSTOMER_HD_ALIAS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "CUSTOMER_HASHDIFF": {"is_hashdiff": True,
@@ -189,6 +207,9 @@ def set_staging_definition(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_PL_EXCLUDE": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_HD_ALIAS": {
@@ -306,9 +327,20 @@ def multi_active_satellite_snowflake(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_EMAIL": "VARCHAR",
+                "CUSTOMER_COUNTRY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -386,6 +418,19 @@ def multi_active_satellite_snowflake(context):
         "MAS_TZ": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MAS_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_COUNTRY": "VARCHAR",
+                "CUSTOMER_EMAIL": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",

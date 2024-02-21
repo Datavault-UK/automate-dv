@@ -293,3 +293,78 @@ Feature: [MAS-1CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | 17-214-233-1217 | Dom           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | 17-214-233-1227 | Don           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | 17-214-233-1237 | Dominik       | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [MAS-1CD-B-11] Load data into a non-existent multi-active satellite with payload exclude columns
+    Given I exclude the following columns for the MAS table
+      | EXCLUDE COLUMNS |
+      | CUSTOMER_EMAIL  |
+    Given the MAS table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_EMAIL  | CUSTOMER_COUNTRY | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | abc_1234@dv.com | United Kingdom   | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1224 | abc_1234@dv.com | United Kingdom   | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1234 | abc_1234@dv.com | United Kingdom   | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | def_456@dv.com  | Greece           | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1225 | def_456@dv.com  | Greece           | 1993-01-01 | *      |
+      | 1002        | Bobby         | 17-214-233-1235 | def_456@dv.com  | Greece           | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | ghi_789@dv.com  | South Africa     | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1226 | ghi_789@dv.com  | South Africa     | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1236 | ghi_789@dv.com  | South Africa     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | jkl_101@dv.com  | Japan            | 1993-01-01 | *      |
+      | 1004        | Don           | 17-214-233-1227 | jkl_101@dv.com  | Japan            | 1993-01-01 | *      |
+      | 1004        | Dominik       | 17-214-233-1237 | jkl_101@dv.com  | Japan            | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_ID | CUSTOMER_COUNTRY | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')   | Alice         | 17-214-233-1214 | 1001        | United Kingdom   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')   | Alice         | 17-214-233-1224 | 1001        | United Kingdom   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234')   | Alice         | 17-214-233-1234 | 1001        | United Kingdom   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')     | Bob           | 17-214-233-1215 | 1002        | Greece           | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')     | Bob           | 17-214-233-1225 | 1002        | Greece           | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | Bobby         | 17-214-233-1235 | 1002        | Greece           | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')    | Chad          | 17-214-233-1216 | 1003        | South Africa     | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | Chaz          | 17-214-233-1226 | 1003        | South Africa     | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | Chaz          | 17-214-233-1236 | 1003        | South Africa     | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 1004        | Japan            | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | Don           | 17-214-233-1227 | 1004        | Japan            | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | Dominik       | 17-214-233-1237 | 1004        | Japan            | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [MAS-1CD-B-12] Load data into a non-existent multi-active satellite with payload exclude columns
+    Given I exclude the following columns for the MAS table
+      | EXCLUDE COLUMNS  |
+      | CUSTOMER_COUNTRY |
+      | CUSTOMER_EMAIL   |
+    Given the MAS table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_EMAIL  | CUSTOMER_COUNTRY | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | abc_1234@dv.com | United Kingdom   | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1224 | abc_1234@dv.com | United Kingdom   | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1234 | abc_1234@dv.com | United Kingdom   | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | def_456@dv.com  | Greece           | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1225 | def_456@dv.com  | Greece           | 1993-01-01 | *      |
+      | 1002        | Bobby         | 17-214-233-1235 | def_456@dv.com  | Greece           | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | ghi_789@dv.com  | South Africa     | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1226 | ghi_789@dv.com  | South Africa     | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1236 | ghi_789@dv.com  | South Africa     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | jkl_101@dv.com  | Japan            | 1993-01-01 | *      |
+      | 1004        | Don           | 17-214-233-1227 | jkl_101@dv.com  | Japan            | 1993-01-01 | *      |
+      | 1004        | Dominik       | 17-214-233-1237 | jkl_101@dv.com  | Japan            | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')   | Alice         | 17-214-233-1214 | 1001        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')   | Alice         | 17-214-233-1224 | 1001        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234')   | Alice         | 17-214-233-1234 | 1001        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')     | Bob           | 17-214-233-1215 | 1002        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')     | Bob           | 17-214-233-1225 | 1002        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | Bobby         | 17-214-233-1235 | 1002        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')    | Chad          | 17-214-233-1216 | 1003        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | Chaz          | 17-214-233-1226 | 1003        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | Chaz          | 17-214-233-1236 | 1003        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 1004        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | Don           | 17-214-233-1227 | 1004        | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | Dominik       | 17-214-233-1237 | 1004        | 1993-01-01     | 1993-01-01 | *      |

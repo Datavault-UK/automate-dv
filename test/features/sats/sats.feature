@@ -449,7 +449,7 @@ Feature: [SAT] Satellites
       | CUSTOMER_DOB    |
       | CUSTOMER_PHONE  |
       | CUSTOMER_ID     |
-    Given the SATELLITE table does not exist
+    And the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
