@@ -18,10 +18,8 @@
 
     {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
 
-    {% set identifier = model['name'] %}
-
     {%- set target_relation = this.incorporate(type='table') -%}
-    {%- set existing_relation = this.incorporate(type='table') -%}
+    {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
