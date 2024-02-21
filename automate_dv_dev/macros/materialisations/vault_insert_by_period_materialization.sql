@@ -18,14 +18,20 @@
 
     {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
 
-    {% if target.type == "sqlserver" %}
-        {%- set target_relation = this.incorporate(type='table') -%}
-    {%  else %}
-        {%- set target_relation = this -%}
-    {% endif %}
+    {% set identifier = model['name'] %}
 
-    {%- set existing_relation = load_relation(this) -%}
+    {%- set target_relation = this.incorporate(type='table') -%}
+    {%- set existing_relation = this.incorporate(type='table') -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
+
+    {% do log('database: ' ~ database, true) %}
+    {% do log('schema: ' ~ schema, true) %}
+    {% do log('identifier: ' ~ identifier, true) %}
+    {% do log('this: ' ~ this, true) %}
+
+    {% do log('target_relation: ' ~ target_relation, true) %}
+    {% do log('existing_relation: ' ~ existing_relation, true) %}
+    {% do log('tmp_relation: ' ~ tmp_relation, true) %}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
@@ -44,7 +50,7 @@
     {{ run_hooks(pre_hooks, inside_transaction=True) }}
 
     {% if existing_relation is none %}
-
+        {% do log('here 0', true) %}
         {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(core_sql=sql, timestamp_field=timestamp_field,
                                                                        start_timestamp=start_stop_dates.start_date,
                                                                        stop_timestamp=start_stop_dates.stop_date,
@@ -53,7 +59,7 @@
         {% do to_drop.append(tmp_relation) %}
 
     {% elif existing_relation.is_view %}
-
+        {% do log('here 1', true) %}
         {{ log("Dropping relation " ~ target_relation ~ " because it is a view and this model is a table (vault_insert_by_period).") }}
         {% do adapter.drop_relation(existing_relation) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
@@ -65,22 +71,22 @@
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif full_refresh_mode %}
+        {% do log('here 2', true) %}
         {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(core_sql=sql, timestamp_field=timestamp_field,
-                                                                       start_timestamp=start_stop_dates.start_date,
-                                                                       stop_timestamp=start_stop_dates.stop_date,
-                                                                       offset=0, period=period) %}
+                                                                                 start_timestamp=start_stop_dates.start_date,
+                                                                                 stop_timestamp=start_stop_dates.stop_date,
+                                                                                 offset=0, period=period) %}
         {% if target.type in ['postgres', 'sqlserver'] %}
             {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
 
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
-        {% set period_boundaries = automate_dv.get_period_boundaries(target_relation,
-                                                                  timestamp_field,
-                                                                  start_stop_dates.start_date,
-                                                                  start_stop_dates.stop_date,
-                                                                  period) %}
-
+        {% do log('here 3', true) %}
+        {% set period_boundaries = automate_dv.get_period_boundaries(target_relation, timestamp_field,
+                                                                     start_stop_dates.start_date,
+                                                                     start_stop_dates.stop_date,
+                                                                     period) %}
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
         {%- set loop_vars = {'sum_rows_inserted': 0} -%}
@@ -96,10 +102,8 @@
             {% set tmp_relation = make_temp_relation(target_relation) %}
 
             {% set tmp_table_sql = automate_dv.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
-                                                                  period_boundaries.start_timestamp,
-                                                                  period_boundaries.stop_timestamp, i) %}
-
-
+                                                                     period_boundaries.start_timestamp,
+                                                                     period_boundaries.stop_timestamp, i) %}
 
             {# This call statement drops and then creates a temporary table #}
             {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}

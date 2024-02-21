@@ -1,6 +1,7 @@
+import os
+
 from behave.fixture import use_fixture_by_tag
 from dbt.cli.main import dbtRunner
-import os
 
 from env import env_utils
 from test import automate_dv_generator, behave_helpers
@@ -12,11 +13,11 @@ from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
 from test.features.pit import fixtures_pit
+from test.features.ref_tables import fixtures_ref_table
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
-from test.features.ref_tables import fixtures_ref_table
 
 fixture_registry_utils = {
     "fixture.enable_sha": behave_fixtures.enable_sha,

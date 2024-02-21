@@ -4,26 +4,27 @@ from pathlib import Path
 from dbt.cli.main import dbtRunnerResult
 
 
-def run_dbt_command(dbt_class, command, logs_required=False) -> (bool, str):
+def run_dbt_command(dbt_class, command, logs_required=False, use_colours=False) -> (bool, str):
     """
     Run a command in dbt and capture dbt logs.
         :param dbt_class: dbt Runner object
         :param command: Command to run.
         :param logs_required: True if error message in the logs needs to be read
+        :param use_colours: If false, remove ASCII escape codes for colours from log output, so it's easier to read.
         :return: dbt logs
     """
+    if 'dbt' in command and isinstance(command, list):
+        command.remove('dbt')
 
     if not logs_required:
-        if 'dbt' in command and isinstance(command, list):
-            command.remove('dbt')
 
         res: dbtRunnerResult = dbt_class.invoke(command)
 
         return res.success, ''
 
     else:
-        if 'dbt' in command and isinstance(command, list):
-            command.remove('dbt')
+        if not use_colours:
+            command = [*['--no-use-colors-file'], *command]
 
         res: dbtRunnerResult = dbt_class.invoke(command)
 
