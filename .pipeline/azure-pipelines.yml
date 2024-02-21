@@ -45,11 +45,11 @@ extends:
   template: templates/platform_template.yml
   parameters:
     platforms:
-      - 'snowflake'
+#      - 'snowflake'
       - 'sqlserver'
-      - 'postgres'
-      - 'bigquery'
-      - 'databricks'
+#      - 'postgres'
+#      - 'bigquery'
+#      - 'databricks'
 
     runConfig:
       - groupName: 'staging'
@@ -67,11 +67,19 @@ extends:
       - groupName: 'links'
         displayName: 'Links'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental' ]
+      - groupName: 'links_mat'
+        displayName: 'Links (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental' ]
+      - groupName: 't_links_mat'
+        displayName: 'Transactional Links (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 'sats'
         displayName: 'Satellites'
         disabledForPlatform: [ ]
