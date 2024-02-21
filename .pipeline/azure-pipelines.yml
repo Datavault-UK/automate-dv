@@ -55,11 +55,15 @@ extends:
       - groupName: 'staging'
         displayName: 'Staging'
         disabledForPlatform: [ ]
-        subGroups: ['main', 'hashing']
+        subGroups: [ 'main', 'hashing' ]
       - groupName: 'hubs'
         displayName: 'Hubs'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental' ]
+      - groupName: 'hubs_mat'
+        displayName: 'Hubs'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 'links'
         displayName: 'Links'
         disabledForPlatform: [ ]
