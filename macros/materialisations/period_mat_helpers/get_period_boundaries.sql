@@ -100,7 +100,7 @@
                 CAST(COALESCE({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
-      )
+        )
         SELECT
             start_timestamp,
             stop_timestamp,
@@ -110,9 +110,13 @@
 
     {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
+    {%  do log('period_boundaries_dict: ' ~ period_boundaries_dict, true) %}
+
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
                                 'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
+
+    {%  do log('period_boundaries: ' ~ period_boundaries, true) %}
 
     {% do return(period_boundaries) %}
 {%- endmacro %}
