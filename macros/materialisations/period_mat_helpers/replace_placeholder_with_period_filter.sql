@@ -60,10 +60,6 @@
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:27] %}
 
-    {% do log('start_timestamp: ' ~ start_timestamp, true) %}
-    {% do log('start_timestamp_mssql: ' ~ start_timestamp, true) %}
-    {% do log('offset: ' ~ offset, true) %}
-
     {%- set period_filter -%}
     (
         CAST({{ timestamp_field }} AS DATETIME2) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0)
@@ -73,8 +69,6 @@
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
-
-    {% do log('filtered_sql: ' ~ filtered_sql, true) %}
 
     {% do return(filtered_sql) %}
 {% endmacro %}

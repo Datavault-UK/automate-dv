@@ -34,8 +34,6 @@
 
 
 {% macro sqlserver__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
-    {%  do log('offset (inner): ' ~ offset, true) %}
-
     {%- set filtered_sql = {'sql': base_sql} -%}
 
     {%- do filtered_sql.update({'sql': automate_dv.replace_placeholder_with_period_filter(core_sql=filtered_sql.sql,
@@ -45,8 +43,6 @@
                                                                                           offset=offset, period=period)}) -%}
     {# MSSQL does not allow CTEs in a subquery #}
     {{ filtered_sql.sql }}
-
-    {%  do log('filtered_sql.sql: ' ~ filtered_sql.sql, true) %}
 {%- endmacro %}
 
 
