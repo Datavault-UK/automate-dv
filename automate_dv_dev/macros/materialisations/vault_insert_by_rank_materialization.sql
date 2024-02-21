@@ -168,7 +168,7 @@
 
 {%- endmaterialization %}
 
-{% materialization vault_insert_by_rank, adapter='sqlserver' %}                                                                                                                                                                                                                 {% materialization vault_insert_by_period, adapter='sqlserver' %}
+{% materialization vault_insert_by_rank, adapter='sqlserver' %}
 
 {{ automate_dv.currently_disabled_error(func_name='vault_insert_by_rank') }}
 
