@@ -8,8 +8,7 @@
     {%- set available_hash_algorithms = ['md5', 'sha', 'sha1'] -%}
 
     {%- if execute and hash | lower not in available_hash_algorithms %}
-
-        {%- do exceptions.warn("Configured hash ('{}') not recognised. Must be one of: {} (case insensitive)".format(hash | lower, available_hash_algorithms | join(', '))) -%}
+        {%- do exceptions.warn("Configured hash ('{}') not recognised. Must be one of: {} (case insensitive). Defaulting to MD5 hashing.".format(hash | lower, available_hash_algorithms | join(', '))) -%}
     {%- endif -%}
 
     {%- if hash | lower == 'md5' -%}
