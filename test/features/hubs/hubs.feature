@@ -617,7 +617,7 @@ Feature: [HUB] Hubs
       | 1002        | Bob           | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 1993-01-01 | TPCH   |
-    And I stage the STG_CUSTOMER data, I get a 'Configured hash ('sha1') is not supported on Postgres.' warning.
+    And I stage the STG_CUSTOMER data, I get a 'Configured hash (SHA-1) is not supported on Postgres.' warning.
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
