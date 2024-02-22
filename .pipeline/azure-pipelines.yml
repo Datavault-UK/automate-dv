@@ -60,7 +60,7 @@ extends:
         displayName: 'Hubs'
         disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'incremental' ]
-      - groupName: 'hubs_mat'
+      - groupName: 'hubs'
         displayName: 'Hubs (Mat)'
         disabledForPlatform: [ 'sqlserver' ]
         subGroups: [ 'mat' ]
@@ -68,7 +68,7 @@ extends:
         displayName: 'Links'
         disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'incremental' ]
-      - groupName: 'links_mat'
+      - groupName: 'links'
         displayName: 'Links (Mat)'
         disabledForPlatform: [ 'sqlserver' ]
         subGroups: [ 'mat' ]
@@ -76,7 +76,7 @@ extends:
         displayName: 'Transactional Links'
         disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'incremental' ]
-      - groupName: 't_links_mat'
+      - groupName: 't_links'
         displayName: 'Transactional Links (Mat)'
         disabledForPlatform: [ 'sqlserver' ]
         subGroups: [ 'mat' ]
@@ -84,7 +84,7 @@ extends:
         displayName: 'Satellites'
         disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', ]
-      - groupName: 'sats_mat'
+      - groupName: 'sats'
         displayName: 'Satellites (Mat)'
         disabledForPlatform: [ 'sqlserver' ]
         subGroups: [ 'pm_core', 'pm_range', 'pm_datepart',
@@ -93,7 +93,7 @@ extends:
         displayName: 'Effectivity Satellites'
         disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'auto', 'disabled' ]
-      - groupName: 'eff_sats_mat'
+      - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites (Mat)'
         disabledForPlatform: [ 'sqlserver' ]
         subGroups: [ 'mat' ]
@@ -101,7 +101,7 @@ extends:
         displayName: 'Multi-Active Satellites'
         disabledForPlatform: [ ]
         subGroups: [ 'comp_pk', '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental' ]
-      - groupName: 'ma_sats_mat'
+      - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites (Mat)'
         disabledForPlatform: [ 'sqlserver' ]
         subGroups: [ 'pm', 'rm', 'rm_dup' ]
