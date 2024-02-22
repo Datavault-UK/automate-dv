@@ -19,10 +19,11 @@
 {% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
-        (TO_TIMESTAMP({{ timestamp_field }})
-        >= DATE_TRUNC('{{ period }}', TO_TIMESTAMP('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
-             TO_TIMESTAMP({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_TIMESTAMP('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
-      AND (TO_TIMESTAMP({{ timestamp_field }}) >= TO_TIMESTAMP('{{ start_timestamp }}'))
+        (
+            TO_TIMESTAMP({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_TIMESTAMP('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}')
+                AND TO_TIMESTAMP({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_TIMESTAMP('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
+                AND (TO_TIMESTAMP({{ timestamp_field }}) >= TO_TIMESTAMP('{{ start_timestamp }}')
+        )
     {%- endset -%}
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
 
@@ -58,10 +59,13 @@
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:27] %}
+
     {%- set period_filter -%}
-            (CAST({{ timestamp_field }} AS DATETIME2) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0) AND
-             CAST({{ timestamp_field }} AS DATETIME2) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2)))
-      AND (CAST({{ timestamp_field }} AS DATETIME2) >= CAST('{{ start_timestamp_mssql }}' AS DATETIME2)))
+    (
+        CAST({{ timestamp_field }} AS DATETIME2) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0)
+            AND CAST({{ timestamp_field }} AS DATETIME2) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2)))
+            AND (CAST({{ timestamp_field }} AS DATETIME2) >= CAST('{{ start_timestamp_mssql }}' AS DATETIME2))
+    )
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
@@ -74,8 +78,8 @@
 
     {%- set period_filter -%}
         {{ timestamp_field }}::TIMESTAMP >= DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}')
-        AND {{ timestamp_field }}::TIMESTAMP < DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}')
-        AND {{ timestamp_field }}::TIMESTAMP >= TIMESTAMP '{{ start_timestamp }}'
+            AND {{ timestamp_field }}::TIMESTAMP < DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}')
+            AND {{ timestamp_field }}::TIMESTAMP >= TIMESTAMP '{{ start_timestamp }}'
     {%- endset -%}
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
 
