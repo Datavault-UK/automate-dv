@@ -133,7 +133,7 @@
 
 {% macro postgres__hash_alg_sha1() -%}
 
-    {%- do exceptions.warn("Configured hash ('SHA1') is not supported on Postgres.
+    {%- do exceptions.warn("Configured hash (SHA-1) is not supported on Postgres.
     Defaulting to hash 'MD5', alternatively configure your hash as 'SHA' for SHA256 hashing.") -%}
     {{ automate_dv.hash_alg_md5() }}
 
