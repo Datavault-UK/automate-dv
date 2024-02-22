@@ -100,7 +100,7 @@
                 CAST(COALESCE({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
-      )
+        )
         SELECT
             start_timestamp,
             stop_timestamp,
