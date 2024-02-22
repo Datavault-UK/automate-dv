@@ -46,7 +46,7 @@ extends:
   parameters:
     platforms:
       - 'snowflake'
-#      - 'sqlserver'
+      - 'sqlserver'
       - 'postgres'
       - 'bigquery'
       - 'databricks'
@@ -55,32 +55,56 @@ extends:
       - groupName: 'staging'
         displayName: 'Staging'
         disabledForPlatform: [ ]
-        subGroups: ['main', 'hashing']
+        subGroups: [ 'main', 'hashing' ]
       - groupName: 'hubs'
         displayName: 'Hubs'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental' ]
+      - groupName: 'hubs_mat'
+        displayName: 'Hubs (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 'links'
         displayName: 'Links'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental' ]
+      - groupName: 'links_mat'
+        displayName: 'Links (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental' ]
+      - groupName: 't_links_mat'
+        displayName: 'Transactional Links (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 'sats'
         displayName: 'Satellites'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart',
+        subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', ]
+      - groupName: 'sats_mat'
+        displayName: 'Satellites (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'pm_core', 'pm_range', 'pm_datepart',
                      'pm_small_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
         disabledForPlatform: [ ]
-        subGroups: [ 'main', 'comp_pk', 'auto', 'disabled', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'auto', 'disabled' ]
+      - groupName: 'eff_sats_mat'
+        displayName: 'Effectivity Satellites (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'mat' ]
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
         disabledForPlatform: [ ]
-        subGroups: [ 'comp_pk', '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
+        subGroups: [ 'comp_pk', '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental' ]
+      - groupName: 'ma_sats_mat'
+        displayName: 'Multi-Active Satellites (Mat)'
+        disabledForPlatform: [ 'sqlserver' ]
+        subGroups: [ 'pm', 'rm', 'rm_dup' ]
       - groupName: 'xts'
         displayName: 'Extended Tracking Satellites'
         disabledForPlatform: [ ]

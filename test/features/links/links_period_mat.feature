@@ -113,3 +113,25 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 00:00:00.000004 | CRM    |
     And I stage the STG_CUSTOMER data
     Then if I insert by period into the LINK_TZ link by microsecond this will fail with "This datepart" error
+
+  @not_postgres
+  @fixture.single_source_comp_pk_link
+  Scenario: [LNK-PM-06] Load a simple stage table into a non-existent link table, period load
+    Given the LINK table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-03 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-04 | CRM    |
+    And I stage the STG_CUSTOMER data
+    And I insert by period into the LINK link by day
+    And I insert by period into the LINK link by day
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | COMP_PK     | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('1006') | md5('DEU') | 1993-01-03 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('1007') | md5('ITA') | 1993-01-04 | CRM    |

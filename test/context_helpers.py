@@ -1,8 +1,8 @@
 import pandas as pd
 from behave.model import Table
 
-from test import dbt_file_utils
 import test
+from test import dbt_file_utils
 from test import dbt_runner
 
 

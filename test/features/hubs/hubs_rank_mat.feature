@@ -74,3 +74,27 @@ Feature: [HUB-RM] Hubs Loaded using Rank Materialization
       | md5('1002') | 1002    | 1993-01-01 | *      |
       | md5('1003') | 1003    | 1993-01-03 | *      |
       | md5('1004') | 1004    | 1993-01-04 | *      |
+
+  @not_postgres
+  @fixture.single_source_comp_pk_hub
+  Scenario: [HUB-RM-04] Simple load of stage data into an empty hub using insert-by-rank
+    Given the HUB table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | A           | Alice         | 1993-01-01 | TPCH   |
+      | 1001        | A           | Alice         | 1993-01-02 | TPCH   |
+      | 1002        | B           | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | B           | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | B           | Bob           | 1993-01-03 | TPCH   |
+      | 1003        | A           | Chad          | 1993-01-03 | TPCH   |
+      | 1004        | A           | Dom           | 1993-01-04 | TPCH   |
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I stage the STG_CUSTOMER data
+    And I insert by rank into the HUB hub
+    And I insert by rank into the HUB hub
+    Then the HUB table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_CK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | A           | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | B           | 1002        | 1993-01-02 | TPCH   |
+      | md5('1003') | A           | 1003        | 1993-01-03 | TPCH   |
+      | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |

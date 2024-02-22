@@ -55,7 +55,7 @@ def load_table(context, model_name, vault_structure, period):
     is_full_refresh = step_helpers.is_full_refresh(context)
 
     dbt_result, dbt_logs = dbt_runner.run_dbt_models(dbt_class=context.dbt, mode="run", model_names=[model_name],
-                                                     full_refresh=is_full_refresh)
+                                                     full_refresh=is_full_refresh, return_logs=True)
 
     assert dbt_result
 
