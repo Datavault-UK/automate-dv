@@ -1123,6 +1123,8 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_EMAIL": "VARCHAR(50)",
+                "CUSTOMER_COUNTRY": "VARCHAR(50)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
@@ -1198,6 +1200,8 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_EMAIL": "VARCHAR(50)",
+                "CUSTOMER_COUNTRY": "VARCHAR(50)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -1787,6 +1791,8 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_ID": "NUMERIC(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_EMAIL": "VARCHAR",
+                "CUSTOMER_COUNTRY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1855,6 +1861,8 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_EMAIL": "VARCHAR",
+                "CUSTOMER_COUNTRY": "VARCHAR",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
