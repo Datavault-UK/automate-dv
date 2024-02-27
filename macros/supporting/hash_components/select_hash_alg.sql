@@ -39,7 +39,7 @@
 
 {% macro bigquery__hash_alg_md5() -%}
 
-    {% do return(automate_dv.cast_binary('UPPER(TO_HEX(MD5([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {% do return(automate_dv.cast_binary('MD5([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
