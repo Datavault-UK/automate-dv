@@ -39,7 +39,7 @@
 
 {% macro bigquery__hash_alg_md5() -%}
 
-    {%- set is_native_hashing = var('enable_native_hashes', false) | lower -%}
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
 
     {% if is_native_hashing %}
         {%- do return(automate_dv.cast_binary('MD5([HASH_STRING_PLACEHOLDER])', quote=false)) -%}
@@ -85,7 +85,13 @@
 
 {% macro bigquery__hash_alg_sha256() -%}
 
-    {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA256([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
+
+    {% if is_native_hashing %}
+        {%- do return(automate_dv.cast_binary('SHA256([HASH_STRING_PLACEHOLDER])', quote=false)) -%}
+    {%- else -%}
+        {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA256([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {%- endif -%}
 
 {% endmacro %}
 
@@ -127,7 +133,13 @@
 
 {% macro bigquery__hash_alg_sha1() -%}
 
-    {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA1([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
+
+    {% if is_native_hashing %}
+        {%- do return(automate_dv.cast_binary('SHA1([HASH_STRING_PLACEHOLDER])', quote=false)) -%}
+    {%- else -%}
+        {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA1([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {%- endif -%}
 
 {% endmacro %}
 
