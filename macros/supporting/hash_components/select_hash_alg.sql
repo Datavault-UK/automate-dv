@@ -39,7 +39,13 @@
 
 {% macro bigquery__hash_alg_md5() -%}
 
-    {% do return(automate_dv.cast_binary('MD5([HASH_STRING_PLACEHOLDER])', quote=false)) %}
+    {%- set is_native_hashing = var('enable_native_hashes', false) | lower -%}
+
+    {% if is_native_hashing %}
+        {%- do return(automate_dv.cast_binary('MD5([HASH_STRING_PLACEHOLDER])', quote=false)) -%}
+    {%- else -%}
+        {%- do return(automate_dv.cast_binary('UPPER(TO_HEX(MD5([HASH_STRING_PLACEHOLDER])))', quote=false)) -%}
+    {%- endif -%}
 
 {% endmacro %}
 
