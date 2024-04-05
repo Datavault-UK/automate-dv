@@ -32,5 +32,5 @@
 {%- endmacro -%}
 
 {%- macro fabric__type_binary() -%}
-    VARBINARY
+    UNIQUEIDENTIFIER
 {%- endmacro -%}
