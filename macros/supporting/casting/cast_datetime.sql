@@ -40,6 +40,15 @@
 {%- endmacro -%}
 
 
+{%- macro fabric__cast_datetime(column_str, as_string=false, alias=none, date_type=none) -%}
+
+    CONVERT(DATETIME2, {{ column_str }})
+
+    {%- if alias %} AS {{ alias }} {%- endif %}
+
+{%- endmacro -%}
+
+
 {%- macro bigquery__cast_datetime(column_str, as_string=false, alias=none, date_type=none) -%}
 
     {%- if date_type == 'timestamp' -%}

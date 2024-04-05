@@ -19,6 +19,10 @@
     VARCHAR
 {%- endmacro -%}
 
+{%- macro fabric__type_string(is_hash, char_length) -%}
+    VARCHAR
+{%- endmacro -%}
+
 {%- macro databricks__type_string(is_hash=false, char_length=255) -%}
     {%- if is_hash -%}
         {%- if var('hash', 'MD5') | lower == 'md5' -%}

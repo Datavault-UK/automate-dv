@@ -22,3 +22,7 @@
 {%- macro sqlserver__null_ghost(datatype, alias) -%}
     {{ automate_dv.bigquery__null_ghost(datatype, alias) }}
 {%- endmacro -%}
+
+{%- macro fabric__null_ghost(datatype, alias) -%}
+    {{ automate_dv.bigquery__null_ghost(datatype, alias) }}
+{%- endmacro -%}
