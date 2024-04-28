@@ -44,11 +44,10 @@
 
 row_rank_{{ source_number }} AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ automate_dv.prefix(source_cols_with_rank, 'rr') }},
+    SELECT {{ automate_dv.prefix(source_cols_with_rank, 'rr') }}
     {%- else %}
-    SELECT {{ automate_dv.prefix(source_cols, 'rr') }},
+    SELECT {{ automate_dv.prefix(source_cols, 'rr') }}
     {%- endif %}
-
     FROM {{ ref(src) }} AS rr
     WHERE {{ automate_dv.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     QUALIFY ROW_NUMBER() OVER(

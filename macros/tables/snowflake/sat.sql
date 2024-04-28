@@ -86,7 +86,7 @@ valid_stg AS (
 
 first_record_in_set AS (
     SELECT
-    {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
+        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
     {%- if automate_dv.is_any_incremental() and apply_source_filter %}
     FROM valid_stg AS sd
     {%- else %}
