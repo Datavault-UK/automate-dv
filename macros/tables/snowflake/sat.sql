@@ -54,18 +54,17 @@ WITH source_data AS (
 {%- if automate_dv.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
-        ROW_NUMBER() OVER (
-           PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
-           ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
-        ) AS rank_num
+    SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }}
     FROM {{ this }} AS current_records
     JOIN (
         SELECT DISTINCT {{ automate_dv.prefix([src_pk], 'source_data') }}
         FROM source_data
     ) AS source_records
         ON {{ automate_dv.multikey(src_pk, prefix=['source_records','current_records'], condition='=') }}
-    QUALIFY rank_num = 1
+    QUALIFY ROW_NUMBER() OVER (
+           PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
+           ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
+    ) = 1
 ),
 
 {%- if apply_source_filter %}
@@ -87,17 +86,16 @@ valid_stg AS (
 
 first_record_in_set AS (
     SELECT
-    {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-    ROW_NUMBER() OVER (
-            PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-            ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-    ) AS asc_rank
+    {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
     {%- if automate_dv.is_any_incremental() and apply_source_filter %}
     FROM valid_stg AS sd
     {%- else %}
     FROM source_data AS sd
     {%- endif %}
-    QUALIFY asc_rank = 1
+    QUALIFY ROW_NUMBER() OVER (
+            PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+            ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+    ) = 1
 ),
 
 unique_source_records AS (
@@ -139,7 +137,7 @@ records_to_insert AS (
     SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
     FROM first_record_in_set AS frin
     {%- if automate_dv.is_any_incremental() %}
-    LEFT JOIN latest_records lr
+    LEFT JOIN latest_records AS lr
         ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
         AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
         WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
