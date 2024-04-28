@@ -63,9 +63,9 @@ WITH source_data AS (
 {# Select latest records from satellite, restricted to PKs in source data -#}
 latest_records AS (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'mas', alias_target='target') }},
-           mas.latest_rank,
-           DENSE_RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
-                              ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
+           DENSE_RANK() OVER (
+               PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
+               ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
            ) AS check_rank
     FROM (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
@@ -80,6 +80,10 @@ latest_records AS (
             ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
         ) = 1
     ) AS mas
+    QUALIFY DENSE_RANK() OVER (
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
+        ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
+    ) = 1
 ),
 
 {# Select summary details for each group of latest records -#}
