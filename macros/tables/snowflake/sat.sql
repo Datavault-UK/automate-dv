@@ -62,8 +62,8 @@ latest_records AS (
     ) AS source_records
         ON {{ automate_dv.multikey(src_pk, prefix=['source_records','current_records'], condition='=') }}
     QUALIFY ROW_NUMBER() OVER (
-           PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
-           ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
     ) = 1
 ),
 
@@ -93,8 +93,8 @@ first_record_in_set AS (
     FROM source_data AS sd
     {%- endif %}
     QUALIFY ROW_NUMBER() OVER (
-            PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-            ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
     ) = 1
 ),
 

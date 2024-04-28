@@ -63,15 +63,15 @@ latest_records AS (
                               ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
            ) AS check_rank
     FROM (
-    SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }},
-           RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
-                        ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
-           ) AS latest_rank
+    SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
     FROM {{ this }} AS inner_mas
     INNER JOIN (SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
         ON {{ automate_dv.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
         {%- if target.type =='databricks' %}
-        QUALIFY latest_rank = 1
+        QUALIFY RANK() OVER (
+            PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
+            ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
+        ) = 1
         {%- endif %}
     ) AS mas
     {% if target.type == 'sqlserver' or target.type == 'postgres' -%}

@@ -48,13 +48,13 @@ row_rank_{{ source_number }} AS (
     {%- else %}
     SELECT {{ automate_dv.prefix(source_cols, 'rr') }},
     {%- endif %}
-           ROW_NUMBER() OVER(
-               PARTITION BY {{ automate_dv.prefix([src_pk], 'rr') }}
-               ORDER BY {{ automate_dv.prefix([src_ldts], 'rr') }}
-           ) AS row_number
+
     FROM {{ ref(src) }} AS rr
     WHERE {{ automate_dv.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
-    QUALIFY row_number = 1
+    QUALIFY ROW_NUMBER() OVER(
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'rr') }}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'rr') }}
+    ) = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
@@ -89,14 +89,13 @@ stage_mat_filter AS (
 {%- if stage_count > 1 %}
 
 row_rank_union AS (
-    SELECT ru.*,
-           ROW_NUMBER() OVER(
-               PARTITION BY {{ automate_dv.prefix([src_pk], 'ru') }}
-               ORDER BY {{ automate_dv.prefix([src_ldts], 'ru') }}, {{ automate_dv.prefix([src_source], 'ru') }} ASC
-           ) AS row_rank_number
+    SELECT ru.*
     FROM {{ ns.last_cte }} AS ru
     WHERE {{ automate_dv.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
-    QUALIFY row_rank_number = 1
+    QUALIFY ROW_NUMBER() OVER(
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'ru') }}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'ru') }}, {{ automate_dv.prefix([src_source], 'ru') }} ASC
+    ) = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}
