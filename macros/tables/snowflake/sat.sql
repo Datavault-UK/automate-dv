@@ -54,7 +54,7 @@ WITH source_data AS (
 {%- if automate_dv.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(window_cols, 'current_records', alias_target='target') }}
     FROM {{ this }} AS current_records
     JOIN (
         SELECT DISTINCT {{ automate_dv.prefix([src_pk], 'source_data') }}
