@@ -34,17 +34,13 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
 
-{# Select unique source records #}
+{# Select unique source records -#}
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT DISTINCT {{ automate_dv.prefix(source_cols_with_rank, 's', alias_target='source') }}
     {%- else %}
     SELECT DISTINCT {{ automate_dv.prefix(source_cols, 's', alias_target='source') }}
     {%- endif %}
-    {% if automate_dv.is_any_incremental() %}
-        ,COUNT(DISTINCT {{ automate_dv.prefix([src_hashdiff], 's', alias_target='source') }}, {{ automate_dv.prefix(cdk_cols, 's', alias_target='source') }})
-            OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 's') }}) AS source_count
-    {% endif %}
     FROM {{ ref(source_model) }} AS s
     WHERE {{ automate_dv.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
     {%- for child_key in cdk_cols %}
