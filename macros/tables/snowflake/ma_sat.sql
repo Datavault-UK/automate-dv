@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -80,10 +80,6 @@ latest_records AS (
             ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
         ) = 1
     ) AS mas
-    QUALIFY DENSE_RANK() OVER (
-        PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
-        ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
-    ) = 1
 ),
 
 {# Select summary details for each group of latest records -#}
