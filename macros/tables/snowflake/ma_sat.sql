@@ -74,25 +74,35 @@ source_data_with_count AS (
     ON {{ automate_dv.multikey(src_pk, prefix=['a','b'], condition='=') }}
 ),
 
+{# Select latest records from satellite, restricted to PKs in source data -#}
 latest_records AS (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'mas', alias_target='target') }},
+           {%- if target.type in ['sqlserver', 'postgres'] %}mas.latest_rank,{%- endif -%}
            DENSE_RANK() OVER (
                PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
                ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
            ) AS check_rank
     FROM (
-    SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
-    FROM {{ this }} AS inner_mas
-        INNER JOIN (
-            SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }}
-            FROM source_data as s
-        ) AS spk
+        SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
+        {%- if target.type in ['sqlserver', 'postgres'] %},
+               RANK() OVER (
+                   PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
+                   ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
+               ) AS latest_rank
+        {%- endif %}
+        FROM {{ this }} AS inner_mas
+        INNER JOIN (SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
             ON {{ automate_dv.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
-        QUALIFY RANK() OVER (
-            PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
-            ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
-        ) = 1
+            {% if target.type not in ['sqlserver', 'postgres'] -%}
+            QUALIFY RANK() OVER (
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
+            ) = 1
+            {%- endif %}
     ) AS mas
+    {% if target.type in ['sqlserver', 'postgres'] -%}
+    WHERE latest_rank = 1
+    {%- endif %}
 ),
 
 {# Select summary details for each group of latest records -#}
