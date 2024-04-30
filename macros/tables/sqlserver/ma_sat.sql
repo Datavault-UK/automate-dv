@@ -14,7 +14,7 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
 
-{# Select unique source records -#}
+{#- Select unique source records #}
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT DISTINCT {{ automate_dv.prefix(source_cols_with_rank, 's', alias_target='source') }}
@@ -33,17 +33,15 @@ WITH source_data AS (
     {%- endif %}
 ),
 
-{# if any_incremental -#}
-{% if automate_dv.is_any_incremental() %}
+{#- if any_incremental -#}
+{%- if automate_dv.is_any_incremental() %}
 
 source_data_with_count AS (
     SELECT a.*,
            b.source_count
-    FROM source_data a
-    INNER JOIN
-    (
-        SELECT {{ automate_dv.prefix([src_pk], 't') }},
-               COUNT(*) AS source_count
+    FROM source_data AS a
+    INNER JOIN (
+        SELECT {{ automate_dv.prefix([src_pk], 't') }}, COUNT(*) AS source_count
         FROM (
             SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }},
                             {{ automate_dv.prefix([src_hashdiff], 's', alias_target='source') }},
@@ -59,24 +57,31 @@ source_data_with_count AS (
 latest_records AS (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'mas', alias_target='target') }},
            mas.latest_rank,
-           DENSE_RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
-                              ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
+           DENSE_RANK() OVER (
+               PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
+               ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
            ) AS check_rank
     FROM (
-    SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
-    FROM {{ this }} AS inner_mas
-    INNER JOIN (SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
-        ON {{ automate_dv.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
-        {%- if target.type =='databricks' %}
-        QUALIFY RANK() OVER (
-            PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
-            ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
-        ) = 1
+        SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
+        {%- if target.type == 'sqlserver' %},
+               RANK() OVER (
+                   PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
+                   ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
+               ) AS latest_rank
         {%- endif %}
+        FROM {{ this }} AS inner_mas
+        INNER JOIN (SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
+            ON {{ automate_dv.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
+            {%- if target.type =='databricks' %}
+            QUALIFY RANK() OVER (
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
+            ) = 1
+            {%- endif %}
     ) AS mas
-    {% if target.type == 'sqlserver' or target.type == 'postgres' -%}
+    {% if target.type in ['sqlserver', 'postgres'] -%}
     WHERE latest_rank = 1
-    {% endif -%}
+    {%- endif %}
 ),
 
 {# Select summary details for each group of latest records -#}
@@ -88,18 +93,18 @@ latest_group_details AS (
     GROUP BY {{ automate_dv.prefix([src_pk], 'lr') }}, {{ automate_dv.prefix([src_ldts], 'lr') }}
 ),
 
-{# endif any_incremental -#}
+{#- endif any_incremental -#}
 {%- endif %}
 
 {# Select groups of source records where at least one member does not appear in a group of latest records -#}
 records_to_insert AS (
-{% if not automate_dv.is_any_incremental() -%}
+{%- if not automate_dv.is_any_incremental() %}
     SELECT {{ automate_dv.alias_all(source_cols, 'source_data') }}
     FROM source_data
 {%- endif -%}
 
 {#- if any_incremental -#}
-{% if automate_dv.is_any_incremental() %}
+{%- if automate_dv.is_any_incremental() %}
     SELECT {{ automate_dv.alias_all(source_cols, 'source_data_with_count') }}
     FROM source_data_with_count
     WHERE EXISTS (
@@ -117,14 +122,13 @@ records_to_insert AS (
             ) AS active_records
             WHERE {{ automate_dv.multikey(src_pk, prefix=['stage', 'active_records'], condition='=') }}
                 AND {{ automate_dv.prefix([src_hashdiff], 'stage') }} = {{ automate_dv.prefix([src_hashdiff], 'active_records', alias_target='target') }}
-{#- In order to maintain the parallel with the standard satellite, we don''t allow for groups of records to be updated if the ldts is the only difference -#}
-{#-        AND {{ automate_dv.prefix([src_ldts], 'stage') }} = {{ automate_dv.prefix([src_ldts], 'active_records') }} #}
+                {#- In order to maintain the parallel with the standard satellite, we don''t allow for groups of records to be updated if the ldts is the only difference #}
                 AND {{ automate_dv.multikey(cdk_cols, prefix=['stage', 'active_records'], condition='=') }}
                 AND stage.source_count = active_records.latest_count
         )
         AND {{ automate_dv.multikey(src_pk, prefix=['source_data_with_count', 'stage'], condition='=') }}
     )
-{# endif any_incremental -#}
+{#- endif any_incremental -#}
 {%- endif %}
 )
 
