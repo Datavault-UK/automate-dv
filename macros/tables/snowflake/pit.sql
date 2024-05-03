@@ -46,20 +46,8 @@
 
 {%- if not enable_ghost_record -%}
     {#- Setting ghost values to replace NULLS -#}
-    {%- set zeroes = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
-    {%- set enable_native_hashes = var('enable_native_hashes', false) -%}
-
-    {%- if target.type == 'bigquery' -%}
-        {%- set ghost_date = '1900-01-01 00:00:00.000000' -%}
-        {%- if not enable_native_hashes -%}
-            {%- set ghost_pk = "CAST(CONCAT('0x', {}) AS BYTES)".format(zeroes | string | upper) -%}
-        {%- else -%}
-            {%- set ghost_pk = "CAST({} AS BYTES)".format(zeroes | string | upper ) -%}
-        {%- endif -%}
-    {%- else -%}
-        {%- set ghost_date = '1900-01-01 00:00:00.000' -%}
-        {%- set ghost_pk = zeroes -%}
-    {%- endif -%}
+    {%- set ghost_date = '1900-01-01 00:00:00.000' -%}
+    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
 {%- endif -%}
 
 {%- if automate_dv.is_any_incremental() -%}
