@@ -37,7 +37,7 @@
 {%- endmacro -%}
 
 {%- macro databricks__type_binary() -%}
-  {%- set enable_native_hashes = var('enable_native_hashes', false) | lower -%}
+  {%- set enable_native_hashes = var('enable_native_hashes', false) -%}
 
   {%- if not enable_native_hashes -%}
     STRING
