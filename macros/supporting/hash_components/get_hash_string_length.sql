@@ -5,14 +5,22 @@
 
 {%- macro get_hash_string_length(hash) -%}
 
+    {%- set enable_native_hashes = var('enable_native_hashes', false) -%}
+
     {%- if hash | lower == 'md5' -%}
-        {%- do return(32) -%}
+        {%- set hash_length = 32 -%}
     {%- elif hash | lower == 'sha' -%}
-        {%- do return(64) -%}
+        {%- set hash_length = 64 -%}
     {%- elif hash | lower == 'sha1' -%}
-        {%- do return(40) -%}
+        {%- set hash_length = 40 -%}
     {%- else -%}
-        {%- do return(32) -%}
+        {%- set hash_length = 32 -%}
     {%- endif -%}
+
+    {%- if enable_native_hashes and target.type == 'bigquery' %}
+        {%- do return((hash_length / 2) | int) -%}
+    {%- else %}
+        {%- do return(hash_length) -%}
+    {%- endif %}
 
 {%- endmacro %}

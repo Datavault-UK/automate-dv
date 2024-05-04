@@ -43,10 +43,9 @@
 {%- endif -%}
 
 {%- set hash = var('hash', 'MD5') -%}
+{%- set enable_native_hashes = var('enable_native_hashes', false) -%}
 
 {%- if not enable_ghost_record -%}
-
-    {%- set enable_native_hashes = var('enable_native_hashes', false) -%}
 
     {#- Setting ghost values to replace NULLs -#}
     {%- set ghost_date = '1900-01-01 00:00:00.000' %}
@@ -54,7 +53,7 @@
 
     {% if target.type == 'bigquery' %}
         {%- if enable_native_hashes %}
-            {%- set ghost_pk = "CONCAT('0x', {})".format(modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash) | string | upper)) %}
+            {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) %}
             {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
         {%- endif %}
     {% endif %}
@@ -109,7 +108,11 @@ backfill AS (
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+                 {% if enable_native_hashes %}
+                 {{ ghost_pk }}
+                 {% else %}
                  {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
+                 {% endif %}
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
