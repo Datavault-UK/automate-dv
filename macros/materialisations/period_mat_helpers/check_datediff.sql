@@ -45,3 +45,16 @@
     {% do return(num_periods) %}
 
 {% endmacro %}
+
+{% macro fabric__check_num_periods(start_date, stop_date, period) %}
+
+    {% set num_periods_check_sql %}
+    SELECT DATEDIFF_BIG({{ period }}, CAST('{{ start_date }}' AS DATETIME2),
+        CAST(NULLIF('{{ stop_date | lower }}', 'none') AS DATETIME2)) AS NUM_PERIODS
+    {% endset %}
+    {% set num_periods_dict = automate_dv.get_query_results_as_dict(num_periods_check_sql) %}
+    {% set num_periods = num_periods_dict['NUM_PERIODS'][0] | int %}
+
+    {% do return(num_periods) %}
+
+{% endmacro %}

@@ -74,6 +74,28 @@
 {% endmacro %}
 
 
+{% macro fabric__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+    {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
+        {{ automate_dv.sqlserver_datepart_too_small_error(period=period) }}
+    {%- endif -%}
+
+    {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
+    {% set start_timestamp_mssql = start_timestamp[0:27] %}
+
+    {%- set period_filter -%}
+    (
+        CAST({{ timestamp_field }} AS DATETIME2) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0)
+            AND CAST({{ timestamp_field }} AS DATETIME2) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2)))
+            AND (CAST({{ timestamp_field }} AS DATETIME2) >= CAST('{{ start_timestamp_mssql }}' AS DATETIME2))
+    )
+    {%- endset -%}
+
+    {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
+
+    {% do return(filtered_sql) %}
+{% endmacro %}
+
+
 {% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}

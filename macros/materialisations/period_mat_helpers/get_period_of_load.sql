@@ -64,6 +64,22 @@
 {%- endmacro -%}
 
 
+{%- macro fabric__get_period_of_load(period, offset, start_timestamp) -%}
+    {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
+    {% set start_timestamp_mssql = start_timestamp[0:23] %}
+
+    {% set period_of_load_sql -%}
+        SELECT DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0) AS period_of_load
+    {%- endset %}
+
+    {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
+
+    {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
+
+    {% do return(period_of_load) %}
+{%- endmacro -%}
+
+
 {%- macro databricks__get_period_of_load(period, offset, start_timestamp) -%}
     {% do return(automate_dv.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}
 {%- endmacro -%}

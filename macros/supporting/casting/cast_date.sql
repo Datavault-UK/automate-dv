@@ -38,6 +38,20 @@
 {%- endmacro -%}
 
 
+{%- macro fabric__cast_date(column_str, as_string=false, alias=none) -%}
+
+    {%- if not as_string -%}
+        CONVERT(DATE, {{ column_str }})
+    {%- else -%}
+        CONVERT(DATE, '{{ column_str }}')
+    {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif %}
+
+
+{%- endmacro -%}
+
+
 {%- macro bigquery__cast_date(column_str, as_string=false, alias=none) -%}
 
     {%- if not as_string -%}

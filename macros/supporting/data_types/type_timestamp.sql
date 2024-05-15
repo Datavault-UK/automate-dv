@@ -14,3 +14,7 @@
 {%- macro sqlserver__type_timestamp() -%}
     DATETIME2
 {%- endmacro -%}
+
+{%- macro fabric__type_timestamp() -%}
+    DATETIME2
+{%- endmacro -%}

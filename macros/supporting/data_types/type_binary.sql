@@ -30,3 +30,7 @@
 {%- macro databricks__type_binary() -%}
     STRING
 {%- endmacro -%}
+
+{%- macro fabric__type_binary() -%}
+    UNIQUEIDENTIFIER
+{%- endmacro -%}

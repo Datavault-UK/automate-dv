@@ -44,6 +44,10 @@
     {%- do return (('"', '"')) -%}
 {%- endmacro %}
 
+{%- macro fabric__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}
+
 {%- macro databricks__get_escape_characters() %}
     {%- do return (('`', '`')) -%}
 {%- endmacro %}
