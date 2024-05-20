@@ -53,7 +53,6 @@
 
     {%- if target.type == 'bigquery' -%}
         {%- if enable_native_hashes -%}
-            {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
             {%- set ghost_date = '1900-01-01 00:00:00.000000' -%}
         {%- endif -%}
     {%- endif -%}
