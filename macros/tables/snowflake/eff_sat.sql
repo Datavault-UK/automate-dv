@@ -58,9 +58,9 @@ latest_records AS (
             PARTITION BY {{ automate_dv.prefix([src_pk], 'b') }}
             ORDER BY b.{{ src_ldts }} DESC
         ) = 1
-        {%- endif %}
+        {% endif -%}
     ) AS inner_select
-    {%- if target.type in ['sqlserver', 'postgres'] -%}
+    {% if target.type in ['sqlserver', 'postgres'] -%}
         WHERE inner_select.row_num = 1
     {%- endif %}
 ),
