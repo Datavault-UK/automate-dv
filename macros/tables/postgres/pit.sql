@@ -72,7 +72,7 @@ backfill AS (
 
         {%- else %}
 
-        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+        COALESCE(DECODE(MAX(ENCODE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}, 'hex')), 'hex'),
                  {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
