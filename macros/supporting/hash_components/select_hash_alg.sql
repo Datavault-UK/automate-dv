@@ -63,7 +63,7 @@
 
 {% macro databricks__hash_alg_md5() -%}
 
-    {% do return(automate_dv.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
+    {%- do return(automate_dv.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) -%}
 
 {% endmacro %}
 
@@ -113,7 +113,7 @@
 
 {% macro databricks__hash_alg_sha256() -%}
 
-    {% do return('UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))') %}
+    {%- do return(automate_dv.cast_binary('UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))', quote=false)) %}
 
 {% endmacro %}
 
@@ -159,6 +159,6 @@
 
 {% macro databricks__hash_alg_sha1() -%}
 
-    {% do return('UPPER(SHA1([HASH_STRING_PLACEHOLDER]))') %}
+    {%- do return(automate_dv.cast_binary('UPPER(SHA1([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
