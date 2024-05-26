@@ -11,6 +11,16 @@
 
 {%- macro default__concat_ws(string_list, separator="||") -%}
 
+CONCAT_WS('{{ separator }}',
+{%- for str_obj in string_list %}
+    {{ str_obj }}{% if not loop.last %},{% endif %}
+{%- endfor %}
+)
+
+{%- endmacro -%}
+
+{%- macro bigquery__concat_ws(string_list, separator="||") -%}
+
 CONCAT(
 {%- for str in string_list %}
     {{ str }}
@@ -20,13 +30,19 @@ CONCAT(
 
 {%- endmacro -%}
 
-{%- macro bigquery__concat_ws(string_list, separator="||") -%}
+{%- macro sqlserver__concat_ws(string_list, separator="||") -%}
 
     {{ automate_dv.default__concat_ws(string_list=string_list, separator=separator) }}
 
 {%- endmacro -%}
 
-{%- macro sqlserver__concat_ws(string_list, separator="||") -%}
+ {%- macro postgres__concat_ws(string_list, separator="||") -%}
+
+    {{ automate_dv.default__concat_ws(string_list=string_list, separator=separator) }}
+
+{%- endmacro -%}
+
+{%- macro databricks__concat_ws(string_list, separator="||") -%}
 
     {{ automate_dv.default__concat_ws(string_list=string_list, separator=separator) }}
 
