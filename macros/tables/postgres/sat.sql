@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -34,9 +34,9 @@ WITH source_data AS (
 {%- if automate_dv.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'b', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(window_cols, 'b', alias_target='target') }}
     FROM (
-        SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
+        SELECT {{ automate_dv.prefix(window_cols, 'current_records', alias_target='target') }},
             ROW_NUMBER() OVER (
                PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
                ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC

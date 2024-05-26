@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -38,3 +38,16 @@
     {{ automate_dv.default__cast_binary(column_str=column_str, alias=alias, quote=quote) }}
 
 {%- endmacro -%}
+
+{%- macro databricks__cast_binary(column_str, alias=none, quote=true) -%}
+
+    {%- if quote -%}
+        TO_BINARY('{{ column_str }}')
+    {%- else -%}
+        TO_BINARY({{ column_str }})
+    {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif -%}
+
+{%- endmacro -%}
+
