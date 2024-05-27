@@ -21,7 +21,7 @@
 
 {%- set string_columns = [src_payload] -%}
 
-{%- if src_extra_columns != none -%}
+{%- if src_extra_columns -%}
     {%- do string_columns.append(src_extra_columns) -%}
 {%- endif -%}
 
@@ -32,8 +32,21 @@
     {%- set col_name = col.column -%}
     {%- set col_compare = col_name | lower -%}
     {%- set col_type = col.dtype | lower -%}
+    {%- set source_system_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
 
-    {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
+    {# If record source col, replace with system value #}
+    {%- if col_compare == (src_source | lower) -%}
+        {%- set col_sql -%}
+            CAST('{{ source_system_str }}' AS {{ col.dtype }}) AS {{ src_source }}
+        {%- endset -%}
+        {%- do col_definitions.append(col_sql) -%}
+    {# If column in payload, make its ghost representation NULL  #}
+    {%- elif col_compare in src_payload | map('lower') | list -%}
+        {%- do col_definitions.append(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
+    {# Handle anything else as its correct ghost representation '#}
+    {%- else -%}
+        {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
+    {%- endif -%}
 
 {%- endfor -%}
 
