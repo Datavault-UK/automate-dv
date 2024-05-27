@@ -18,7 +18,7 @@
 
 {%- if col_type in string_types -%}
     {{ print('string_types selected.') }}
-    {% do return(automate_dv.null_ghost(col_type, col_name)) -%}
+    {% do return(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
 {%- endif -%}
 
 {%- if col_type in binary_types -%}
