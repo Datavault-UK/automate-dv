@@ -16,35 +16,48 @@
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set source_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
-{%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
+{%- set columns_in_source = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
-{%- set string_columns = [src_payload] -%}
+{%- set null_columns = automate_dv.expand_column_list([src_payload, src_extra_columns]) | map('lower') | list -%}
+{%- set pk_columns = automate_dv.expand_column_list([src_pk]) | map('lower') | list -%}
+{%- set all_columns = automate_dv.expand_column_list([src_pk, src_hashdiff, src_payload, src_extra_columns,
+                                                      src_eff, src_ldts, src_source]) | list -%}
 
-{%- if src_extra_columns -%}
-    {%- do string_columns.append(src_extra_columns) -%}
-{%- endif -%}
+{%- set filtered_source_columns = columns_in_source | selectattr('column', 'in', all_columns) | list -%}
+{%- set all_columns = all_columns | map('lower') | list -%}
 
-{%- set string_columns = automate_dv.expand_column_list(string_columns) -%}
+{{ print('null_columns: ' ~ null_columns) }}
+{{ print('pk_columns: ' ~ pk_columns) }}
+{{ print('all_columns: ' ~ all_columns) }}
+{{ print('columns_in_source: ' ~ columns_in_source) }}
+{{ print('filtered_source_columns: ' ~ filtered_source_columns) }}
 
-{%- for col in columns -%}
+{%- for col in filtered_source_columns -%}
 
     {%- set col_name = col.column -%}
     {%- set col_compare = col_name | lower -%}
     {%- set col_type = col.dtype | lower -%}
     {%- set source_system_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
 
+    {# If src_pk col, use binary ghost unless composite #}
+    {%- if (col_compare in pk_columns) or (col_compare == src_hashdiff) -%}
+        {{ print('is src_pk') }}
+        {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
     {# If record source col, replace with system value #}
-    {%- if col_compare == (src_source | lower) -%}
+    {%- elif col_compare == (src_source | lower) -%}
+        {{ print('is src_source') }}
         {%- set col_sql -%}
             CAST('{{ source_system_str }}' AS {{ col.dtype }}) AS {{ src_source }}
         {%- endset -%}
         {%- do col_definitions.append(col_sql) -%}
     {# If column in payload, make its ghost representation NULL  #}
-    {%- elif col_compare in src_payload | map('lower') | list -%}
+    {%- elif col_compare in null_columns -%}
+        {{ print('is null col') }}
         {%- do col_definitions.append(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
-    {# Handle anything else as its correct ghost representation '#}
+    {# Handle anything else as its correct ghost representation #}
     {%- else -%}
+        {{ print('is other col') }}
         {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
     {%- endif -%}
 
