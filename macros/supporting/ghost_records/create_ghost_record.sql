@@ -47,18 +47,22 @@
 
     {# If src_pk col, use binary ghost unless composite #}
     {%- if col_compare in binary_columns -%}
-        {%- do col_definitions.append(automate_dv.binary_ghost(alias=col_name, hash=hash)) -%}
+        {{ print('binary_columns selected.') }}
+        {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
     {# If record source col, replace with system value #}
     {%- elif col_compare == (src_source | lower) -%}
+        {{ print('src_source selected.') }}
         {%- set col_sql -%}
             CAST('{{ source_system_str }}' AS {{ col.dtype }}) AS {{ src_source }}
         {%- endset -%}
         {%- do col_definitions.append(col_sql) -%}
     {# If column in payload, make its ghost representation NULL  #}
     {%- elif col_compare in null_columns -%}
+        {{ print('null_columns selected.') }}
         {%- do col_definitions.append(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
     {# Handle anything else as its correct ghost representation #}
     {%- else -%}
+        {{ print('cg else selected.') }}
         {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
     {%- endif -%}
 
