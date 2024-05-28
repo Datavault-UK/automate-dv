@@ -16,6 +16,8 @@
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set source_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
+{%- set enable_native_hashes = var('enable_native_hashes', false) -%}
+
 {%- set columns_in_source = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set src_hashdiff_name = src_hashdiff['source_column'] | default(src_hashdiff) -%}
 {%- set col_definitions = [] -%}
@@ -27,7 +29,13 @@
 {%- set all_columns = automate_dv.expand_column_list([src_pk, src_hashdiff_name, src_payload, src_extra_columns,
                                                       src_eff, src_ldts, src_source]) | list -%}
 
-{%- set filtered_source_columns = columns_in_source | selectattr('column', 'in', all_columns) | list -%}
+{%- set filtered_source_columns = [] -%}
+{%- for column in columns_in_source -%}
+    {%- if column.column | lower in all_columns | map('lower') -%}
+        {%- do filtered_source_columns.append(column) -%}
+    {%- endif -%}
+{%- endfor -%}
+
 {%- set all_columns = all_columns | map('lower') | list -%}
 
 {{ print('binary_columns: ' ~ binary_columns) }}
@@ -49,7 +57,21 @@
     {# If src_pk col, use binary ghost unless composite #}
     {%- if col_compare in binary_columns -%}
         {{ print('binary_columns selected.') }}
-        {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
+        {%- if target.type == 'bigquery' and not enable_native_hashes -%}
+
+            {%- set warning_message = """
+            In version 0.10.2 and earlier, BigQuery used the STRING data type for hashes.
+            If native hashes are disabled for BigQuery, all columns in the src_pk and src_hashdiff
+            parameters will use a binary string of zeros (0000...) instead of the correct hash data type.
+            To resolve this, enable native hashes at your earliest convenience.
+            """ -%}
+
+            {%- do exceptions.warn(warning_message) -%}
+            {%- do col_definitions.append(automate_dv.binary_ghost(alias=col_name, hash=hash)) -%}
+        {%- else -%}
+            {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
+        {%- endif -%}
+
     {# If record source col, replace with system value #}
     {%- elif col_compare == (src_source | lower) -%}
         {{ print('src_source selected.') }}
