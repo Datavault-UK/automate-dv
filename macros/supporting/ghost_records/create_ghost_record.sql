@@ -17,13 +17,14 @@
 {%- set hash = var('hash', 'MD5') -%}
 {%- set source_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
 {%- set columns_in_source = adapter.get_columns_in_relation(ref(source_model)) -%}
+{%- set src_hashdiff_name = src_hashdiff['source_column'] | default(src_hashdiff) -%}
 {%- set col_definitions = [] -%}
 
-{%- set binary_columns = automate_dv.expand_column_list([src_pk, src_hashdiff]) | map('lower') | list -%}
+{%- set binary_columns = automate_dv.expand_column_list([src_pk, src_hashdiff_name]) | map('lower') | list -%}
 {%- set null_columns = automate_dv.expand_column_list([src_payload, src_extra_columns]) | map('lower') | list -%}
 {%- set time_columns = automate_dv.expand_column_list([src_ldts, src_eff]) | map('lower') | list -%}
 
-{%- set all_columns = automate_dv.expand_column_list([src_pk, src_hashdiff, src_payload, src_extra_columns,
+{%- set all_columns = automate_dv.expand_column_list([src_pk, src_hashdiff_name, src_payload, src_extra_columns,
                                                       src_eff, src_ldts, src_source]) | list -%}
 
 {%- set filtered_source_columns = columns_in_source | selectattr('column', 'in', all_columns) | list -%}
