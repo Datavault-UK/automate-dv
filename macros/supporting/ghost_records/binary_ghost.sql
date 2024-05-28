@@ -23,13 +23,13 @@
 
 {%- macro bigquery__binary_ghost(alias, hash) -%}
     {%- if hash == 'md5' -%}
-        CAST(FROM_HEX('{{ modules.itertools.repeat('0', 32) | join ('') }}') AS BYTES)
+        {{ automate_dv.cast_binary(column_str="FROM_HEX('{}')".format(modules.itertools.repeat('0', 32) | join ('')), alias=alias, quote=false) }}
     {%- elif hash == 'sha' -%}
-        CAST(FROM_HEX('{{ modules.itertools.repeat('0', 64) | join ('') }}') AS BYTES)
+        {{ automate_dv.cast_binary(column_str="FROM_HEX('{}')".format(modules.itertools.repeat('0', 64) | join ('')), alias=alias, quote=false) }}
     {%- elif hash == 'sha1' -%}
-        CAST(FROM_HEX('{{ modules.itertools.repeat('0', 40) | join ('') }}') AS BYTES)
+        {{ automate_dv.cast_binary(column_str="FROM_HEX('{}')".format(modules.itertools.repeat('0', 40) | join ('')), alias=alias, quote=false) }}
     {%- else -%}
-        CAST(FROM_HEX('{{ modules.itertools.repeat('0', 32) | join ('') }}') AS BYTES)
+        {{ automate_dv.cast_binary(column_str="FROM_HEX('{}')".format(modules.itertools.repeat('0', 32) | join ('')), alias=alias, quote=false) }}
     {%- endif -%}
 {%- endmacro -%}
 
