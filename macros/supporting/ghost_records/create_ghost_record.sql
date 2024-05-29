@@ -29,6 +29,16 @@
 {%- set all_columns = automate_dv.expand_column_list([src_pk, src_hashdiff_name, src_payload, src_extra_columns,
                                                       src_eff, src_ldts, src_source]) | list -%}
 
+{%- if target.type == 'bigquery' and not enable_native_hashes -%}
+    {%- set warning_message -%}
+    WARNING: In AutomateDV v0.10.2 and earlier, BigQuery used the STRING data type for hashes.
+          If native hashes are disabled for BigQuery, all columns in the src_pk and src_hashdiff
+          parameters will use a string of zeros (0000...) instead of the correct hash data type.
+          To resolve this, enable native hashes at your earliest convenience.
+    {%- endset -%}
+    {%- do automate_dv.log_warning(warning_message) -%}
+{%- endif -%}
+
 {%- set filtered_source_columns = [] -%}
 {%- for column in columns_in_source -%}
     {%- if column.column | lower in all_columns | map('lower') -%}
@@ -37,15 +47,6 @@
 {%- endfor -%}
 
 {%- set all_columns = all_columns | map('lower') | list -%}
-
-{{ print('binary_columns: ' ~ binary_columns) }}
-{{ print('null_columns: ' ~ null_columns) }}
-{{ print('time_columns: ' ~ time_columns) }}
-
-{{ print('all_columns: ' ~ all_columns) }}
-
-{{ print('columns_in_source: ' ~ columns_in_source) }}
-{{ print('filtered_source_columns: ' ~ filtered_source_columns) }}
 
 {%- for col in filtered_source_columns -%}
 
@@ -56,36 +57,22 @@
 
     {# If src_pk col, use binary ghost unless composite #}
     {%- if col_compare in binary_columns -%}
-        {{ print('binary_columns selected.') }}
         {%- if target.type == 'bigquery' and not enable_native_hashes -%}
-
-            {%- set warning_message = """
-            In version 0.10.2 and earlier, BigQuery used the STRING data type for hashes.
-            If native hashes are disabled for BigQuery, all columns in the src_pk and src_hashdiff
-            parameters will use a binary string of zeros (0000...) instead of the correct hash data type.
-            To resolve this, enable native hashes at your earliest convenience.
-            """ -%}
-
-            {%- do exceptions.warn(warning_message) -%}
             {%- do col_definitions.append(automate_dv.binary_ghost(alias=col_name, hash=hash)) -%}
         {%- else -%}
             {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
         {%- endif -%}
-
     {# If record source col, replace with system value #}
     {%- elif col_compare == (src_source | lower) -%}
-        {{ print('src_source selected.') }}
         {%- set col_sql -%}
             CAST('{{ source_system_str }}' AS {{ col.dtype }}) AS {{ src_source }}
         {%- endset -%}
         {%- do col_definitions.append(col_sql) -%}
     {# If column in payload, make its ghost representation NULL  #}
     {%- elif col_compare in null_columns -%}
-        {{ print('null_columns selected.') }}
         {%- do col_definitions.append(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
     {# Handle anything else as its correct ghost representation #}
     {%- else -%}
-        {{ print('cg else selected.') }}
         {%- do col_definitions.append(automate_dv.ghost_for_type(col_type, col_name)) -%}
     {%- endif -%}
 
