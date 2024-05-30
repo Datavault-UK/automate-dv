@@ -4,7 +4,7 @@
  */
 
 {%- macro binary_ghost(alias, hash) -%}
-    {% set hash = hash | lower -%}
+    {%- set hash = hash | lower -%}
 
     {{ adapter.dispatch('binary_ghost', 'automate_dv')(alias=alias, hash=hash) }}
 {%- endmacro -%}
@@ -21,9 +21,9 @@
         {%- set zero_string_size = 32 %}
     {%- endif -%}
 
-    {% set zero_string = modules.itertools.repeat('0', zero_string_size) | join ('') %}
+    {%- set zero_string = modules.itertools.repeat('0', zero_string_size) | join ('') -%}
 
-    {{ automate_dv.cast_binary(column_str=zero_string, alias=alias, quote=true) }}
+    {{- automate_dv.cast_binary(column_str=zero_string, alias=alias, quote=true) -}}
 
 {%- endmacro -%}
 
@@ -48,7 +48,7 @@
         {%- set column_str = zero_string -%}
     {%- endif -%}
 
-    {{ automate_dv.cast_binary(column_str=column_str, alias=alias, quote=false if enable_native_hashes else true) }}
+    {{- automate_dv.cast_binary(column_str=column_str, alias=alias, quote=false if enable_native_hashes else true) -}}
 
 {%- endmacro -%}
 

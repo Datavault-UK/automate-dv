@@ -11,10 +11,17 @@
 {%- set time_types = ['date', dbt.type_timestamp(), 'datetime', 'datetime2', 'timestamp', 'timestamp_ntz',
                       'timestamp_tz', 'timestamp with time zone'] -%}
 
-{%- if col_type in string_types -%}
-    {% do return(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
-{%- elif col_type in binary_types -%}
+{{- print('----------------') -}}
+{{- print('col_name: ' ~ col_name) -}}
+{{- print('col_type: ' ~ col_type) -}}
+{{- print('binary_types: ' ~ binary_types) -}}
+{{- print('string_types: ' ~ string_types) -}}
+{{- print('time_types: ' ~ time_types) -}}
+
+{%- if col_type in binary_types -%}
     {%- do return(automate_dv.binary_ghost(alias=col_name, hash=hash)) -%}
+{%- elif col_type in string_types -%}
+    {%- do return(automate_dv.null_ghost(data_type=col_type, alias=col_name)) -%}
 {%- elif col_type in time_types -%}
     {%- do return(automate_dv.date_ghost(date_type=col_type, alias=col_name)) -%}
 {%- else -%}
