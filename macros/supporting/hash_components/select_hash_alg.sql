@@ -159,6 +159,12 @@
 
 {% macro databricks__hash_alg_sha1() -%}
 
-    {%- do return(automate_dv.cast_binary('UPPER(SHA1([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
+
+    {% if is_native_hashing %}
+        {%- do return('UNHEX(SHA1([HASH_STRING_PLACEHOLDER]))') %}
+    {%- else -%}
+        {%- do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA1([HASH_STRING_PLACEHOLDER])))', quote=false)) -%}
+    {%- endif -%}
 
 {% endmacro %}
