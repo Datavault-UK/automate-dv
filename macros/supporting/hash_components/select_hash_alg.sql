@@ -122,7 +122,7 @@
     {%- set is_native_hashing = var('enable_native_hashes', false) -%}
 
     {% if is_native_hashing %}
-        {%- do return('UNHEX(SHA2([HASH_STRING_PLACEHOLDER]))') %}
+        {%- do return('UNHEX(SHA2([HASH_STRING_PLACEHOLDER], 256))') %}
     {%- else -%}
         {%- do return(automate_dv.cast_binary('UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))', quote=false)) -%}
     {%- endif -%}
