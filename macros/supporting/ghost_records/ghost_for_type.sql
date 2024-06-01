@@ -7,16 +7,12 @@
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set binary_types = [automate_dv.type_binary(for_dbt_compare=true)] | map('lower') | list -%}
-{%- set string_types = [dbt.type_string() | lower, 'varchar', 'character varying'] -%}
-{%- set time_types = ['date', dbt.type_timestamp(), 'datetime', 'datetime2', 'timestamp', 'timestamp_ntz',
-                      'timestamp_tz', 'timestamp with time zone'] -%}
-
-{{- print('----------------') -}}
-{{- print('col_name: ' ~ col_name) -}}
-{{- print('col_type: ' ~ col_type) -}}
-{{- print('binary_types: ' ~ binary_types) -}}
-{{- print('string_types: ' ~ string_types) -}}
-{{- print('time_types: ' ~ time_types) -}}
+{%- set string_types = [dbt.type_string() | lower, 'varchar', 'character varying', 'char', 'string',
+                        'text', 'ntext', 'nvarchar', 'nchar'] -%}
+{%- set time_types = [dbt.type_timestamp() | lower, 'date', 'datetime', 'datetime2', 'timestamp',
+                      'timestamp_ltz', 'timestamp_ntz', 'timestamp_tz', 'timestamp with time zone',
+                      'timestamp without time zone', 'datetimeoffset', 'smalldatetime', 'time',
+                      'time with timezone'] -%}
 
 {%- if col_type in binary_types -%}
     {%- do return(automate_dv.binary_ghost(alias=col_name, hash=hash)) -%}
