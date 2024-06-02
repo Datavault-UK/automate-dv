@@ -123,10 +123,11 @@ new_reopened_records AS (
     WHERE {{ automate_dv.cast_date(automate_dv.alias(src_end_date, 'g')) }} = {{ automate_dv.cast_date(automate_dv.cast_datetime(max_datetime, as_string=true)) }}
 ),
 
-{%- if is_auto_end_dating %}
-
 {# Creating the closing records -#}
 {# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
+
+{%- if is_auto_end_dating %}
+
 new_closed_records AS (
     SELECT DISTINCT
         {{ automate_dv.alias_all([src_pk, fk_cols], 'lo') }},
@@ -141,7 +142,8 @@ new_closed_records AS (
     FROM source_data AS h
     INNER JOIN latest_open AS lo
     ON {{ automate_dv.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
-    WHERE ({{ automate_dv.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
+    WHERE NOT EXISTS (SELECT 1 FROM source_data AS stg WHERE {{ automate_dv.multikey(src_pk, prefix=['stg','lo'], condition='=') }}
+        AND {{ automate_dv.multikey(src_end_date, prefix=['stg', 'lo'], condition='=') }} )
 ),
 
 {#- else if (not) is_auto_end_dating -#}
