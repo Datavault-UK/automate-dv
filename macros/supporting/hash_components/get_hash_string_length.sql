@@ -17,10 +17,6 @@
         {%- set hash_length = 32 -%}
     {%- endif -%}
 
-    {%- if enable_native_hashes and target.type == 'bigquery' %}
-        {%- do return((hash_length / 2) | int) -%}
-    {%- else %}
-        {%- do return(hash_length) -%}
-    {%- endif %}
+    {%- do return(hash_length) -%}
 
 {%- endmacro %}

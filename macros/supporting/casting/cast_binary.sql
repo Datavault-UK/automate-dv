@@ -39,15 +39,3 @@
 
 {%- endmacro -%}
 
-{%- macro databricks__cast_binary(column_str, alias=none, quote=true) -%}
-
-    {%- if quote -%}
-        TO_BINARY('{{ column_str }}')
-    {%- else -%}
-        TO_BINARY({{ column_str }})
-    {%- endif -%}
-
-    {%- if alias %} AS {{ alias }} {%- endif -%}
-
-{%- endmacro -%}
-
