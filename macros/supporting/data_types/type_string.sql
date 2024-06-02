@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -25,6 +25,8 @@
             VARCHAR(16)
         {%- elif var('hash', 'MD5') | lower == 'sha' -%}
             VARCHAR(32)
+        {%- elif var('hash', 'MD5') | lower == 'sha1' -%}
+            VARCHAR(20)
         {%- endif -%}
     {%- else -%}
         VARCHAR({{ char_length }})

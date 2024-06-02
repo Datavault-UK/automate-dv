@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -34,10 +34,10 @@ WITH source_data AS (
 {%- if automate_dv.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'b', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(window_cols, 'b', alias_target='target') }}
     FROM (
-        SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
-            RANK() OVER (
+        SELECT {{ automate_dv.prefix(window_cols, 'current_records', alias_target='target') }},
+            ROW_NUMBER() OVER (
                PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
                ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
             ) AS rank
@@ -57,12 +57,12 @@ valid_stg AS (
     SELECT {{ automate_dv.prefix(source_cols, 's', alias_target='source') }}
     FROM source_data AS s
     LEFT JOIN latest_records AS sat
-    ON {{ automate_dv.multikey(src_pk, prefix=['s', 'sat'], condition='=') }}
-    WHERE {{ automate_dv.multikey(src_pk, prefix='sat', condition='IS NULL') }}
-    OR {{ automate_dv.prefix([src_ldts], 's') }} > (
-        SELECT MAX({{ src_ldts }}) FROM latest_records AS sat
-        WHERE {{ automate_dv.multikey(src_pk, prefix=['sat','s'], condition='=') }}
-    )
+        ON {{ automate_dv.multikey(src_pk, prefix=['s', 'sat'], condition='=') }}
+            WHERE {{ automate_dv.multikey(src_pk, prefix='sat', condition='IS NULL') }}
+                OR {{ automate_dv.prefix([src_ldts], 's') }} > (
+                    SELECT MAX({{ src_ldts }}) FROM latest_records AS sat
+                    WHERE {{ automate_dv.multikey(src_pk, prefix=['sat','s'], condition='=') }}
+                )
 ),
 {%- endif %}
 
@@ -72,14 +72,14 @@ first_record_in_set AS (
     SELECT * FROM (
         SELECT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-        RANK() OVER (
+        ROW_NUMBER() OVER (
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
                 ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-            ) as asc_rank
+            ) AS asc_rank
         {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-        FROM valid_stg as sd
+        FROM valid_stg AS sd
         {%- else %}
-        FROM source_data as sd
+        FROM source_data AS sd
         {%- endif %}
     ) AS rin
     WHERE rin.asc_rank = 1
@@ -93,11 +93,11 @@ unique_source_records AS (
             {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
             LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC) as prev_hashdiff
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC) AS prev_hashdiff
         {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-        FROM valid_stg as sd
+        FROM valid_stg AS sd
         {%- else %}
-        FROM source_data as sd
+        FROM source_data AS sd
         {%- endif %}
         ) AS b
     WHERE {{ automate_dv.prefix([src_hashdiff], 'b', alias_target='source') }} != b.prev_hashdiff
@@ -108,9 +108,9 @@ unique_source_records AS (
 
 ghost AS (
     {{ automate_dv.create_ghost_record(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                                    src_payload=src_payload, src_extra_columns=src_extra_columns,
-                                    src_eff=src_eff, src_ldts=src_ldts,
-                                    src_source=src_source, source_model=source_model) }}
+                                       src_payload=src_payload, src_extra_columns=src_extra_columns,
+                                       src_eff=src_eff, src_ldts=src_ldts,
+                                       src_source=src_source, source_model=source_model) }}
 ),
 
 {%- endif %}
@@ -121,21 +121,22 @@ records_to_insert AS (
         {{ automate_dv.alias_all(source_cols, 'g') }}
         FROM ghost AS g
         {%- if automate_dv.is_any_incremental() %}
-        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h 
+            WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
         {%- endif %}
     UNION
     {%- endif %}
         SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
         FROM first_record_in_set AS frin
         {%- if automate_dv.is_any_incremental() %}
-        LEFT JOIN LATEST_RECORDS lr
+        LEFT JOIN latest_records AS lr
             ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
             AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
             WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
         {%- endif %}
         UNION
         SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
-        FROM unique_source_records as usr
+        FROM unique_source_records AS usr
 )
 
 SELECT * FROM records_to_insert

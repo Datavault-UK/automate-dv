@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -14,12 +14,15 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{#- Setting ghost values to replace NULLS -#}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1900-01-01 00:00:00.000' %}
 {%- set hash = var('hash', 'MD5') -%}
+{%- set enable_native_hashes = var('enable_native_hashes', false) -%}
 
-{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+{%- if not enable_ghost_record -%}
+
+    {#- Setting ghost values to replace NULLs -#}
+    {%- set ghost_date = '1900-01-01 00:00:00.000' -%}
+    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
+{%- endif -%}
 
 {%- if automate_dv.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
@@ -70,7 +73,7 @@ backfill AS (
         {%- else %}
 
         COALESCE(DECODE(MAX(ENCODE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}, 'hex')), 'hex'),
-                 {{automate_dv.cast_binary(ghost_pk, quote=true)}})
+                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
@@ -134,7 +137,7 @@ new_rows AS (
         {%- else %}
 
         COALESCE(DECODE(MAX(ENCODE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}, 'hex')), 'hex'),
-                 {{automate_dv.cast_binary(ghost_pk, quote=true)}})
+                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),

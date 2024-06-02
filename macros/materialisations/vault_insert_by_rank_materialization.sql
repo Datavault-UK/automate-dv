@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -167,3 +167,9 @@
     {{ return({'relations': [target_relation]}) }}
 
 {%- endmaterialization %}
+
+{% materialization vault_insert_by_rank, adapter='sqlserver' %}
+
+{{ automate_dv.currently_disabled_error(func_name='vault_insert_by_rank') }}
+
+{% endmaterialization %}

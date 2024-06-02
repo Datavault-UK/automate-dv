@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -84,6 +84,23 @@
 
     {%- if execute -%}
     {{- exceptions.warn(automate_dv.wrap_warning(message)) -}}
+    {%- endif -%}
+
+{%- endmacro -%}
+
+
+{%- macro currently_disabled_error(func_name) -%}
+
+    {%- set message -%}
+    This functionality ({{ func_name }}) is currently disabled for dbt-sqlserver 1.7.x,
+    please revert to dbt-sqlserver 1.4.3 and AutomateDV 0.10.1 to use {{ func_name }}.
+
+    This is due to a suspected bug with the SQLServer Adapter in the 1.7.x version.
+    We are actively working to get this fixed. Thank you for your understanding.
+    {%- endset -%}
+
+    {%- if execute -%}
+    {{- exceptions.raise_compiler_error(automate_dv.wrap_warning(message)) -}}
     {%- endif -%}
 
 {%- endmacro -%}
