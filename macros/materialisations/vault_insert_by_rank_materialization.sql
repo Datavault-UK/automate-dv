@@ -5,6 +5,8 @@
 
 {% materialization vault_insert_by_rank, default -%}
 
+    {{ automate_dv.materialisation_deprecation_warning() }}
+
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}
@@ -25,9 +27,6 @@
     {% if min_max_ranks.max_rank | int > 100000 %}
         {{ automate_dv.max_iterations_error(func_name='vault_insert_by_rank') }}
     {% endif %}
-
-    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_rank') }}
-
 
     {%- set to_drop = [] -%}
 

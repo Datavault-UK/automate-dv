@@ -4,28 +4,6 @@
  */
 
 
-{% macro wrap_warning(warning_message) %}
-
-    {%- set new_message = [] -%}
-    {%- set length_list = [] -%}
-
-    {%- for ln in warning_message.split('\n') -%}
-        {%- do new_message.append((ln | trim)) -%}
-        {%- do length_list.append((ln | length)) -%}
-    {%- endfor -%}
-
-    {%- set max_line_length = length_list | max -%}
-    {%- set padding_length = (max_line_length - 7) // 2 -%}
-
-    {%- set border = modules.itertools.repeat('=', padding_length) | join ('') ~ 'WARNING' ~ modules.itertools.repeat('=', padding_length) | join ('') -%}
-
-    {%- set wrapped_message = '\n' ~ border ~ '\n' ~ new_message | join('\n') ~ '\n' ~ border -%}
-
-    {%- do return(wrapped_message) -%}
-
-{% endmacro %}
-
-
 {%- macro datepart_too_small_error(period) -%}
 
     {%- set message -%}
@@ -35,10 +13,7 @@
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset -%}
 
-    {%- if execute -%}
-    {{- exceptions.raise_compiler_error(message) -}}
-    {%- endif -%}
-
+    {%- do automate_dv.log_error(message) -%}
 {%- endmacro -%}
 
 
@@ -51,10 +26,7 @@
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset -%}
 
-    {%- if execute -%}
-    {{- exceptions.warn(automate_dv.wrap_warning(message)) -}}
-    {%- endif -%}
-
+    {%- do automate_dv.log_warning(message) -%}
 {%- endmacro -%}
 
 
@@ -67,10 +39,7 @@
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset %}
 
-    {%- if execute -%}
-    {{- exceptions.raise_compiler_error(message) -}}
-    {%- endif -%}
-
+    {%- do automate_dv.log_warning(message) -%}
 {%- endmacro -%}
 
 
@@ -82,10 +51,7 @@
     Using this functionality in a live production setting may result in unpredictable outcomes, data loss, or system instability.
     {%- endset -%}
 
-    {%- if execute -%}
-    {{- exceptions.warn(automate_dv.wrap_warning(message)) -}}
-    {%- endif -%}
-
+    {%- do automate_dv.log_warning(message) -%}
 {%- endmacro -%}
 
 
@@ -99,23 +65,32 @@
     We are actively working to get this fixed. Thank you for your understanding.
     {%- endset -%}
 
-    {%- if execute -%}
-    {{- exceptions.raise_compiler_error(automate_dv.wrap_warning(message)) -}}
-    {%- endif -%}
-
+    {%- do automate_dv.log_error(message) -%}
 {%- endmacro -%}
 
 
-{%- macro materialisation_deprecation() -%}
+{%- macro materialisation_deprecation_warning() -%}
 
-    {%- set warning_message -%}
-        DEPRECATED: Since AutomateDV v0.11.0, vault_insert_by_x materialisations are now deprecated in favour of
-  If native hashes are disabled for BigQuery, all columns in the src_pk and src_hashdiff
-          parameters will use a string of zeros (0000...) instead of the correct hash data type.
-          To resolve this, enable native hashes at your earliest convenience.
+    {%- set message -%}
+        DEPRECATED: Since AutomateDV v0.11.0, vault_insert_by_x materialisations are now deprecated.
+            These materialisation were initially designed to provide an option for rapid iterative development of
+            incremental loading patterns in local environments for development and testing, allowing users to bypass
+            the need for a comprehensive PSA or delta-loading solution. They are being deprecated to encourage the use
+            of more robust solutions.
     {%- endset -%}
 
-    {%- set message = wrap_warning(warning_message) -%}
+    {%- do automate_dv.log_warning(message) -%}
+{%- endmacro -%}
 
-    {%- automate_dv.log_warning(message) -%}
+
+{%- macro pit_bridge_deprecation_warning() -%}
+
+    {%- set message -%}
+        DEPRECATED: Since AutomateDV v0.11.0, the pit() and bridge() macros are now deprecated.
+            This is because they are not currently fit-for-purpose and need significant usability
+            and peformance improvements, as well as a design overhaul.
+            Improved implementations will be released in a future version of AutomateDV.
+    {%- endset -%}
+
+    {%- do automate_dv.log_warning(message) -%}
 {%- endmacro -%}

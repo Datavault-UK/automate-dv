@@ -9,6 +9,8 @@
       {%- do exceptions.warn("WARNING: src_extra_columns not yet available for PITs or Bridges. This parameter will be ignored.") -%}
     {%- endif -%}
 
+    {{ automate_dv.pit_bridge_deprecation_warning() }}
+
     {{- automate_dv.check_required_parameters(src_pk=src_pk,
                                            as_of_dates_table=as_of_dates_table,
                                            satellites=satellites,

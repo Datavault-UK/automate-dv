@@ -16,7 +16,7 @@
         {{ automate_dv.datepart_not_recommended_warning(period=period) }}
     {%- endif -%}
 
-    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
+    {{ automate_dv.materialisation_deprecation_warning() }}
 
     {%- set target_relation = this.incorporate(type='table') -%}
     {%- set existing_relation = load_relation(this) -%}
