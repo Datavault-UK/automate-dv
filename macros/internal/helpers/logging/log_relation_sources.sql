@@ -9,7 +9,7 @@
 
 {% macro default__log_relation_sources(relation, source_count) %}
 
-    {%- if 'docs' not in invocation_args_dict['rpc_method'] and execute -%}
+    {%- if execute and automate_dv.is_something(invocation_args_dict.get('which')) and invocation_args_dict.get('which') != 'docs' -%}
 
         {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(relation.database, relation.schema, relation.identifier),
                                                                         source_count)) -%}
@@ -18,7 +18,7 @@
 
 {% macro databricks__log_relation_sources(relation, source_count) %}
 
-    {%- if 'docs' not in invocation_args_dict['rpc_method'] and execute -%}
+    {%- if execute and automate_dv.is_something(invocation_args_dict.get('which')) and invocation_args_dict.get('which') != 'docs' -%}
 
         {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}".format(relation.schema, relation.identifier),
                                                                         source_count)) -%}
