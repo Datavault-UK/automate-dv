@@ -104,3 +104,18 @@
     {%- endif -%}
 
 {%- endmacro -%}
+
+
+{%- macro materialisation_deprecation() -%}
+
+    {%- set warning_message -%}
+        DEPRECATED: Since AutomateDV v0.11.0, vault_insert_by_x materialisations are now deprecated in favour of
+  If native hashes are disabled for BigQuery, all columns in the src_pk and src_hashdiff
+          parameters will use a string of zeros (0000...) instead of the correct hash data type.
+          To resolve this, enable native hashes at your earliest convenience.
+    {%- endset -%}
+
+    {%- set message = wrap_warning(warning_message) -%}
+
+    {%- automate_dv.log_warning(message) -%}
+{%- endmacro -%}
