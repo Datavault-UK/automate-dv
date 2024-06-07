@@ -7,13 +7,13 @@
 </div>
 <div align="center">
   
-  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.3%20%3C=1.7.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
+  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.4%20%3C=1.8.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
 
 </div>
 
 [Changelog and past doc versions](https://automate-dv.readthedocs.io/en/latest/changelog/)
 
-# AutomateDV by [Datavault](https://www.data-vault.co.uk)
+# AutomateDV by [Datavault](https://www.data-vault.com)
 
 Build your own Data Vault data warehouse! AutomateDV is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on your data platform.
 
@@ -30,18 +30,18 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/we_worked_example/)
+- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/)
 
-- [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
+- [Project Repository](https://github.com/Datavault-UK/automate-dv-demo)
 
 ## Supported platforms:
 
-[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/macros/#platform-support)
+[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/platform_support/
 
 ## Installation
 
-Check [dbt Hub](https://hub.getdbt.com/datavault-uk/automate_dv/latest/) for the latest installation instructions, 
-or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/) for more information on installing packages.
+Check [dbt Hub](https://hub.getdbt.com/Datavault-UK/automate_dv/latest/) for the latest installation instructions, 
+or [read the docs](https://docs.getdbt.com/docs/build/packages) for more information on installing packages.
 
 ## Usage
 
@@ -68,6 +68,7 @@ Talk to our developers and other members of our growing community, get support a
 
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
+
 ## Social 
 
 [![Twitter Follow](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/Automate_DV)
@@ -75,6 +76,7 @@ Talk to our developers and other members of our growing community, get support a
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/showcase/automate-dv/)
 
 [![Youtube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@AutomateDV)
+
 
 ## Awards
 
