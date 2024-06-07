@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -16,7 +16,7 @@
         {{ automate_dv.datepart_not_recommended_warning(period=period) }}
     {%- endif -%}
 
-    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
+    {{ automate_dv.materialisation_deprecation_warning() }}
 
     {%- set target_relation = this.incorporate(type='table') -%}
     {%- set existing_relation = load_relation(this) -%}

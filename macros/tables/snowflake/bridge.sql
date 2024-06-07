@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -8,6 +8,8 @@
     {%- if automate_dv.is_something(src_extra_columns) and execute -%}
       {%- do exceptions.warn("WARNING: src_extra_columns not yet available for PITs or Bridges. This parameter will be ignored.") -%}
     {%- endif -%}
+
+    {{ automate_dv.pit_bridge_deprecation_warning() }}
 
     {{- automate_dv.check_required_parameters(src_pk=src_pk,
                                            as_of_dates_table=as_of_dates_table,
@@ -81,40 +83,49 @@ all_rows AS (
 {# Select most recent set of relationship key(s) for each as of date -#}
 candidate_rows AS (
     SELECT *
+    {%- if target.type not in ['sqlserver', 'postgres'] %}
+    FROM all_rows
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY
+         AS_OF_DATE,
+         {% for bridge_step in bridge_walk.keys() -%}
+             {%- set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+             {{ bridge_link_pk }} {%- if not loop.last %}, {% endif -%}
+         {%- endfor %}
+      ORDER BY
+         {% for bridge_step in bridge_walk.keys() -%}
+             {%- set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
+             {{ bridge_load_date }} DESC {%- if not loop.last %}, {% endif -%}
+         {%- endfor %}
+    ) = 1
+    {%- else %}
     FROM (
         SELECT *,
-               ROW_NUMBER() OVER (
-               PARTITION BY
-                   AS_OF_DATE,
-                   {% for bridge_step in bridge_walk.keys() -%}
-
-                       {%- set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-
-                       {{ bridge_link_pk }} {%- if not loop.last %}, {% endif -%}
-
-                   {%- endfor %}
-               ORDER BY
-                   {% for bridge_step in bridge_walk.keys() -%}
-
-                       {%- set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
-
-                       {{ bridge_load_date }} DESC {%- if not loop.last %}, {% endif -%}
-
-                   {%- endfor %}
-               ) AS ROW_NUM
+            ROW_NUMBER() OVER (
+              PARTITION BY
+                 AS_OF_DATE,
+                 {% for bridge_step in bridge_walk.keys() -%}
+                     {%- set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+                     {{ bridge_link_pk }} {%- if not loop.last %}, {% endif -%}
+                 {%- endfor %}
+              ORDER BY
+                 {% for bridge_step in bridge_walk.keys() -%}
+                     {%- set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
+                     {{ bridge_load_date }} DESC {%- if not loop.last %}, {% endif -%}
+                 {%- endfor %}
+            ) AS ROW_NUM
         FROM all_rows
-    ) AS a
-    WHERE a.ROW_NUM = 1
+    ) AS subquery
+    WHERE ROW_NUM = 1
+    {%- endif %}
 ),
 
 bridge AS (
     SELECT
         {{ automate_dv.prefix([src_pk], 'c') }},
         c.AS_OF_DATE,
-
-        {% for bridge_step in bridge_walk.keys() %}
-
-        {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] %}
+        {%- for bridge_step in bridge_walk.keys() -%}
+        {%- set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] %}
         c.{{ bridge_link_pk }}
         {%- if not loop.last %}, {%- endif -%}
         {%- endfor %}
@@ -123,7 +134,6 @@ bridge AS (
 
 {%- for bridge_step in bridge_walk.keys() -%}
     {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
-
     {% if loop.first -%} WHERE {%- else -%} AND {%- endif %} {{ automate_dv.cast_date(automate_dv.prefix([bridge_end_date], 'c')) }} = {{ automate_dv.cast_date(max_datetime, true, false) }}
 
 {% endfor -%}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -38,3 +38,4 @@
     {{ automate_dv.default__cast_binary(column_str=column_str, alias=alias, quote=quote) }}
 
 {%- endmacro -%}
+
