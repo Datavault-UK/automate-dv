@@ -36,7 +36,7 @@ Learn quickly with our worked example:
 
 ## Supported platforms:
 
-[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/platform_support/
+[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/platform_support/)
 
 ## Installation
 
