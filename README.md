@@ -1,6 +1,11 @@
 <div align="center">
+
+  <a href="https://automate-dv.com/">
   <img src="https://user-images.githubusercontent.com/25080503/237990810-ab2e14cf-a449-47ac-8c72-6f0857816194.png#gh-light-mode-only" alt="AutomateDV">
+  </a>
+  <a href="https://automate-dv.com/">
   <img src="https://user-images.githubusercontent.com/25080503/237990915-6afbeba8-9e80-44cb-a57b-5b5966ab5c02.png#gh-dark-mode-only" alt="AutomateDV">
+  </a>
 
   [![Documentation Status](https://img.shields.io/badge/docs-stable-blue)](https://automate-dv.readthedocs.io/en/stable/?badge=stable)
   [![Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
@@ -13,7 +18,7 @@
 
 [Changelog and past doc versions](https://automate-dv.readthedocs.io/en/latest/changelog/)
 
-# AutomateDV by [Datavault](https://www.data-vault.co.uk)
+# AutomateDV by [Datavault](https://www.data-vault.com)
 
 Build your own Data Vault data warehouse! AutomateDV is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on your data platform.
 
@@ -30,18 +35,18 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/we_worked_example/)
+- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/)
 
-- [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
+- [Project Repository](https://github.com/Datavault-UK/automate-dv-demo)
 
 ## Supported platforms:
 
-[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/macros/#platform-support)
+[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/platform_support/
 
 ## Installation
 
-Check [dbt Hub](https://hub.getdbt.com/datavault-uk/dbtvault/latest/) for the latest installation instructions, 
-or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/) for more information on installing packages.
+Check [dbt Hub](https://hub.getdbt.com/Datavault-UK/automate_dv/latest/) for the latest installation instructions, 
+or [read the docs](https://docs.getdbt.com/docs/build/packages) for more information on installing packages.
 
 ## Usage
 
