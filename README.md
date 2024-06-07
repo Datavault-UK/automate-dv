@@ -1,5 +1,4 @@
 <div align="center">
-
   <img src="https://user-images.githubusercontent.com/25080503/237990810-ab2e14cf-a449-47ac-8c72-6f0857816194.png#gh-light-mode-only" alt="AutomateDV">
   <img src="https://user-images.githubusercontent.com/25080503/237990915-6afbeba8-9e80-44cb-a57b-5b5966ab5c02.png#gh-dark-mode-only" alt="AutomateDV">
 
@@ -37,7 +36,7 @@ Learn quickly with our worked example:
 
 ## Supported platforms:
 
-[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/platform_support/)
+[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/platform_support/
 
 ## Installation
 
@@ -60,7 +59,7 @@ or [read the docs](https://docs.getdbt.com/docs/build/packages) for more informa
 
 # Call the macro
 {{ automate_dv.hub(src_pk, src_nk, src_ldts,
-                src_source, source_model) }}
+                   src_source, source_model) }}
 ```
 
 ## Join our Slack Channel
@@ -68,6 +67,16 @@ or [read the docs](https://docs.getdbt.com/docs/build/packages) for more informa
 Talk to our developers and other members of our growing community, get support and discuss anything related to AutomateDV or Data Vault 2.0
 
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
+
+
+## Social 
+
+[![Twitter Follow](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/Automate_DV)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/showcase/automate-dv/)
+
+[![Youtube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@AutomateDV)
+
 
 ## Awards
 
@@ -82,4 +91,4 @@ Talk to our developers and other members of our growing community, get support a
 [View our contribution guidelines](CONTRIBUTING.md)
 
 ## License
-[Apache 2.0](LICENSE.md)
+[Apache 2.0](LICENSE)
