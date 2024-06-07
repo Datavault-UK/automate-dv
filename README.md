@@ -7,7 +7,7 @@
 </div>
 <div align="center">
   
-  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.3%20%3C=1.7.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
+  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.4%20%3C=1.8.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
 
 </div>
 
@@ -30,7 +30,7 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/)
+- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
 - [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
@@ -40,7 +40,7 @@ Learn quickly with our worked example:
 
 ## Installation
 
-Check [dbt Hub](https://hub.getdbt.com/datavault-uk/automate_dv/latest/) for the latest installation instructions, 
+Check [dbt Hub](https://hub.getdbt.com/datavault-uk/dbtvault/latest/) for the latest installation instructions, 
 or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/) for more information on installing packages.
 
 ## Usage
@@ -59,7 +59,7 @@ or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-m
 
 # Call the macro
 {{ automate_dv.hub(src_pk, src_nk, src_ldts,
-                   src_source, source_model) }}
+                src_source, source_model) }}
 ```
 
 ## Join our Slack Channel
@@ -67,14 +67,6 @@ or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-m
 Talk to our developers and other members of our growing community, get support and discuss anything related to AutomateDV or Data Vault 2.0
 
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
-
-## Social 
-
-[![Twitter Follow](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/Automate_DV)
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/showcase/automate-dv/)
-
-[![Youtube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@AutomateDV)
 
 ## Awards
 
@@ -89,4 +81,4 @@ Talk to our developers and other members of our growing community, get support a
 [View our contribution guidelines](CONTRIBUTING.md)
 
 ## License
-[Apache 2.0](LICENSE)
+[Apache 2.0](LICENSE.md)
