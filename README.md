@@ -1,11 +1,7 @@
 <div align="center">
 
-  <a href="https://automate-dv.com/">
   <img src="https://user-images.githubusercontent.com/25080503/237990810-ab2e14cf-a449-47ac-8c72-6f0857816194.png#gh-light-mode-only" alt="AutomateDV">
-  </a>
-  <a href="https://automate-dv.com/">
   <img src="https://user-images.githubusercontent.com/25080503/237990915-6afbeba8-9e80-44cb-a57b-5b5966ab5c02.png#gh-dark-mode-only" alt="AutomateDV">
-  </a>
 
   [![Documentation Status](https://img.shields.io/badge/docs-stable-blue)](https://automate-dv.readthedocs.io/en/stable/?badge=stable)
   [![Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
