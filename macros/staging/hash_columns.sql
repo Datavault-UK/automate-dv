@@ -17,14 +17,14 @@
 
         {%- if columns[col] is mapping and columns[col].is_hashdiff -%}
 
-            {{- automate_dv.hash(columns=columns[col]['columns'],
+            {{- automate_dv.dv_hash(columns=columns[col]['columns'],
                               alias=col,
                               is_hashdiff=columns[col]['is_hashdiff'],
                               columns_to_escape=columns_to_escape) -}}
 
         {%- elif columns[col] is not mapping -%}
 
-            {{- automate_dv.hash(columns=columns[col],
+            {{- automate_dv.dv_hash(columns=columns[col],
                               alias=col,
                               is_hashdiff=false,
                               columns_to_escape=columns_to_escape) -}}
@@ -35,7 +35,7 @@
                 {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'is_hashdiff' flag. Use list syntax for PKs.") -%}
             {% endif %}
 
-            {{- automate_dv.hash(columns=columns[col]['columns'], alias=col, columns_to_escape=columns_to_escape) -}}
+            {{- automate_dv.dv_hash(columns=columns[col]['columns'], alias=col, columns_to_escape=columns_to_escape) -}}
 
         {%- endif -%}
 

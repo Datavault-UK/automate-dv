@@ -3,18 +3,18 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro hash(columns=none, alias=none, is_hashdiff=false, columns_to_escape=none) -%}
+{%- macro dv_hash(columns=none, alias=none, is_hashdiff=false, columns_to_escape=none) -%}
 
     {%- if is_hashdiff is none -%}
         {%- set is_hashdiff = false -%}
     {%- endif -%}
 
-    {{- adapter.dispatch('hash', 'automate_dv')(columns=columns, alias=alias,
+    {{- adapter.dispatch('dv_hash', 'automate_dv')(columns=columns, alias=alias,
                                              is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) -}}
 
 {%- endmacro %}
 
-{%- macro default__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+{%- macro default__dv_hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
 {%- set hash = var('hash', 'md5') -%}
 {%- set concat_string = var('concat_string', '||') -%}
@@ -93,29 +93,29 @@
 {%- endmacro -%}
 
 
-{%- macro bigquery__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+{%- macro bigquery__dv_hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
-
-{%- endmacro -%}
-
-
-{%- macro sqlserver__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
-
-    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__dv_hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
-{%- macro postgres__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+{%- macro sqlserver__dv_hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__dv_hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
-{%- macro databricks__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+{%- macro postgres__dv_hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__dv_hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+
+{%- endmacro -%}
+
+
+{%- macro databricks__dv_hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+
+    {{ automate_dv.default__dv_hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
