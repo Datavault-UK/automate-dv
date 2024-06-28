@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -12,12 +12,11 @@
     {{- automate_dv.prepend_generated_by() }}
 
     {{ adapter.dispatch('stage', 'automate_dv')(include_source_columns=include_source_columns,
-                                              source_model=source_model,
-                                              hashed_columns=hashed_columns,
-                                              derived_columns=derived_columns,
-                                              null_columns=null_columns,
-                                              ranked_columns=ranked_columns
-                                              ) -}}
+                                                source_model=source_model,
+                                                hashed_columns=hashed_columns,
+                                                derived_columns=derived_columns,
+                                                null_columns=null_columns,
+                                                ranked_columns=ranked_columns) -}}
 {%- endmacro -%}
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, null_columns, ranked_columns) -%}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -8,6 +8,8 @@
     {%- if automate_dv.is_something(src_extra_columns) and execute -%}
       {%- do exceptions.warn("WARNING: src_extra_columns not yet available for PITs or Bridges. This parameter will be ignored.") -%}
     {%- endif -%}
+
+    {{ automate_dv.pit_bridge_deprecation_warning() }}
 
     {{- automate_dv.check_required_parameters(src_pk=src_pk,
                                            as_of_dates_table=as_of_dates_table,
@@ -23,12 +25,12 @@
     {%- endfor -%}
 
     {{ adapter.dispatch('pit', 'automate_dv')(src_pk=src_pk,
-                                           src_extra_columns=src_extra_columns,
-                                           as_of_dates_table=as_of_dates_table,
-                                           satellites=satellites,
-                                           stage_tables_ldts=stage_tables_ldts,
-                                           src_ldts=src_ldts,
-                                           source_model=source_model) -}}
+                                              src_extra_columns=src_extra_columns,
+                                              as_of_dates_table=as_of_dates_table,
+                                              satellites=satellites,
+                                              stage_tables_ldts=stage_tables_ldts,
+                                              src_ldts=src_ldts,
+                                              source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) -%}
@@ -42,12 +44,25 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{#- Setting ghost values to replace NULLS -#}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1900-01-01 00:00:00.000' %}
 {%- set hash = var('hash', 'MD5') -%}
+{%- set enable_native_hashes = var('enable_native_hashes', false) -%}
 
-{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+{%- if not enable_ghost_record -%}
+
+    {#- Setting ghost values to replace NULLs -#}
+    {%- set ghost_date = '1900-01-01 00:00:00.000000' -%}
+    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
+
+    {%- if target.type == 'bigquery' -%}
+        {%- if enable_native_hashes -%}
+            {%- set ghost_pk = "FROM_HEX({})".format(ghost_pk) -%}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if target.type == 'sqlserver' -%}
+        {%- set ghost_date = '1900-01-01 00:00:00.000' -%}
+        {%- set ghost_pk = "REPLICATE({}, {})".format('0', automate_dv.get_hash_string_length(hash)) -%}
+    {%- endif -%}
+{%- endif -%}
 
 {%- if automate_dv.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
@@ -98,7 +113,11 @@ backfill AS (
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=true) }})
+                 {% if enable_native_hashes %}
+                 {{ ghost_pk }}
+                 {% else %}
+                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
+                 {% endif %}
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
@@ -162,7 +181,7 @@ new_rows AS (
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=true) }})
+                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),

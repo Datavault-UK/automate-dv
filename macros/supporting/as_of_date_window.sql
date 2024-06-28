@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -79,7 +79,7 @@ new_rows_as_of AS (
     WHERE a.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     UNION
     {%- endif %}
-    SELECT as_of_date
+    SELECT AS_OF_DATE
     FROM as_of_grain_new_entries
 ),
 

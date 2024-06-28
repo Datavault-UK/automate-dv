@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
+ * Copyright (c) Business Thinking Ltd. 2019-2024
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -45,20 +45,24 @@ WITH source_data AS (
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
     SELECT * FROM (
-        SELECT {{ automate_dv.alias_all(source_cols, 'b') }},
-               ROW_NUMBER() OVER (
-                    PARTITION BY {{ automate_dv.prefix([src_pk], 'b') }}
-                    ORDER BY b.{{ src_ldts }} DESC
-               ) AS row_num
+        SELECT {{ automate_dv.alias_all(source_cols, 'b') }}
+            {%- if target.type in ['sqlserver', 'postgres'] -%},
+            ROW_NUMBER() OVER (
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'b') }}
+                ORDER BY b.{{ src_ldts }} DESC
+            ) AS row_num
+            {%- endif %}
         FROM {{ this }} AS b
-    )
-    {%- if target.type == 'sqlserver' -%}
-        l
-        WHERE l.row_num = 1
-    {%- else -%}
-        AS inner_rank
-        WHERE row_num = 1
-    {%- endif -%}
+        {% if target.type not in ['sqlserver', 'postgres'] -%}
+        QUALIFY ROW_NUMBER() OVER (
+            PARTITION BY {{ automate_dv.prefix([src_pk], 'b') }}
+            ORDER BY b.{{ src_ldts }} DESC
+        ) = 1
+        {% endif -%}
+    ) AS inner_select
+    {% if target.type in ['sqlserver', 'postgres'] -%}
+        WHERE inner_select.row_num = 1
+    {%- endif %}
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
@@ -78,16 +82,15 @@ latest_closed AS (
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ automate_dv.prefix([src_pk], 'f') }},
-        {{ automate_dv.alias_all(fk_cols, 'f') }},
-        {% if automate_dv.is_something(src_extra_columns) %}
+        {{ automate_dv.alias_all([src_pk, fk_cols], 'f') }},
+        {%- if automate_dv.is_something(src_extra_columns) %}
             {{ automate_dv.prefix([src_extra_columns], 'f') }},
         {% endif -%}
         {%- if is_auto_end_dating %}
         f.{{ src_eff }} AS {{ src_start_date }},
-        {% else %}
+        {%- else %}
         f.{{ src_start_date }} AS {{ src_start_date }},
-        {% endif %}
+        {%- endif %}
         f.{{ src_end_date }} AS {{ src_end_date }},
         f.{{ src_eff }} AS {{ src_eff }},
         f.{{ src_ldts }},
@@ -101,16 +104,15 @@ new_open_records AS (
 {# Identifying the currently closed link relationships to be reopened in eff sat -#}
 new_reopened_records AS (
     SELECT DISTINCT
-        {{ automate_dv.prefix([src_pk], 'lc') }},
-        {{ automate_dv.alias_all(fk_cols, 'lc') }},
-        {% if automate_dv.is_something(src_extra_columns) %}
+        {{ automate_dv.alias_all([src_pk, fk_cols], 'lc') }},
+        {%- if automate_dv.is_something(src_extra_columns) %}
             {{ automate_dv.prefix([src_extra_columns], 'g') }},
         {% endif -%}
         {%- if is_auto_end_dating %}
         g.{{ src_eff }} AS {{ src_start_date }},
-        {% else %}
+        {%- else %}
         g.{{ src_start_date }} AS {{ src_start_date }},
-        {% endif %}
+        {%- endif %}
         g.{{ src_end_date }} AS {{ src_end_date }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
@@ -121,14 +123,14 @@ new_reopened_records AS (
     WHERE {{ automate_dv.cast_date(automate_dv.alias(src_end_date, 'g')) }} = {{ automate_dv.cast_date(automate_dv.cast_datetime(max_datetime, as_string=true)) }}
 ),
 
-{%- if is_auto_end_dating %}
-
 {# Creating the closing records -#}
 {# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
+
+{%- if is_auto_end_dating %}
+
 new_closed_records AS (
     SELECT DISTINCT
-        {{ automate_dv.prefix([src_pk], 'lo') }},
-        {{ automate_dv.alias_all(fk_cols, 'lo') }},
+        {{ automate_dv.alias_all([src_pk, fk_cols], 'lo') }},
         {% if automate_dv.is_something(src_extra_columns) %}
             {{ automate_dv.prefix([src_extra_columns], 'h') }},
         {% endif -%}
@@ -140,7 +142,8 @@ new_closed_records AS (
     FROM source_data AS h
     INNER JOIN latest_open AS lo
     ON {{ automate_dv.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
-    WHERE ({{ automate_dv.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
+    WHERE NOT EXISTS (SELECT 1 FROM source_data AS stg WHERE {{ automate_dv.multikey(src_pk, prefix=['stg','lo'], condition='=') }}
+        AND {{ automate_dv.multikey(src_end_date, prefix=['stg', 'lo'], condition='=') }} )
 ),
 
 {#- else if (not) is_auto_end_dating -#}
@@ -148,8 +151,7 @@ new_closed_records AS (
 
 new_closed_records AS (
     SELECT DISTINCT
-        {{ automate_dv.prefix([src_pk], 'lo') }},
-        {{ automate_dv.alias_all(fk_cols, 'lo') }},
+        {{ automate_dv.alias_all([src_pk, fk_cols], 'lo') }},
         {% if automate_dv.is_something(src_extra_columns) %}
             {{ automate_dv.prefix([src_extra_columns], 'h') }},
         {% endif -%}
