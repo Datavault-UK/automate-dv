@@ -14,6 +14,7 @@
   {% endif %}
   {%- set existing_relation = load_relation(this) -%}
   {%- set tmp_relation = make_temp_relation(target_relation) -%}
+  {%- set grant_config = config.get('grants') -%}
 
   {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
@@ -45,6 +46,10 @@
   {%- call statement("main") -%}
       {{ build_sql }}
   {%- endcall -%}
+
+  -- GRANTS are managed here
+  {% set should_revoke = should_revoke(existing_relation, full_refresh_mode) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
 
   {{ run_hooks(post_hooks, inside_transaction=True) }}
 
