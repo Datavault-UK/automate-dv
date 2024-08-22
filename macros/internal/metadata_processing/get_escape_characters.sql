@@ -52,6 +52,3 @@
     {%- do return (('"', '"')) -%}
 {%- endmacro %}
 
-{%- macro duckdb__get_escape_characters() %}
-    {%- do return (('', '')) -%}
-{%- endmacro %}
