@@ -1,12 +1,12 @@
 {%- macro duckdb__hub(src_pk, src_nk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_extra_columns, src_ldts, src_source]) -%}
+{%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_nk, src_extra_columns, src_ldts, src_source]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + automate_dv.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
-{{ dbtvault.prepend_generated_by() }}
+{{ automate_dv.prepend_generated_by() }}
 
 {{ 'WITH ' -}}
 
@@ -25,13 +25,13 @@ row_rank_{{ source_number }} AS (
     strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...
 -#}
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'rr') }}) {{ dbtvault.prefix(source_cols_with_rank, 'rr') }}
+    SELECT DISTINCT ON ({{ automate_dv.prefix([src_pk], 'rr') }}) {{ automate_dv.prefix(source_cols_with_rank, 'rr') }}
     {%- else %}
-    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'rr') }}) {{ dbtvault.prefix(source_cols, 'rr') }}
+    SELECT DISTINCT ON ({{ automate_dv.prefix([src_pk], 'rr') }}) {{ automate_dv.prefix(source_cols, 'rr') }}
     {%- endif %}
     FROM {{ ref(src) }} AS rr
-    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
-    ORDER BY {{ dbtvault.prefix([src_pk], 'rr') }}, {{ dbtvault.prefix([src_ldts], 'rr') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
+    ORDER BY {{ automate_dv.prefix([src_pk], 'rr') }}, {{ automate_dv.prefix([src_ldts], 'rr') }}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
@@ -67,20 +67,20 @@ row_rank_union AS (
 {#- PostgreSQL has DISTINCT ON which should be more performant than the
     strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...
 -#}
-    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'ru') }}) ru.*
+    SELECT DISTINCT ON ({{ automate_dv.prefix([src_pk], 'ru') }}) ru.*
     FROM {{ ns.last_cte }} AS ru
-    WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
-    ORDER BY {{ dbtvault.prefix([src_pk], 'ru') }}, {{ dbtvault.prefix([src_ldts], 'ru') }}, {{ dbtvault.prefix([src_source], 'ru') }} ASC
+    WHERE {{ automate_dv.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
+    ORDER BY {{ automate_dv.prefix([src_pk], 'ru') }}, {{ automate_dv.prefix([src_ldts], 'ru') }}, {{ automate_dv.prefix([src_source], 'ru') }} ASC
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}
 records_to_insert AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='target') }}
     FROM {{ ns.last_cte }} AS a
-    {%- if dbtvault.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON {{ dbtvault.multikey(src_pk, prefix=['a','d'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_pk, prefix='d', condition='IS NULL') }}
+    ON {{ automate_dv.multikey(src_pk, prefix=['a','d'], condition='=') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='d', condition='IS NULL') }}
     {%- endif %}
 )
 

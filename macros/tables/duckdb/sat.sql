@@ -3,25 +3,25 @@
 
 
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 
-{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set rank_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 
-{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
+{%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 
 
 
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
 
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + automate_dv.escape_column_names([config.get('rank_column')]) -%}
 
 {%- endif -%}
 
 
 
 
-{{ dbtvault.prepend_generated_by() }}
+{{ automate_dv.prepend_generated_by() }}
 
 
 
@@ -30,17 +30,17 @@ WITH source_data AS (
 
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
 
-    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+    SELECT {{ automate_dv.prefix(source_cols_with_rank, 'a', alias_target='source') }}
 
     {%- else %}
 
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
 
     {%- endif %}
 
     FROM {{ ref(source_model) }} AS a
 
-    WHERE {{ dbtvault.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
 
     {%- if model.config.materialized == 'vault_insert_by_period' %}
 
@@ -57,24 +57,24 @@ WITH source_data AS (
 
 
 
-{%- if dbtvault.is_any_incremental() %}
+{%- if automate_dv.is_any_incremental() %}
 
 
 
 
 latest_records AS (
 
-    SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(rank_cols, 'a', alias_target='target') }}
 
     FROM (
 
-        SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
+        SELECT {{ automate_dv.prefix(rank_cols, 'current_records', alias_target='target') }},
 
             RANK() OVER (
 
-                PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
 
-                ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
 
             ) AS rank
 
@@ -82,13 +82,13 @@ latest_records AS (
 
             JOIN (
 
-                SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}
+                SELECT DISTINCT {{ automate_dv.prefix([src_pk], 'source_data') }}
 
                 FROM source_data
 
             ) AS source_records
 
-                ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
+                ON {{ automate_dv.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
 
     ) AS a
 
@@ -106,19 +106,19 @@ latest_records AS (
 
 records_to_insert AS (
 
-    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
+    SELECT DISTINCT {{ automate_dv.alias_all(source_cols, 'stage') }}
 
     FROM source_data AS stage
 
-    {%- if dbtvault.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() %}
 
         LEFT JOIN latest_records
 
-            ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+            ON {{ automate_dv.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
 
-            WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
+            WHERE {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ automate_dv.prefix([src_hashdiff], 'stage') }}
 
-                OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+                OR {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
 
     {%- endif %}
 
