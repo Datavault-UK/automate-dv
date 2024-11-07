@@ -10,6 +10,10 @@
                                               src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
                                               source_model=source_model) -}}
 
+    {%- if not automate_dv.is_list(source_model) -%}
+        {%- set source_model = [source_model] -%}
+    {%- endif -%}
+
     {{- automate_dv.prepend_generated_by() }}
 
     {{ adapter.dispatch('eff_sat', 'automate_dv')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
@@ -26,11 +30,18 @@
 {%- set dfk_cols = automate_dv.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
+{{ 'WITH ' -}}
+
 {%- set max_datetime = automate_dv.max_datetime() %}
 
-WITH source_data AS (
+{%- set stage_count = source_model | length -%}
+
+{%- for src in source_model -%}
+{%- set source_number = loop.index | string -%}
+
+source_data_{{ source_number }} AS (
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
-    FROM {{ ref(source_model) }} AS a
+    FROM {{ ref(src) }} AS a
     WHERE {{ automate_dv.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
     AND {{ automate_dv.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
@@ -38,6 +49,16 @@ WITH source_data AS (
     {%- elif model.config.materialized == 'vault_insert_by_rank' %}
     AND __RANK_FILTER__
     {%- endif %}
+),
+{% endfor -%}
+
+source_data AS (
+    {%- for src in source_model %}
+    SELECT * FROM source_data_{{ loop.index | string }}
+    {%- if not loop.last %}
+    UNION ALL
+    {%- endif %}
+    {%- endfor %}
 ),
 
 {%- if automate_dv.is_any_incremental() %}
