@@ -84,7 +84,7 @@ valid_stg AS (
 
 {%- endif %}
 
-first_record_in_set AS (
+unique_source_records AS (
     SELECT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
     {%- if automate_dv.is_any_incremental() and apply_source_filter %}
@@ -92,26 +92,17 @@ first_record_in_set AS (
     {%- else %}
     FROM source_data AS sd
     {%- endif %}
-    QUALIFY ROW_NUMBER() OVER (
-        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-    ) = 1
-),
-
-unique_source_records AS (
-    SELECT DISTINCT
-        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-    FROM valid_stg AS sd
+    {%- if automate_dv.is_any_incremental() %}
+    LEFT OUTER JOIN latest_records AS lr
+        ON {{ automate_dv.multikey(src_pk, prefix=['sd','lr'], condition='=') }}
+    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, IFNULL( {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }}, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})) OVER (
     {%- else %}
-    FROM source_data AS sd
+    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}) OVER (
     {%- endif %}
-    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
         PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
     )
 ),
-
 
 {%- if enable_ghost_record %}
 
@@ -136,17 +127,8 @@ records_to_insert AS (
     {%- endif %}
     UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
     {%- endif %}
-    SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
-    FROM first_record_in_set AS frin
-    {%- if automate_dv.is_any_incremental() %}
-    LEFT JOIN latest_records AS lr
-        ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
-        AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
-        WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
-    {%- endif %}
-    UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
-    SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
-    FROM unique_source_records AS usr
+    SELECT {{ automate_dv.alias_all(source_cols, 'ur') }}
+    FROM unique_source_records AS ur
 )
 
 SELECT * FROM records_to_insert
