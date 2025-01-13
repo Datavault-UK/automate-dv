@@ -100,8 +100,12 @@ unique_source_records AS (
     QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}) OVER (
     {%- endif %}
         PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+    {%- if automate_dv.is_something([src_eff]) %}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-    )
+			, {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} DESC
+    {%- else %}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+    {%- endif %})
 ),
 
 {%- if enable_ghost_record %}
@@ -127,8 +131,8 @@ records_to_insert AS (
     {%- endif %}
     UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
     {%- endif %}
-    SELECT {{ automate_dv.alias_all(source_cols, 'ur') }}
-    FROM unique_source_records AS ur
+    SELECT {{ automate_dv.alias_all(source_cols, 'usr') }}
+    FROM unique_source_records AS usr
 )
 
 SELECT * FROM records_to_insert
