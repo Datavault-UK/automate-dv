@@ -95,7 +95,7 @@ unique_source_records AS (
     {%- if automate_dv.is_any_incremental() %}
     LEFT OUTER JOIN latest_records AS lr
         ON {{ automate_dv.multikey(src_pk, prefix=['sd','lr'], condition='=') }}
-    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, IFNULL( {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }}, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})) OVER (
+    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, COALESCE( {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }}, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})) OVER (
     {%- else %}
     QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}) OVER (
     {%- endif %}
