@@ -101,11 +101,12 @@ unique_source_records AS (
     {%- endif %}
         PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
     {%- if automate_dv.is_something([src_eff]) %}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-			, {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
+                 {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
     {%- else %}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-    {%- endif %})
+    {%- endif %}
+    )
 ),
 
 {%- if enable_ghost_record %}
