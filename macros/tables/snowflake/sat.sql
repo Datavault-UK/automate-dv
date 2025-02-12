@@ -95,16 +95,22 @@ unique_source_records AS (
     {%- if automate_dv.is_any_incremental() %}
     LEFT OUTER JOIN latest_records AS lr
         ON {{ automate_dv.multikey(src_pk, prefix=['sd','lr'], condition='=') }}
-    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, COALESCE( {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }}, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})) OVER (
+    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != COALESCE(
+        LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1) OVER (
     {%- else %}
     QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}) OVER (
     {%- endif %}
-        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+            PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
     {%- if automate_dv.is_something([src_eff]) %}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
-                 {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
+            ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
+                     {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
     {%- else %}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+            ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+    {%- endif %}
+    {%- if automate_dv.is_any_incremental() %}
+        ),
+        {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }},
+        {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}
     {%- endif %}
     )
 ),
