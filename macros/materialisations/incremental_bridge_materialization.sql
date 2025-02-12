@@ -31,7 +31,9 @@
 
       {%- do adapter.rename_relation(target_relation, backup_relation) -%}
       {%- set build_sql = create_table_as(False, target_relation, sql) -%}
-      {%- do to_drop.append(backup_relation) -%}
+      {% if target.type == "sqlserver" %}
+          {%- do to_drop.append(backup_relation) -%}
+      {% endif %}
   {%- else -%}
 
       {%- set tmp_relation = make_temp_relation(target_relation) -%}

@@ -109,7 +109,7 @@ unique_source_records AS (
     {%- endif %}
     {%- if automate_dv.is_any_incremental() %}
         ),
-        {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }},
+        {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
         {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}
     {%- endif %}
     )

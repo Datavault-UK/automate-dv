@@ -40,7 +40,9 @@
              from_relation=tmp_relation,
              to_relation=target_relation) -%}
       {%- set build_sql = automate_dv.incremental_pit_replace(tmp_relation, target_relation) -%}
-      {%- do to_drop.append(tmp_relation) -%}
+      {% if target.type == "sqlserver" %}
+          {%- do to_drop.append(backup_relation) -%}
+      {% endif %}
 {%- endif -%}
 
   {%- call statement("main") -%}
