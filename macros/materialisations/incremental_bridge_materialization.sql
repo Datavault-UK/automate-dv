@@ -31,9 +31,7 @@
 
       {%- do adapter.rename_relation(target_relation, backup_relation) -%}
       {%- set build_sql = create_table_as(False, target_relation, sql) -%}
-      {% if target.type == "sqlserver" %}
-          {%- do to_drop.append(backup_relation) -%}
-      {% endif %}
+      {%- do to_drop.append(backup_relation) -%}
   {%- else -%}
 
       {%- set tmp_relation = make_temp_relation(target_relation) -%}
@@ -42,7 +40,9 @@
              from_relation=tmp_relation,
              to_relation=target_relation) -%}
       {%- set build_sql = automate_dv.incremental_bridge_replace(tmp_relation, target_relation) -%}
-      {%- do to_drop.append(tmp_relation) -%}
+      {% if target.type == "sqlserver" %}
+        {%- do to_drop.append(tmp_relation) -%}
+      {% endif %}
 {%- endif -%}
 
   {%- call statement("main") -%}

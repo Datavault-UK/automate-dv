@@ -75,17 +75,27 @@ unique_source_records AS (
         SELECT
             {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
             {%- if automate_dv.is_any_incremental() %}
-            LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, COALESCE( {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }}, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})) OVER (
+            LAG(
+                {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }},
+                1,
+                COALESCE({{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
+                         {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})
+            ) OVER (
             {%- else %}
-            LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}) OVER (
+            LAG(
+                {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }},
+                1,
+                {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}
+            ) OVER (
             {%- endif %}
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
             {%- if automate_dv.is_something([src_eff]) %}
-                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-                    , {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
+                         {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
             {%- else %}
                 ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-            {%- endif %}) AS prev_hashdiff
+            {%- endif %}
+            ) AS prev_hashdiff
         {%- if automate_dv.is_any_incremental() and apply_source_filter %}
         FROM valid_stg AS sd
         {%- else %}
