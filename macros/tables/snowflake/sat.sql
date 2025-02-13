@@ -84,29 +84,68 @@ valid_stg AS (
 
 {%- endif %}
 
+{%- set is_incremental = automate_dv.is_any_incremental() %}
+{%- set use_valid_stg = is_incremental and apply_source_filter %}
+{%- set source_table = 'valid_stg AS sd' if use_valid_stg else 'source_data AS sd' %}
+{%- set hashdiff_alias = automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') %}
+{%- set lag_default = automate_dv.cast_binary('FFFFFFFF', quote=true) %}
+{%- set partition_by = automate_dv.prefix([src_pk], 'sd', alias_target='source') %}
+{%- set order_by = automate_dv.prefix([src_ldts], 'sd', alias_target='source') %}
+{%- set order_by_eff = automate_dv.prefix([src_eff], 'sd', alias_target='source') %}
+{%- set is_bigquery = target.type == 'bigquery' %}
+{%- set use_eff = automate_dv.is_something([src_eff]) %}
+{#- BigQuery does not support a 3-arg LAG() where the third arg is an expression, it must be a constant. Workaround below #}
+
 unique_source_records AS (
     SELECT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-    FROM valid_stg AS sd
-    {%- else %}
-    FROM source_data AS sd
-    {%- endif %}
-    {%- if automate_dv.is_any_incremental() %}
+    FROM {{ source_table }}
+    {%- if is_incremental %}
     LEFT OUTER JOIN latest_records AS lr
         ON {{ automate_dv.multikey(src_pk, prefix=['sd','lr'], condition='=') }}
-    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, COALESCE( {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='source') }}, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})) OVER (
-    {%- else %}
-    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}, 1, {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}) OVER (
     {%- endif %}
-        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-    {%- if automate_dv.is_something([src_eff]) %}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
-                 {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
+
+    QUALIFY {{ hashdiff_alias }} !=
+    {%- if is_incremental and is_bigquery %}
+        COALESCE(
+            LAG({{ hashdiff_alias }}, 1) OVER (
+                PARTITION BY {{ partition_by }}
+                {%- if use_eff %}
+                ORDER BY {{ order_by }} ASC,
+                         {{ order_by_eff }} ASC
+                {%- else %}
+                ORDER BY {{ order_by }} ASC
+                {%- endif %}
+            ),
+            {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
+            {{ lag_default }}
+        )
+    {%- elif is_incremental and not is_bigquery %}
+        LAG({{ hashdiff_alias }}, 1,
+            COALESCE(
+                {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
+                {{ lag_default }}
+            )
+        ) OVER (
+            PARTITION BY {{ partition_by }}
+            {%- if use_eff %}
+            ORDER BY {{ order_by }} ASC,
+                     {{ order_by_eff }} ASC
+            {%- else %}
+            ORDER BY {{ order_by }} ASC
+            {%- endif %}
+        )
     {%- else %}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+        LAG({{ hashdiff_alias }}, 1, {{ lag_default }}) OVER (
+            PARTITION BY {{ partition_by }}
+            {%- if use_eff %}
+            ORDER BY {{ order_by }} ASC,
+                     {{ order_by_eff }} ASC
+            {%- else %}
+            ORDER BY {{ order_by }} ASC
+            {%- endif %}
+        )
     {%- endif %}
-    )
 ),
 
 {%- if enable_ghost_record %}
