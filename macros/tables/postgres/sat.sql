@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2024
+ * Copyright (c) Business Thinking Ltd. 2019-2025
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -68,41 +68,46 @@ valid_stg AS (
 
 {%- endif %}
 
-first_record_in_set AS (
-    SELECT * FROM (
-        SELECT
-        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-        ROW_NUMBER() OVER (
-                PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-            ) AS asc_rank
-        {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-        FROM valid_stg AS sd
-        {%- else %}
-        FROM source_data AS sd
-        {%- endif %}
-    ) AS rin
-    WHERE rin.asc_rank = 1
-),
-
 unique_source_records AS (
     SELECT
         {{ automate_dv.prefix(source_cols, 'b', alias_target='source') }}
     FROM (
-        SELECT DISTINCT
+        SELECT
             {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-            LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
+            {%- if automate_dv.is_any_incremental() %}
+            LAG(
+                {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }},
+                1,
+                COALESCE({{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
+                         {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }})
+            ) OVER (
+            {%- else %}
+            LAG(
+                {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }},
+                1,
+                {{ automate_dv.cast_binary('FFFFFFFF', quote=true) }}
+            ) OVER (
+            {%- endif %}
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC) AS prev_hashdiff
+            {%- if automate_dv.is_something([src_eff]) %}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
+                         {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
+            {%- else %}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+            {%- endif %}
+            ) AS prev_hashdiff
         {%- if automate_dv.is_any_incremental() and apply_source_filter %}
         FROM valid_stg AS sd
         {%- else %}
         FROM source_data AS sd
         {%- endif %}
+        {%- if automate_dv.is_any_incremental() %}
+        LEFT OUTER JOIN latest_records AS lr
+            ON {{ automate_dv.multikey(src_pk, prefix=['sd','lr'], condition='=') }}
+        {%- endif %}
         ) AS b
     WHERE {{ automate_dv.prefix([src_hashdiff], 'b', alias_target='source') }} != b.prev_hashdiff
 ),
-
 
 {%- if enable_ghost_record %}
 
@@ -118,25 +123,17 @@ ghost AS (
 records_to_insert AS (
     {%- if enable_ghost_record %}
     SELECT
-        {{ automate_dv.alias_all(source_cols, 'g') }}
-        FROM ghost AS g
-        {%- if automate_dv.is_any_incremental() %}
-        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h 
-            WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
-        {%- endif %}
+    {{ automate_dv.alias_all(source_cols, 'g') }}
+    FROM ghost AS g
+    {%- if automate_dv.is_any_incremental() %}
+    WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+    {% else %}
+    WHERE NOT EXISTS ( SELECT 1 FROM source_data AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='source') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+    {%- endif %}
     UNION
     {%- endif %}
-        SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
-        FROM first_record_in_set AS frin
-        {%- if automate_dv.is_any_incremental() %}
-        LEFT JOIN latest_records AS lr
-            ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
-            AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
-            WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
-        {%- endif %}
-        UNION
-        SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
-        FROM unique_source_records AS usr
+    SELECT {{ automate_dv.alias_all(source_cols, 'usr') }}
+    FROM unique_source_records AS usr
 )
 
 SELECT * FROM records_to_insert
