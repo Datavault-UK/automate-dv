@@ -84,16 +84,21 @@ valid_stg AS (
 
 {%- endif %}
 
-{%- set is_incremental = automate_dv.is_any_incremental() %}
-{%- set use_valid_stg = is_incremental and apply_source_filter %}
-{%- set source_table = 'valid_stg AS sd' if use_valid_stg else 'source_data AS sd' %}
-{%- set hashdiff_alias = automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') %}
-{%- set lag_default = automate_dv.cast_binary('FFFFFFFF', quote=true) %}
-{%- set partition_by = automate_dv.prefix([src_pk], 'sd', alias_target='source') %}
-{%- set order_by = automate_dv.prefix([src_ldts], 'sd', alias_target='source') %}
-{%- set order_by_eff = automate_dv.prefix([src_eff], 'sd', alias_target='source') %}
-{%- set is_bigquery = target.type == 'bigquery' %}
-{%- set use_eff = automate_dv.is_something([src_eff]) %}
+{%- set is_incremental = automate_dv.is_any_incremental() -%}
+{%- set use_valid_stg = is_incremental and apply_source_filter -%}
+{%- set source_table = 'valid_stg AS sd' if use_valid_stg else 'source_data AS sd' -%}
+{%- set hashdiff_alias = automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') -%}
+{%- set lag_default = automate_dv.cast_binary('FFFFFFFF', quote=true) -%}
+{%- set partition_by = automate_dv.prefix([src_pk], 'sd', alias_target='source') -%}
+{%- set is_bigquery = target.type == 'bigquery' -%}
+{%- set order_by = automate_dv.prefix([src_ldts], 'sd', alias_target='source') -%}
+
+{%- set use_eff = automate_dv.is_something(src_eff) -%}
+
+{%- if use_eff -%}
+    {%- set order_by_eff = automate_dv.prefix([src_eff], 'sd', alias_target='source') -%}
+{%- endif -%}
+
 {#- BigQuery does not support a 3-arg LAG() where the third arg is an expression, it must be a constant. Workaround below #}
 
 unique_source_records AS (

@@ -89,7 +89,7 @@ unique_source_records AS (
             ) OVER (
             {%- endif %}
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-            {%- if automate_dv.is_something([src_eff]) %}
+            {%- if automate_dv.is_something(src_eff) %}
                 ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC,
                          {{ automate_dv.prefix([src_eff], 'sd', alias_target='source') }} ASC
             {%- else %}
