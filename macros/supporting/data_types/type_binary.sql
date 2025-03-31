@@ -49,3 +49,13 @@
     BINARY
   {%- endif -%}
 {%- endmacro -%}
+
+{%- macro spark__type_binary(for_dbt_compare=false) -%}
+  {%- set enable_native_hashes = var('enable_native_hashes', false) -%}
+
+  {%- if not enable_native_hashes -%}
+    STRING
+  {%- else -%}
+    BINARY
+  {%- endif -%}
+{%- endmacro -%}

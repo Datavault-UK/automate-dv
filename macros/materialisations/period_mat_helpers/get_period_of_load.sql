@@ -69,6 +69,11 @@
 {%- endmacro -%}
 
 
+{%- macro spark__get_period_of_load(period, offset, start_timestamp) -%}
+    {% do return(automate_dv.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}
+{%- endmacro -%}
+
+
 {%- macro postgres__get_period_of_load(period, offset, start_timestamp) -%}
     {# Postgres uses different DateTime arithmetic #}
     {% set period_of_load_sql -%}
