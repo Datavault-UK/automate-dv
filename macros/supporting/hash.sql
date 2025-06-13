@@ -119,3 +119,10 @@
     {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
+
+
+{%- macro spark__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+
+    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+
+{%- endmacro -%}

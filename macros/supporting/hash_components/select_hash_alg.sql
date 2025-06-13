@@ -73,6 +73,18 @@
 
 {% endmacro %}
 
+{% macro spark__hash_alg_md5() -%}
+
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
+
+    {% if is_native_hashing %}
+        {%- do return('UNHEX(MD5([HASH_STRING_PLACEHOLDER]))') %}
+    {%- else -%}
+        {%- do return(automate_dv.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) -%}
+    {%- endif -%}
+
+{% endmacro %}
+
 
 {#- SHA256 -#}
 
@@ -129,6 +141,18 @@
 
 {% endmacro %}
 
+{% macro spark__hash_alg_sha256() -%}
+
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
+
+    {% if is_native_hashing %}
+        {%- do return('UNHEX(SHA2([HASH_STRING_PLACEHOLDER], 256))') %}
+    {%- else -%}
+        {%- do return(automate_dv.cast_binary('UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))', quote=false)) -%}
+    {%- endif -%}
+
+{% endmacro %}
+
 {#- SHA1 -#}
 
 {%- macro hash_alg_sha1() -%}
@@ -170,6 +194,18 @@
 {% endmacro %}
 
 {% macro databricks__hash_alg_sha1() -%}
+
+    {%- set is_native_hashing = var('enable_native_hashes', false) -%}
+
+    {% if is_native_hashing %}
+        {%- do return('UNHEX(SHA1([HASH_STRING_PLACEHOLDER]))') %}
+    {%- else -%}
+        {%- do return(automate_dv.cast_binary('UPPER(SHA1([HASH_STRING_PLACEHOLDER]))', quote=false)) -%}
+    {%- endif -%}
+
+{% endmacro %}
+
+{% macro spark__hash_alg_sha1() -%}
 
     {%- set is_native_hashing = var('enable_native_hashes', false) -%}
 
