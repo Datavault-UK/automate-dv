@@ -5,12 +5,6 @@
 
 {%- macro repeat(str_to_repeat, desired_length=0) -%}
 
-    {%- set ns = namespace(str_list=[]) %}
-
-    {%- for i in range(desired_length) -%}
-        {%- do ns.str_list.append(str_to_repeat) %}
-    {%- endfor -%}
-
-    {% do return(ns.str_list | join('')) %}
+    {% do return(str_to_repeat * desired_length) %}
 
 {%- endmacro -%}
