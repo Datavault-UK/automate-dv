@@ -21,7 +21,7 @@
 
     {#- Setting ghost values to replace NULLs -#}
     {%- set ghost_date = '1900-01-01 00:00:00.000' -%}
-    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
+    {%- set ghost_pk = automate_dv.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
 {%- endif -%}
 
 {%- if automate_dv.is_any_incremental() -%}
