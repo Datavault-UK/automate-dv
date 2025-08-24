@@ -9,7 +9,7 @@
     {{ adapter.dispatch('binary_ghost', 'automate_dv')(alias=alias, hash=hash) }}
 {%- endmacro -%}
 
-{%- macro default__binary_ghost(alias=none, hash) -%}
+{%- macro default__binary_ghost(alias, hash) -%}
 
     {%- if hash == 'md5' -%}
         {%- set zero_string_size = 32 %}

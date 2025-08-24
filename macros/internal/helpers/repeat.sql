@@ -5,6 +5,8 @@
 
 {%- macro repeat(str_to_repeat, desired_length=0) -%}
 
-    {% do return(str_to_repeat * desired_length) %}
+    {%- set repeated_string = str_to_repeat * desired_length -%}
+
+    {%- do return(repeated_string | string) -%}
 
 {%- endmacro -%}
