@@ -73,7 +73,7 @@ backfill AS (
         {%- else %}
 
         COALESCE(DECODE(MAX(ENCODE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}, 'hex')), 'hex'),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
+                 {{ automate_dv.cast_binary(column_str=ghost_pk, quote=true) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
@@ -137,7 +137,7 @@ new_rows AS (
         {%- else %}
 
         COALESCE(DECODE(MAX(ENCODE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}, 'hex')), 'hex'),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
+                 {{ automate_dv.cast_binary(column_str=ghost_pk, quote=true) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
