@@ -31,7 +31,7 @@
 {%- set cols_for_latest = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_ldts]) %}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' -%}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+    {%- set source_cols_with_rank = source_cols + [automate_dv.config_meta_get('rank_column')] -%}
 {%- endif -%}
 
 {#- Select unique source records #}

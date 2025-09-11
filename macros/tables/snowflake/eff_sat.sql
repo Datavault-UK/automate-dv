@@ -24,7 +24,7 @@
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_extra_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = automate_dv.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = automate_dv.expand_column_list(columns=[src_dfk]) -%}
-{%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+{%- set is_auto_end_dating = automate_dv.config_meta_get('is_auto_end_dating', default=false) %}
 
 {%- set max_datetime = automate_dv.max_datetime() %}
 
