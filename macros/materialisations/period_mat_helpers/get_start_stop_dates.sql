@@ -5,9 +5,9 @@
 
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
 
-    {% if config.get('start_date', default=none) is not none %}
-        {%- set start_date = config.get('start_date') -%}
-        {%- set stop_date = config.get('stop_date', default=none) -%}
+    {% if automate_dv.config_meta_get('start_date', default=none) is not none %}
+        {%- set start_date = automate_dv.config_meta_get('start_date') -%}
+        {%- set stop_date = automate_dv.config_meta_get('stop_date', default=none) -%}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 

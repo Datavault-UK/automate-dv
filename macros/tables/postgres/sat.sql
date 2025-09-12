@@ -5,7 +5,7 @@
 
 {%- macro postgres__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set apply_source_filter = config.get('apply_source_filter', false) -%}
+{%- set apply_source_filter = automate_dv.config_meta_get('apply_source_filter', false) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
@@ -13,7 +13,7 @@
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+    {%- set source_cols_with_rank = source_cols + [automate_dv.config_meta_get('rank_column')] -%}
 {%- endif %}
 
 WITH source_data AS (
