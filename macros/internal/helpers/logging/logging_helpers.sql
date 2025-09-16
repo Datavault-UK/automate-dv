@@ -17,7 +17,9 @@
     {%- set max_line_length = length_list | max -%}
     {%- set padding_length = (max_line_length - 7) // 2 -%}
 
-    {%- set border = modules.itertools.repeat('=', padding_length) | join ('') ~ (type | upper) ~ modules.itertools.repeat('=', padding_length) | join ('') -%}
+    {%- set sep = automate_dv.repeat('=', padding_length) %}
+
+    {%- set border = sep ~ (type | upper) ~ sep -%}
 
     {%- set wrapped_message = '\n' ~ border ~ '\n' ~ new_message | join('\n') ~ '\n' ~ border -%}
 

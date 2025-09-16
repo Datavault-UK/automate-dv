@@ -9,7 +9,7 @@
 {%- set fk_cols = automate_dv.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+    {%- set source_cols_with_rank = source_cols + [automate_dv.config_meta_get('rank_column')] -%}
 {%- endif %}
 
 {{ 'WITH ' -}}

@@ -18,8 +18,8 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
-    {%- set rank_column = config.require('rank_column') -%}
-    {%- set rank_source_models = config.require('rank_source_models') -%}
+    {%- set rank_column = automate_dv.config_meta_require('rank_column') -%}
+    {%- set rank_source_models = automate_dv.config_meta_require('rank_source_models') -%}
 
     {%- set min_max_ranks = automate_dv.get_min_max_ranks(rank_column, rank_source_models) | as_native -%}
 

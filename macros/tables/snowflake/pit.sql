@@ -51,7 +51,7 @@
 
     {#- Setting ghost values to replace NULLs -#}
     {%- set ghost_date = '1900-01-01 00:00:00.000000' -%}
-    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
+    {%- set ghost_pk = automate_dv.repeat('0', automate_dv.get_hash_string_length(hash)) -%}
 
     {%- if target.type == 'bigquery' -%}
         {%- if enable_native_hashes -%}
@@ -116,7 +116,7 @@ backfill AS (
                  {% if enable_native_hashes %}
                  {{ ghost_pk }}
                  {% else %}
-                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
+                 {{ automate_dv.cast_binary(column_str=ghost_pk, quote=true) }})
                  {% endif %}
         AS {{ sat_name }}_{{ sat_pk_name }},
 
@@ -181,7 +181,7 @@ new_rows AS (
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 {{ automate_dv.cast_binary(ghost_pk, quote=false) }})
+                 {{ automate_dv.cast_binary(column_str=ghost_pk, quote=true) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),

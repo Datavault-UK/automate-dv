@@ -7,7 +7,7 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
-    {%- set period = config.get('period', default='day') -%}
+    {%- set period = automate_dv.config_meta_get('period', default='day') -%}
 
     {#- Raise the errors/warnings in this order so that we do not get both -#}
     {%- if period == 'microsecond' -%}
@@ -22,8 +22,8 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
-    {%- set timestamp_field = config.require('timestamp_field') -%}
-    {%- set date_source_models = config.get('date_source_models', default=none) -%}
+    {%- set timestamp_field = automate_dv.config_meta_require('timestamp_field') -%}
+    {%- set date_source_models = automate_dv.config_meta_get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = automate_dv.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
 
