@@ -1,5 +1,5 @@
 name: automate_dv
-version: 0.11.2
+version: 0.11.3
 require-dbt-version: [ ">=1.0.0", "<2.0.0" ]
 config-version: 2
 
