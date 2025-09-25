@@ -10,7 +10,7 @@
         {%- do return(src_payload) -%}
     {%- endif -%}
 
-    {%- set source_model_cols = adapter.get_columns_in_relation(ref(source_model)) -%}
+    {%- set source_model_cols = automate_dv.wrap_get_columns_in_relation(ref(source_model)) -%}
     {%- set columns_in_metadata = automate_dv.expand_column_list(
                                        columns=[src_pk, src_hashdiff, src_cdk,
                                                 src_payload, src_extra_columns,
