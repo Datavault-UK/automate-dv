@@ -7,7 +7,7 @@
 </div>
 <div align="center">
   
-  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.4%20%3C=1.8.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
+  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.9.x%20%3C=3.0.0-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
 
 </div>
 
