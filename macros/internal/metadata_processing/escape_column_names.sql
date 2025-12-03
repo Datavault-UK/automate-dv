@@ -4,101 +4,80 @@
  */
 
 {%- macro escape_column_names(columns=none) -%}
-    {%- do log('ESCAPE_COLUMN_NAMES 1: ' ~ columns, true) -%}
 
+    {# -- Base cases -- #}
+    {%- if columns is none -%}
+        {%- do return(none) -%}
+    {%- elif columns == [] -%}
+        {%- do return([]) -%}
+    {%- elif columns == {} -%}
+        {%- do return({}) -%}
+    {%- elif columns == '' -%}
+        {%- if execute -%}
+            {{ exceptions.raise_compiler_error("Expected a column name or a list of column names, got an empty string") }}
+        {%- endif -%}
+    {%- endif -%}
+
+    {# -- Expand lists -- #}
     {%- if automate_dv.is_list(columns) -%}
         {%- set columns = automate_dv.expand_column_list(columns) -%}
     {%- endif -%}
 
-    {%- do log('ESCAPE_COLUMN_NAMES 2: ' ~ columns, true) -%}
+    {%- set result = none -%}
 
-    {%- if automate_dv.is_something(columns) -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 3: ' ~ columns, true) -%}
-        {%- set col_string = '' -%}
-        {%- set col_list = [] -%}
-        {%- set col_mapping = {} -%}
+    {# -- Single column -- #}
+    {%- if columns is string -%}
 
-        {%- if columns is string -%}
-            {%- do log('ESCAPE_COLUMN_NAMES 3.5: ' ~ columns, true) -%}
-            {%- set col_string = automate_dv.escape_column_name(columns) -%}
-        {%- elif automate_dv.is_list(columns) -%}
-            {%- do log('ESCAPE_COLUMN_NAMES 4: ' ~ columns, true) -%}
+        {%- set result = automate_dv.escape_column_name(columns) -%}
 
-            {%- for col in columns -%}
+    {# -- List of columns -- #}
+    {%- elif automate_dv.is_list(columns, empty_is_false=true) -%}
 
-                {%- if col is string -%}
+        {%- set temp_list = [] -%}
 
-                    {%- set escaped_col = automate_dv.escape_column_name(col) -%}
-
-                    {%- do col_list.append(escaped_col) -%}
-
-                {%- else -%}
-
-                    {%- if execute -%}
-                        {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string.") -}}
-                    {%- endif -%}
-
-                {%- endif -%}
-
-            {%- endfor -%}
-
-        {%- elif columns is mapping -%}
-
-            {%- if columns['source_column'] and columns['alias'] -%}
-
-                {%- set escaped_source_col = automate_dv.escape_column_name(columns['source_column']) -%}
-                {%- set escaped_alias_col = automate_dv.escape_column_name(columns['alias']) -%}
-                {%- set col_mapping = {"source_column": escaped_source_col, "alias": escaped_alias_col} -%}
-
+        {%- for col in columns -%}
+            {%- if col is string -%}
+                {%- do temp_list.append(automate_dv.escape_column_name(col)) -%}
             {%- else -%}
-
                 {%- if execute -%}
-                    {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata.") -}}
-                {%- endif %}
-
+                    {{ exceptions.raise_compiler_error("Invalid column name(s) provided. Must be strings.") }}
+                {%- endif -%}
             {%- endif -%}
+        {%- endfor -%}
+
+        {%- set result = temp_list -%}
+
+    {# -- Mapping (HASHDIFF metadata) -- #}
+    {%- elif columns is mapping -%}
+
+        {%- if 'source_column' in columns and 'alias' in columns -%}
+
+            {%- set result = {
+                "source_column": automate_dv.escape_column_name(columns['source_column']),
+                "alias": automate_dv.escape_column_name(columns['alias'])
+            } -%}
 
         {%- else -%}
 
             {%- if execute -%}
-                {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata.") -}}
-            {%- endif %}
+                {{ exceptions.raise_compiler_error(
+                    "Invalid column mapping. Must contain 'source_column' and 'alias'"
+                ) }}
+            {%- endif -%}
 
         {%- endif -%}
 
-    {%- elif columns == '' -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 5: ' ~ columns, true) -%}
+    {# -- Illegal type -- #}
+    {%- else -%}
+
         {%- if execute -%}
-            {{- exceptions.raise_compiler_error("Expected a column name or a list of column names, got an empty string") -}}
+            {{ exceptions.raise_compiler_error(
+                "Invalid column input type. Must be string, list of strings, or mapping."
+            ) }}
         {%- endif -%}
 
     {%- endif -%}
 
-    {%- if columns is none -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 6: ' ~ columns, true) -%}
-        {%- do return(none) -%}
-
-    {%- elif columns == [] -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 7: ' ~ columns, true) -%}
-        {%- do return([]) -%}
-
-    {%- elif columns == {} -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 8: ' ~ columns, true) -%}
-        {%- do return({}) -%}
-
-    {%- elif columns is string -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 9 (col_string): ' ~ col_string, true) -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 9: (columns):  ' ~ columns, true) -%}
-        {%- do return(col_string) -%}
-
-    {%- elif automate_dv.is_list(columns) -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 10: ' ~ columns, true) -%}
-        {%- do return(col_list) -%}
-
-    {%- elif columns is mapping -%}
-        {%- do log('ESCAPE_COLUMN_NAMES 11: ' ~ columns, true) -%}
-        {%- do return(col_mapping) -%}
-
-    {%- endif -%}
+    {%- do return(result) -%}
 
 {%- endmacro -%}
