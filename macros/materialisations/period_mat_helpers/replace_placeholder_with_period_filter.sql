@@ -32,9 +32,9 @@
 
 
 {% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-    {%- if period is in ['day', 'week', 'month', 'quarter', 'year'] -%}
+    {%- if period in ['day', 'week', 'month', 'quarter', 'year'] -%}
         {%- set timestamp_field_type = 'DATE' -%}
-    {%- elif period is in ['millisecond', 'microsecond', 'second', 'minute', 'hour'] -%}
+    {%- elif period in ['millisecond', 'microsecond', 'second', 'minute', 'hour'] -%}
         {%- set timestamp_field_type = 'TIMESTAMP' -%}
     {%- else -%}
         {%- set timestamp_field_type = 'DATE' -%}
@@ -53,7 +53,7 @@
 
 
 {% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-    {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
+    {%- if period in ['microsecond', 'millisecond', 'second'] -%}
         {{ automate_dv.sqlserver_datepart_too_small_error(period=period) }}
     {%- endif -%}
 

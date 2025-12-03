@@ -83,7 +83,7 @@
 
 
 {% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
-    {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
+    {%- if period in ['microsecond', 'millisecond', 'second'] -%}
         {{ automate_dv.datepart_too_small_error(period=period) }}
     {%- endif -%}
 

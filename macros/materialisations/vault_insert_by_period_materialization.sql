@@ -12,7 +12,7 @@
     {#- Raise the errors/warnings in this order so that we do not get both -#}
     {%- if period == 'microsecond' -%}
         {{ automate_dv.datepart_too_small_error(period=period) }}
-    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
+    {%- elif period in ['millisecond', 'second', 'minute', 'hour'] -%}
         {{ automate_dv.datepart_not_recommended_warning(period=period) }}
     {%- endif -%}
 

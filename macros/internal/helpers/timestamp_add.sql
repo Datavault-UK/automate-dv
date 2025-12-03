@@ -10,7 +10,7 @@
 
 {%- macro default__timestamp_add(datepart, interval, from_date_or_timestamp) -%}
 
-    {%- if datepart is in ['day', 'week', 'month', 'quarter', 'year'] -%}
+    {%- if datepart in ['day', 'week', 'month', 'quarter', 'year'] -%}
         {{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }}
     {%- elif datepart == 'microsecond' -%}
         {{ automate_dv.dateadd('microsecond', 1, from_date_or_timestamp) }}
@@ -28,7 +28,7 @@
 
 {% macro bigquery__timestamp_add(datepart, interval, from_date_or_timestamp) %}
 
-{%- if datepart is in ['day', 'week', 'month', 'quarter', 'year'] -%}
+{%- if datepart in ['day', 'week', 'month', 'quarter', 'year'] -%}
     {{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }}
 {%- elif datepart == 'microsecond' -%}
     TIMESTAMP_ADD(CAST( {{from_date_or_timestamp}} AS TIMESTAMP), INTERVAL 1 microsecond)
