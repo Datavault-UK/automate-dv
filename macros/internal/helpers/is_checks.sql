@@ -4,20 +4,20 @@
  */
 
 {%- macro is_list(obj, empty_is_false=false) -%}
-    {% do log('IS_LIST 1: ' ~ obj, true) %}
+    {%- do log('IS_LIST 1: ' ~ obj, true) -%}
     {%- if obj is undefined -%}
-        {% do log('IS_LIST 2: ' ~ obj, true) %}
+        {%- do log('IS_LIST 2: ' ~ obj, true) -%}
         {%- do return(false) -%}
     {%- elif obj is iterable and obj is not string and obj is not mapping -%}
         {%- if empty_is_false and (obj is none or not obj) -%}
-            {% do log('IS_LIST 3: ' ~ obj, true) %}
+            {%- do log('IS_LIST 3: ' ~ obj, true) -%}
             {%- do return(false) -%}
         {%- else -%}
-            {% do log('IS_LIST 4: ' ~ obj, true) %}
+            {%- do log('IS_LIST 4: ' ~ obj, true) -%}
             {%- do return(true) -%}
         {%- endif -%}
     {%- else -%}
-        {% do log('IS_LIST 5: ' ~ obj, true) %}
+        {%- do log('IS_LIST 5: ' ~ obj, true) -%}
         {%- do return(false) -%}
     {%- endif -%}
 
@@ -38,18 +38,18 @@
 
 
 {%- macro is_something(obj) -%}
-    {% do log('IS_SOMETHING 1: ' ~ obj, true) %}
+    {%- do log('IS_SOMETHING 1: ' ~ obj, true) -%}
     {%- if obj is not none and obj is defined and obj -%}
         {#- if an empty list, do not consider the object something -#}
         {% if automate_dv.is_list(obj, empty_is_false=true) %}
-            {% do log('IS_SOMETHING 2: ' ~ obj, true) %}
+            {%- do log('IS_SOMETHING 2: ' ~ obj, true) -%}
             {%- do return(true) -%}
         {%- else -%}
-            {% do log('IS_SOMETHING 3: ' ~ obj, true) %}
+            {%- do log('IS_SOMETHING 3: ' ~ obj, true) -%}
             {%- do return(false) -%}
         {%- endif -%}
     {%- else -%}
-        {% do log('IS_SOMETHING 4: ' ~ obj, true) %}
+        {%- do log('IS_SOMETHING 4: ' ~ obj, true) -%}
         {%- do return(false) -%}
     {%- endif -%}
 

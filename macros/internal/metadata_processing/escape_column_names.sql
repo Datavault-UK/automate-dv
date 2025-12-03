@@ -4,22 +4,25 @@
  */
 
 {%- macro escape_column_names(columns=none) -%}
+    {%- do log('ESCAPE_COLUMN_NAMES 1: ' ~ columns, true) -%}
 
     {%- if automate_dv.is_list(columns) -%}
         {%- set columns = automate_dv.expand_column_list(columns) -%}
     {%- endif -%}
 
-    {%- if automate_dv.is_something(columns) -%}
+    {%- do log('ESCAPE_COLUMN_NAMES 2: ' ~ columns, true) -%}
 
+    {%- if automate_dv.is_something(columns) -%}
+        {%- do log('ESCAPE_COLUMN_NAMES 3: ' ~ columns, true) -%}
         {%- set col_string = '' -%}
         {%- set col_list = [] -%}
         {%- set col_mapping = {} -%}
 
         {%- if columns is string -%}
-
+            {%- do log('ESCAPE_COLUMN_NAMES 3.5: ' ~ columns, true) -%}
             {%- set col_string = automate_dv.escape_column_name(columns) -%}
-
         {%- elif automate_dv.is_list(columns) -%}
+            {%- do log('ESCAPE_COLUMN_NAMES 4: ' ~ columns, true) -%}
 
             {%- for col in columns -%}
 
@@ -64,7 +67,7 @@
         {%- endif -%}
 
     {%- elif columns == '' -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 5: ' ~ columns, true) -%}
         {%- if execute -%}
             {{- exceptions.raise_compiler_error("Expected a column name or a list of column names, got an empty string") -}}
         {%- endif -%}
@@ -72,27 +75,28 @@
     {%- endif -%}
 
     {%- if columns is none -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 6: ' ~ columns, true) -%}
         {%- do return(none) -%}
 
     {%- elif columns == [] -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 7: ' ~ columns, true) -%}
         {%- do return([]) -%}
 
     {%- elif columns == {} -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 8: ' ~ columns, true) -%}
         {%- do return({}) -%}
 
     {%- elif columns is string -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 9 (col_string): ' ~ col_string, true) -%}
+        {%- do log('ESCAPE_COLUMN_NAMES 9: (columns):  ' ~ columns, true) -%}
         {%- do return(col_string) -%}
 
     {%- elif automate_dv.is_list(columns) -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 10: ' ~ columns, true) -%}
         {%- do return(col_list) -%}
 
     {%- elif columns is mapping -%}
-
+        {%- do log('ESCAPE_COLUMN_NAMES 11: ' ~ columns, true) -%}
         {%- do return(col_mapping) -%}
 
     {%- endif -%}
