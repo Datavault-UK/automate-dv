@@ -10,7 +10,6 @@ seed-paths: [ "seeds" ]
 macro-paths: [ "macros" ]
 docs-paths: [ "docs" ]
 
-target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
