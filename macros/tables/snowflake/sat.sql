@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2024
+ * Copyright (c) Business Thinking Ltd. 2019-2025
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -25,7 +25,7 @@
 
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set apply_source_filter = config.get('apply_source_filter', false) -%}
+{%- set apply_source_filter = automate_dv.config_meta_get('apply_source_filter', false) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
@@ -33,7 +33,7 @@
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+    {%- set source_cols_with_rank = source_cols + [automate_dv.config_meta_get('rank_column')] -%}
 {%- endif %}
 
 WITH source_data AS (
@@ -84,34 +84,74 @@ valid_stg AS (
 
 {%- endif %}
 
-first_record_in_set AS (
-    SELECT
-        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-    FROM valid_stg AS sd
-    {%- else %}
-    FROM source_data AS sd
-    {%- endif %}
-    QUALIFY ROW_NUMBER() OVER (
-        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-    ) = 1
-),
+{%- set is_incremental = automate_dv.is_any_incremental() -%}
+{%- set use_valid_stg = is_incremental and apply_source_filter -%}
+{%- set source_table = 'valid_stg AS sd' if use_valid_stg else 'source_data AS sd' -%}
+{%- set hashdiff_alias = automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') -%}
+{%- set lag_default = automate_dv.cast_binary('FFFFFFFF', quote=true) -%}
+{%- set partition_by = automate_dv.prefix([src_pk], 'sd', alias_target='source') -%}
+{%- set is_bigquery = target.type == 'bigquery' -%}
+{%- set order_by = automate_dv.prefix([src_ldts], 'sd', alias_target='source') -%}
+
+{%- set use_eff = automate_dv.is_something(src_eff) -%}
+
+{%- if use_eff -%}
+    {%- set order_by_eff = automate_dv.prefix([src_eff], 'sd', alias_target='source') -%}
+{%- endif -%}
+
+{#- BigQuery does not support a 3-arg LAG() where the third arg is an expression, it must be a constant. Workaround below #}
 
 unique_source_records AS (
-    SELECT DISTINCT
+    SELECT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    {%- if automate_dv.is_any_incremental() and apply_source_filter %}
-    FROM valid_stg AS sd
-    {%- else %}
-    FROM source_data AS sd
+    FROM {{ source_table }}
+    {%- if is_incremental %}
+    LEFT OUTER JOIN latest_records AS lr
+        ON {{ automate_dv.multikey(src_pk, prefix=['sd','lr'], condition='=') }}
     {%- endif %}
-    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
-        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-    )
-),
 
+    QUALIFY {{ hashdiff_alias }} !=
+    {%- if is_incremental and is_bigquery %}
+        COALESCE(
+            LAG({{ hashdiff_alias }}, 1) OVER (
+                PARTITION BY {{ partition_by }}
+                {%- if use_eff %}
+                ORDER BY {{ order_by }} ASC,
+                         {{ order_by_eff }} ASC
+                {%- else %}
+                ORDER BY {{ order_by }} ASC
+                {%- endif %}
+            ),
+            {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
+            {{ lag_default }}
+        )
+    {%- elif is_incremental and not is_bigquery %}
+        LAG({{ hashdiff_alias }}, 1,
+            COALESCE(
+                {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }},
+                {{ lag_default }}
+            )
+        ) OVER (
+            PARTITION BY {{ partition_by }}
+            {%- if use_eff %}
+            ORDER BY {{ order_by }} ASC,
+                     {{ order_by_eff }} ASC
+            {%- else %}
+            ORDER BY {{ order_by }} ASC
+            {%- endif %}
+        )
+    {%- else %}
+        LAG({{ hashdiff_alias }}, 1, {{ lag_default }}) OVER (
+            PARTITION BY {{ partition_by }}
+            {%- if use_eff %}
+            ORDER BY {{ order_by }} ASC,
+                     {{ order_by_eff }} ASC
+            {%- else %}
+            ORDER BY {{ order_by }} ASC
+            {%- endif %}
+        )
+    {%- endif %}
+),
 
 {%- if enable_ghost_record %}
 
@@ -136,16 +176,7 @@ records_to_insert AS (
     {%- endif %}
     UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
     {%- endif %}
-    SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
-    FROM first_record_in_set AS frin
-    {%- if automate_dv.is_any_incremental() %}
-    LEFT JOIN latest_records AS lr
-        ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
-        AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
-        WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
-    {%- endif %}
-    UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
-    SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
+    SELECT {{ automate_dv.alias_all(source_cols, 'usr') }}
     FROM unique_source_records AS usr
 )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2024
+ * Copyright (c) Business Thinking Ltd. 2019-2025
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -21,7 +21,7 @@
         {%- set zero_string_size = 32 %}
     {%- endif -%}
 
-    {%- set zero_string = modules.itertools.repeat('0', zero_string_size) | join ('') -%}
+    {%- set zero_string = automate_dv.repeat('0', zero_string_size) -%}
 
     {{- automate_dv.cast_binary(column_str=zero_string, alias=alias, quote=true) -}}
 
@@ -40,7 +40,7 @@
     {%- endif -%}
 
     {%- set enable_native_hashes = var('enable_native_hashes', false) -%}
-    {%- set zero_string = modules.itertools.repeat('0', zero_string_size) | join ('') -%}
+    {%- set zero_string = automate_dv.repeat('0', zero_string_size) -%}
 
     {%- if enable_native_hashes -%}
         {%- set column_str = "FROM_HEX('{}')".format(zero_string) -%}

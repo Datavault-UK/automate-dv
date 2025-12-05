@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2024
+ * Copyright (c) Business Thinking Ltd. 2019-2025
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
@@ -9,7 +9,7 @@
 {%- set fk_cols = automate_dv.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+    {%- set source_cols_with_rank = source_cols + [automate_dv.config_meta_get('rank_column')] -%}
 {%- endif %}
 
 {{ 'WITH ' -}}
