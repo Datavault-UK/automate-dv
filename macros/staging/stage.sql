@@ -76,7 +76,7 @@
            and automate_dv.is_nothing(ranked_columns) -%}
         {%- set final_columns_to_select = final_columns_to_select + all_source_columns -%}
     {%- else -%}
-        {#- Only include non-overriden columns if not just source columns -#}
+        {#- Only include non-overridden columns if not just source columns -#}
         {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
     {%- endif -%}
 {%- endif %}
