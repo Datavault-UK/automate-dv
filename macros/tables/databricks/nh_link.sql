@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) Business Thinking Ltd. 2019-2025
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
+ */
+
+{%- macro databricks__nh_link(src_pk, src_fk, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
+
+{%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_fk, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
+{%- set fk_cols = automate_dv.expand_column_list([src_fk]) %}
+
+WITH stage AS (
+    SELECT DISTINCT {{ source_cols | join(', ') }}
+    FROM {{ ref(source_model) }}
+    {%- if model.config.materialized == 'vault_insert_by_period' %}
+    WHERE __PERIOD_FILTER__
+    AND {{ automate_dv.multikey(src_pk, condition='IS NOT NULL') }}
+    AND {{ automate_dv.multikey(fk_cols, condition='IS NOT NULL') }}
+    {%- elif model.config.materialized == 'vault_insert_by_rank' %}
+    WHERE __RANK_FILTER__
+    AND {{ automate_dv.multikey(src_pk, condition='IS NOT NULL') }}
+    AND {{ automate_dv.multikey(fk_cols, condition='IS NOT NULL') }}
+    {%- else %}
+    WHERE {{ automate_dv.multikey(src_pk, condition='IS NOT NULL') }}
+    AND {{ automate_dv.multikey(fk_cols, condition='IS NOT NULL') }}
+    {%- endif %}
+),
+records_to_insert AS (
+    SELECT {{ automate_dv.prefix(source_cols, 'stg') }}
+    FROM stage AS stg
+    {% if automate_dv.is_any_incremental() -%}
+    LEFT ANTI JOIN {{ this }} AS tgt
+    ON {{ automate_dv.multikey(src_pk, prefix=['stg','tgt'], condition='=') }}
+    {%- endif %}
+)
+
+SELECT * FROM records_to_insert
+
+{%- endmacro -%}

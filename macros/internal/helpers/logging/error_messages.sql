@@ -94,3 +94,15 @@
 
     {%- do automate_dv.log_warning(message) -%}
 {%- endmacro -%}
+
+
+{%- macro t_link_deprecation_warning() -%}
+
+    {%- set message -%}
+        DEPRECATED: Since AutomateDV v0.11.5, the t_link() macro is now deprecated in favour of the new nh_link() macro.
+        Functionality remains identical, and it is simply a rename to be more in-line with Data Vault naming standards.
+        The t_link() macro will be removed in a future version, but for now functions as an alias for backwards compatbility.
+    {%- endset -%}
+
+    {%- do automate_dv.log_warning(message) -%}
+{%- endmacro -%}
