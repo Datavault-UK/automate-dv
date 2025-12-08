@@ -58,6 +58,13 @@
 {%- endmacro -%}
 
 
+{%- macro spark__cast_date(column_str, as_string=false, alias=none) -%}
+
+    {{ automate_dv.snowflake__cast_date(column_str=column_str, as_string=as_string, alias=alias)}}
+
+{%- endmacro -%}
+
+
 {%- macro postgres__cast_date(column_str, as_string=false, alias=none) -%}
 
     {%- if as_string -%}

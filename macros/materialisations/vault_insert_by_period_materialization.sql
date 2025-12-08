@@ -119,7 +119,7 @@
 
             {% if 'response' in result.keys() %} {# added in v0.19.0 #}
                 {%- if not result['response']['rows_affected'] %}
-                    {% if target.type == "databricks" and result['data'] | length > 0 %}
+                    {% if target.type in ["databricks", "spark"] and result['data'] | length > 0 %}
                         {% set rows_inserted = result['data'][0][1] | int %}
                     {% else %}
                         {% set rows_inserted = 0 %}
@@ -139,9 +139,9 @@
                                                                                               period_of_load, rows_inserted,
                                                                                               model.unique_id)) }}
 
-            {# In databricks and sqlserver a temporary view/table can only be dropped by #}
+            {# In spark, databricks and sqlserver a temporary view/table can only be dropped by #}
             {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
-            {% if target.type in ['databricks', 'sqlserver'] %}
+            {% if target.type in ['databricks', 'sqlserver', 'spark'] %}
                 {{ automate_dv.drop_temporary_special(tmp_relation) }}
             {% else %}
                 {% do to_drop.append(tmp_relation) %}
@@ -166,7 +166,7 @@
 
         {% if 'response' in result.keys() %} {# added in v0.19.0 #}
             {%- if not result['response']['rows_affected'] %}
-                {% if target.type == "databricks" and result['data'] | length > 0 %}
+                {% if target.type in ["databricks", "spark"] and result['data'] | length > 0 %}
                     {% set rows_inserted = result['data'][0][1] | int %}
                 {% else %}
                     {% set rows_inserted = 0 %}

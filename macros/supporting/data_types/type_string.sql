@@ -32,3 +32,17 @@
         VARCHAR({{ char_length }})
     {%- endif -%}
 {%- endmacro -%}
+
+{%- macro spark__type_string(is_hash=false, char_length=255) -%}
+    {%- if is_hash -%}
+        {%- if var('hash', 'MD5') | lower == 'md5' -%}
+            VARCHAR(16)
+        {%- elif var('hash', 'MD5') | lower == 'sha' -%}
+            VARCHAR(32)
+        {%- elif var('hash', 'MD5') | lower == 'sha1' -%}
+            VARCHAR(20)
+        {%- endif -%}
+    {%- else -%}
+        VARCHAR({{ char_length }})
+    {%- endif -%}
+{%- endmacro -%}
