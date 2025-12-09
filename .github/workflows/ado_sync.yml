@@ -14,7 +14,7 @@ concurrency:
 jobs:
   alert:
     if: ${{ !github.event.issue.pull_request }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: danhellem/github-actions-issue-to-work-item@master
         env:
