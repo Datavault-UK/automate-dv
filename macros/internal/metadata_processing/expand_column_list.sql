@@ -13,7 +13,7 @@
 
 {%- if automate_dv.is_list(columns) -%}
 
-    {%- set columns = columns | reject("none") %}
+    {%- set columns = columns | reject('none') | reject('undefined') | list %}
 
     {%- for col in columns -%}
 
