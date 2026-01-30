@@ -100,7 +100,7 @@
 
     {%- set message -%}
         DEPRECATED: Since AutomateDV v0.11.5, the t_link() macro is now deprecated in favour of the new nh_link() macro.
-        Functionality remains identical, and it is simply a rename to be more in-line with Data Vault naming standards.
+        Functionality remains identical, and it is simply a rename to be in-line with the latest Data Vault naming standards.
         The t_link() macro will be removed in a future version, but for now functions as an alias for backwards compatibility.
     {%- endset -%}
 
