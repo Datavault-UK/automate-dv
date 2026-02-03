@@ -22,7 +22,7 @@ WITH source_data AS (
     {%- else %}
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
-    FROM {{ ref(source_model) }} AS a
+    FROM ({{ ref(source_model) }}) AS a
     WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     AND __PERIOD_FILTER__
