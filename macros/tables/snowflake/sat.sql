@@ -29,7 +29,7 @@
 {%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
-{%- set window_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set window_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts, src_eff]) -%}
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
@@ -64,6 +64,9 @@ latest_records AS (
     QUALIFY ROW_NUMBER() OVER (
         PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
+        {%- if automate_dv.is_something(src_eff) -%}
+        , {{ automate_dv.prefix([src_eff], 'current_records') }} DESC
+        {%- endif %}
     ) = 1
 ),
 
