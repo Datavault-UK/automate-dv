@@ -180,3 +180,23 @@
     {%- endif -%}
 
 {% endmacro %}
+
+{#- Redshift -#}
+
+{% macro redshift__hash_alg_md5() -%}
+
+    {% do return("UPPER(MD5([HASH_STRING_PLACEHOLDER]))") %}
+
+{% endmacro %}
+
+{% macro redshift__hash_alg_sha256() -%}
+
+    {% do return("UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))") %}
+
+{% endmacro %}
+
+{% macro redshift__hash_alg_sha1() -%}
+
+    {% do return("UPPER(SHA1([HASH_STRING_PLACEHOLDER]))") %}
+
+{% endmacro %}

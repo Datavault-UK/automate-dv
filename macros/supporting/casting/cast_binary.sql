@@ -39,3 +39,14 @@
 
 {%- endmacro -%}
 
+{%- macro redshift__cast_binary(column_str, alias=none, quote=true) -%}
+
+    {%- if quote -%}
+        '{{ column_str }}'
+    {%- else -%}
+        CAST({{ column_str }} AS {{ automate_dv.type_binary() }})
+    {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif -%}
+
+{%- endmacro -%}

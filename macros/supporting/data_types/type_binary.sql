@@ -49,3 +49,21 @@
     BINARY
   {%- endif -%}
 {%- endmacro -%}
+
+{%- macro redshift__type_binary(for_dbt_compare=false) -%}
+    {%- if for_dbt_compare -%}
+        VARCHAR
+    {%- else -%}
+        {%- set selected_hash = var('hash', 'MD5') | lower -%}
+
+        {%- if selected_hash == 'md5' -%}
+            VARCHAR(32)
+        {%- elif selected_hash == 'sha' -%}
+            VARCHAR(64)
+        {%- elif selected_hash == 'sha1' -%}
+            VARCHAR(40)
+        {%- else -%}
+            VARCHAR(32)
+        {%- endif -%}
+    {%- endif -%}
+{%- endmacro -%}
