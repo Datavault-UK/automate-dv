@@ -51,3 +51,7 @@
 {%- macro postgres__get_escape_characters() %}
     {%- do return (('"', '"')) -%}
 {%- endmacro %}
+
+{%- macro redshift__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}
