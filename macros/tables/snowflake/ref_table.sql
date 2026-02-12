@@ -29,6 +29,10 @@ WITH source_data AS (
         {{ automate_dv.prefix(source_cols, 'a') }}
     FROM {{ ref(src) }} AS a
     WHERE a.{{ src_pk }} IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'a') }}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'a') }} 
+    ) = 1
     {%- endfor %}
 ),
 
