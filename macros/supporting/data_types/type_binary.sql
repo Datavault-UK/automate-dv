@@ -49,3 +49,7 @@
     BINARY
   {%- endif -%}
 {%- endmacro -%}
+
+{%- macro redshift__type_binary(for_dbt_compare=false) -%}
+    VARCHAR(32)
+{%- endmacro -%}

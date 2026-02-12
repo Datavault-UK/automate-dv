@@ -14,3 +14,7 @@
 {%- macro sqlserver__type_timestamp() -%}
     DATETIME2
 {%- endmacro -%}
+
+{%- macro redshift__type_timestamp() -%}
+    TIMESTAMP
+{%- endmacro -%}
