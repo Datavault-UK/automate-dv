@@ -150,6 +150,37 @@
 {%- endmacro %}
 
 
+{% macro spark__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+
+    {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
+            {%- set datepart = period -%}
+    {% set period_boundary_sql -%}
+
+        WITH period_data AS (
+            SELECT
+                COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
+                COALESCE(
+                {{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
+                         {{ current_timestamp() }}) AS stop_timestamp
+            FROM {{ target_relation }}
+        )
+        SELECT
+            IF(stop_timestamp < start_timestamp, stop_timestamp, start_timestamp) AS start_timestamp,
+            stop_timestamp,
+            {{ datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
+
+        FROM period_data
+    {%- endset %}
+
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
+
+    {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
+                                'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
+                                'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
+
+    {% do return(period_boundaries) %}
+{%- endmacro %}
+
 {% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}

@@ -43,6 +43,23 @@
 {%- endmacro -%}
 
 
+{%- macro spark__standard_column_wrapper(hash_content_casing) -%}
+
+    {%- if hash_content_casing == 'upper' -%}
+        {%- set standardise -%}
+            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string(is_hash=true) }}))), '')
+        {%- endset -%}
+    {%- else -%}
+        {%- set standardise -%}
+            NULLIF(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string(is_hash=true) }})), '')
+        {%- endset -%}
+    {%- endif -%}
+
+    {% do return(standardise) -%}
+
+{%- endmacro -%}
+
+
 {%- macro sqlserver__standard_column_wrapper(hash_content_casing) -%}
 
     {%- if hash_content_casing == 'upper' -%}
