@@ -21,7 +21,7 @@ Do đó chỉ cần override ở tầng thấp nhất, các macro cấp cao tự
 |-------|------|-----------|
 | `fabric__type_binary` | `macros/supporting/data_types/type_binary.sql` | Fabric không có kiểu `BINARY` cho cột hash → dùng `CHAR(n)` chứa hex. |
 | `fabric__binary_ghost` | `macros/supporting/ghost_records/binary_ghost.sql` | Ghost record dùng `REPLICATE('0', n) AS CHAR(n)` thay cho `BINARY`. |
-| `fabric__cast_datetime` | `macros/supporting/casting/cast_datetime.sql` | Cần chỉ định precision: `CONVERT(DATETIME2(6), ...)`. |
+| `fabric__cast_datetime` | `macros/supporting/casting/cast_datetime.sql` | Cần chỉ định precision: `CONVERT(DATETIME2(6), ...)`. Fabric giới hạn `datetime2`/`time` tối đa **6 chữ số** phần thập phân của giây → **bắt buộc** dùng `(6)`, không để mặc định `(7)`. |
 
 ### Độ dài CHAR theo thuật toán hash (QUAN TRỌNG)
 
@@ -36,15 +36,14 @@ Hash được lưu dưới dạng chuỗi **hex** (`CONVERT(..., style 2)`), nê
 > ⚠️ **Lưu ý bug lịch sử:** phiên bản fork đầu tiên để `CHAR(32)` cho *mọi* thuật toán → **cắt cụt** SHA-256/SHA-1.
 > Bản hiện tại đã sửa đúng độ dài. Nếu đổi độ dài ở `fabric__type_binary` thì phải đổi khớp ở `fabric__binary_ghost`.
 
-## 3. TRUNCATE không được hỗ trợ
+## 3. TRUNCATE — nay đã được hỗ trợ
 
-Fabric Warehouse không hỗ trợ `TRUNCATE TABLE` trong ngữ cảnh này → dùng `DELETE FROM`.
+> **Cập nhật 2026-06 (theo T-SQL surface area của Fabric DW):** `TRUNCATE TABLE` **đã được hỗ trợ**
+> trong Fabric Warehouse. Vì vậy `macros/materialisations/incremental_pit_bridge_replace.sql`
+> dùng thẳng `TRUNCATE TABLE` cho cả SQL Server lẫn Fabric — **không** còn workaround `DELETE FROM`.
 
-- File: `macros/materialisations/incremental_pit_bridge_replace.sql`
-- Xử lý có điều kiện, SQL Server vẫn dùng TRUNCATE:
-  ```jinja
-  {% if target.type == 'fabric' %}DELETE FROM {{ target_relation }};{% else %}TRUNCATE TABLE {{ target_relation }};{% endif %}
-  ```
+Lịch sử: bản Fabric đời đầu chưa hỗ trợ `TRUNCATE` nên từng phải thay bằng `DELETE FROM`.
+Nếu gặp lỗi TRUNCATE trên workspace Fabric cũ, mới cần cân nhắc quay lại `DELETE FROM`.
 
 ## 4. Các macro DELEGATE (chỉ gọi lại `sqlserver__`)
 
@@ -111,3 +110,30 @@ my_project:
 ```
 
 Cần cài `dbt-fabric`. AutomateDV sẽ tự dùng các macro `fabric__` nhờ `target.type == 'fabric'`.
+
+## 9. Ảnh chụp khả năng T-SQL của Fabric DW (liên quan AutomateDV)
+
+Nguồn: [T-SQL surface area](https://learn.microsoft.com/en-us/fabric/data-warehouse/tsql-surface-area)
+và [Data types](https://learn.microsoft.com/en-us/fabric/data-warehouse/data-types) — cập nhật theo tài liệu ngày **2026-06-11**.
+Kiểm tra lại 2 trang này trước khi thêm tính năng mới.
+
+| Tính năng | Trạng thái trên Fabric DW | Ảnh hưởng AutomateDV |
+|-----------|---------------------------|----------------------|
+| `TRUNCATE TABLE` | ✅ Hỗ trợ | Dùng thẳng, bỏ workaround DELETE (mục 3) |
+| `MERGE` | ✅ GA | Có thể dùng cho incremental nếu cần |
+| `datetime2` / `time` | ✅ nhưng precision tối đa **6** | `fabric__cast_datetime` dùng `DATETIME2(6)` |
+| `HASHBYTES` (MD5, SHA2_256, SHA1) | ✅ | Dùng trong `fabric__hash_alg_*` |
+| `CONVERT(..., style)` | ✅ | Dùng để đổi hash sang chuỗi hex |
+| `char` / `varchar` | ✅ (persisted) | Kiểu cột hash hiện tại `CHAR(n)` |
+| `varbinary` | ✅ (persisted) | Lựa chọn thay thế cho hash (xem ghi chú dưới) |
+| `binary(n)` cố định | ❌ **không** hỗ trợ cho cột lưu trữ | Vì vậy KHÔNG dùng `BINARY(16)` như SQL Server |
+| `nchar` / `nvarchar` | ❌ | Dùng `char`/`varchar` |
+| `datetime` / `smalldatetime` | ❌ | Dùng `datetime2` |
+| `#temp` tables (session-scoped) | ✅ | An toàn cho materialization tạm |
+| `SET ROWCOUNT`, Triggers, Synonyms, Materialized views, Recursive CTE | ❌ | Tránh dùng |
+
+**Ghi chú về kiểu hash (CHAR vs VARBINARY):** hiện dùng `CHAR(n)` chứa hash dạng **hex** — an toàn, đã kiểm chứng.
+Vì Fabric nay hỗ trợ `varbinary` (nhưng không hỗ trợ `binary(n)` cố định), có thể đổi `fabric__type_binary`
+sang `VARBINARY(16/20/32)` để tiết kiệm dung lượng (lưu byte thô thay vì hex). Nếu đổi, phải chỉnh khớp
+`fabric__binary_ghost` và kiểm tra kỹ hành vi `CONVERT(..., style 2)` + `REPLICATE` trên varbinary. Chưa làm vì
+CHAR đang chạy ổn và ít rủi ro hơn.
