@@ -81,3 +81,10 @@
 
     {% do return(period_of_load) %}
 {%- endmacro -%}
+
+
+{%- macro fabric__get_period_of_load(period, offset, start_timestamp) -%}
+
+    {{ automate_dv.sqlserver__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp) }}
+
+{%- endmacro -%}

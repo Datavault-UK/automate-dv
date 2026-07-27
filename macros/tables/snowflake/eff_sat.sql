@@ -46,21 +46,21 @@ WITH source_data AS (
 latest_records AS (
     SELECT * FROM (
         SELECT {{ automate_dv.alias_all(source_cols, 'b') }}
-            {%- if target.type in ['sqlserver', 'postgres'] -%},
+            {%- if target.type in ['sqlserver', 'postgres', 'fabric'] -%},
             ROW_NUMBER() OVER (
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'b') }}
                 ORDER BY b.{{ src_ldts }} DESC
             ) AS row_num
             {%- endif %}
         FROM {{ this }} AS b
-        {% if target.type not in ['sqlserver', 'postgres'] -%}
+        {% if target.type not in ['sqlserver', 'postgres', 'fabric'] -%}
         QUALIFY ROW_NUMBER() OVER (
             PARTITION BY {{ automate_dv.prefix([src_pk], 'b') }}
             ORDER BY b.{{ src_ldts }} DESC
         ) = 1
         {% endif -%}
     ) AS inner_select
-    {% if target.type in ['sqlserver', 'postgres'] -%}
+    {% if target.type in ['sqlserver', 'postgres', 'fabric'] -%}
         WHERE inner_select.row_num = 1
     {%- endif %}
 ),

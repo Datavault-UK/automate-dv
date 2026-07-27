@@ -39,3 +39,10 @@
 
 {%- endmacro -%}
 
+
+
+{%- macro fabric__cast_binary(column_str, alias=none, quote=true) -%}
+
+    {{ automate_dv.sqlserver__cast_binary(column_str=column_str, alias=alias, quote=quote) }}
+
+{%- endmacro -%}

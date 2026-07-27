@@ -58,7 +58,7 @@
             {%- set ghost_pk = "FROM_HEX({})".format(ghost_pk) -%}
         {%- endif -%}
     {%- endif -%}
-    {%- if target.type == 'sqlserver' -%}
+    {%- if target.type in ['sqlserver', 'fabric'] -%}
         {%- set ghost_date = '1900-01-01 00:00:00.000' -%}
         {%- set ghost_pk = "REPLICATE({}, {})".format('0', automate_dv.get_hash_string_length(hash)) -%}
     {%- endif -%}

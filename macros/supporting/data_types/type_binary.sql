@@ -49,3 +49,21 @@
     BINARY
   {%- endif -%}
 {%- endmacro -%}
+
+{%- macro fabric__type_binary(for_dbt_compare=false) -%}
+    {%- if for_dbt_compare -%}
+        CHAR
+    {%- else -%}
+        {%- set selected_hash = var('hash', 'MD5') | lower -%}
+
+        {%- if selected_hash == 'md5' -%}
+            CHAR(32)
+        {%- elif selected_hash == 'sha' -%}
+            CHAR(64)
+        {%- elif selected_hash == 'sha1' -%}
+            CHAR(40)
+        {%- else -%}
+            CHAR(32)
+        {%- endif -%}
+    {%- endif -%}
+{%- endmacro -%}

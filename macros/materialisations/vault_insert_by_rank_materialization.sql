@@ -9,7 +9,7 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
-    {% if target.type == "sqlserver" %}
+    {% if target.type in ["sqlserver", "fabric"] %}
         {%- set target_relation = this.incorporate(type='table') -%}
     {%  else %}
         {%- set target_relation = this -%}
@@ -54,7 +54,7 @@
 
     {% elif full_refresh_mode %}
         {% set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-        {% if target.type in ['postgres', 'sqlserver'] %}
+        {% if target.type in ['postgres', 'sqlserver', 'fabric'] %}
             {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
@@ -116,7 +116,7 @@
 
             {# In databricks and sqlserver a temporary view/table can only be dropped by #}
             {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
-            {% if target.type in ['databricks', 'sqlserver'] %}
+            {% if target.type in ['databricks', 'sqlserver', 'fabric'] %}
                 {{ automate_dv.drop_temporary_special(tmp_relation) }}
             {% else %}
                 {% do to_drop.append(tmp_relation) %}
@@ -168,6 +168,11 @@
 {%- endmaterialization %}
 
 {% materialization vault_insert_by_rank, adapter='sqlserver' %}
+
+{{ automate_dv.currently_disabled_error(func_name='vault_insert_by_rank') }}
+
+{% endmaterialization %}
+{% materialization vault_insert_by_rank, adapter='fabric' %}
 
 {{ automate_dv.currently_disabled_error(func_name='vault_insert_by_rank') }}
 

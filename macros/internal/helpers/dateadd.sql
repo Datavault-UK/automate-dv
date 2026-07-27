@@ -24,3 +24,9 @@
     )
 
 {% endmacro %}
+
+{%- macro fabric__dateadd(datepart, interval, from_date_or_timestamp) -%}
+
+    {{ automate_dv.sqlserver__dateadd(datepart=datepart, interval=interval, from_date_or_timestamp=from_date_or_timestamp) }}
+
+{%- endmacro -%}

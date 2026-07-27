@@ -11,7 +11,7 @@
     {% call statement(drop_query_name, fetch_result=True) -%}
         {% if target.type == 'databricks' %}
             DROP VIEW {{ tmp_relation }};
-        {% elif target.type == 'sqlserver' %}
+        {% elif target.type in ['sqlserver', 'fabric'] %}
             DROP TABLE {{ tmp_relation }};
         {% elif target.type == 'postgres' %}
             DROP TABLE {{ tmp_relation }};

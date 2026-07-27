@@ -85,3 +85,10 @@
 
     {% do return(filtered_sql) %}
 {% endmacro %}
+
+
+{%- macro fabric__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
+
+    {{ automate_dv.sqlserver__replace_placeholder_with_period_filter(core_sql=core_sql, timestamp_field=timestamp_field, start_timestamp=start_timestamp, stop_timestamp=stop_timestamp, offset=offset, period=period) }}
+
+{%- endmacro -%}

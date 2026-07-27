@@ -69,3 +69,9 @@
     {%- if alias %} AS {{ alias }} {%- endif %}
 
 {%- endmacro -%}
+
+{%- macro fabric__cast_date(column_str, as_string=false, alias=none) -%}
+
+    {{ automate_dv.sqlserver__cast_date(column_str=column_str, as_string=as_string, alias=alias) }}
+
+{%- endmacro -%}

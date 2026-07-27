@@ -51,3 +51,9 @@
 
     {% do return(filtered_sql) %}
 {% endmacro %}
+
+{%- macro fabric__replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) -%}
+
+    {{ automate_dv.sqlserver__replace_placeholder_with_rank_filter(core_sql=core_sql, rank_column=rank_column, rank_iteration=rank_iteration) }}
+
+{%- endmacro -%}

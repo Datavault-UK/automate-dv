@@ -58,3 +58,10 @@
                                                                                           offset=offset, period=period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
+
+
+{%- macro fabric__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+
+    {{ automate_dv.sqlserver__get_period_filter_sql(target_cols_csv=target_cols_csv, base_sql=base_sql, timestamp_field=timestamp_field, period=period, start_timestamp=start_timestamp, stop_timestamp=stop_timestamp, offset=offset) }}
+
+{%- endmacro -%}

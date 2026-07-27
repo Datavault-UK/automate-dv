@@ -15,7 +15,7 @@
     {%- set dest_columns = adapter.get_columns_in_relation(target_relation) -%}
     {%- set dest_cols_csv = dest_columns | map(attribute='quoted') | join(', ') -%}
 
-    TRUNCATE TABLE {{ target_relation }};
+    {% if target.type == 'fabric' %}DELETE FROM {{ target_relation }};{% else %}TRUNCATE TABLE {{ target_relation }};{% endif %}
 
     INSERT INTO {{ target_relation }} ({{ dest_cols_csv }})
     (
@@ -50,7 +50,7 @@
     {%- set dest_columns = adapter.get_columns_in_relation(target_relation) -%}
     {%- set dest_cols_csv = dest_columns | map(attribute='quoted') | join(', ') -%}
 
-    TRUNCATE TABLE {{ target_relation }};
+    {% if target.type == 'fabric' %}DELETE FROM {{ target_relation }};{% else %}TRUNCATE TABLE {{ target_relation }};{% endif %}
 
     INSERT INTO {{ target_relation }} ({{ dest_cols_csv }})
     (

@@ -175,3 +175,9 @@
 
     {% do return(period_boundaries) %}
 {%- endmacro %}
+
+{%- macro fabric__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+
+    {{ automate_dv.sqlserver__get_period_boundaries(target_relation=target_relation, timestamp_field=timestamp_field, start_date=start_date, stop_date=stop_date, period=period) }}
+
+{%- endmacro -%}

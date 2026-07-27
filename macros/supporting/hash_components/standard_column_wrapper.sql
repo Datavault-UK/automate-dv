@@ -58,3 +58,9 @@
     {% do return(standardise) -%}
 
 {%- endmacro -%}
+
+{%- macro fabric__standard_column_wrapper(hash_content_casing) -%}
+
+    {{ automate_dv.sqlserver__standard_column_wrapper(hash_content_casing=hash_content_casing) }}
+
+{%- endmacro -%}

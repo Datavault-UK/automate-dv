@@ -46,3 +46,9 @@
     {% do return(column_expression) %}
 
 {%- endmacro -%}
+
+{%- macro fabric__null_expression(standardise, column_str, null_placeholder_string) -%}
+
+    {{ automate_dv.sqlserver__null_expression(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string) }}
+
+{%- endmacro -%}

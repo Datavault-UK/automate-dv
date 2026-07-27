@@ -22,3 +22,10 @@
 {%- macro databricks__type_string() -%}
     STRING
 {%- endmacro -%}
+
+
+{%- macro fabric__type_string() -%}
+
+    {{ automate_dv.sqlserver__type_string() }}
+
+{%- endmacro -%}

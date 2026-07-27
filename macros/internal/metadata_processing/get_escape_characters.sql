@@ -51,3 +51,10 @@
 {%- macro postgres__get_escape_characters() %}
     {%- do return (('"', '"')) -%}
 {%- endmacro %}
+
+
+{%- macro fabric__get_escape_characters() -%}
+
+    {{ automate_dv.sqlserver__get_escape_characters() }}
+
+{%- endmacro -%}

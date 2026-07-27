@@ -45,3 +45,9 @@
     {% do return(num_periods) %}
 
 {% endmacro %}
+
+{%- macro fabric__check_num_periods(start_date, stop_date, period) -%}
+
+    {{ automate_dv.sqlserver__check_num_periods(start_date=start_date, stop_date=stop_date, period=period) }}
+
+{%- endmacro -%}

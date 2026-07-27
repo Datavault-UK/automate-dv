@@ -83,7 +83,7 @@ all_rows AS (
 {# Select most recent set of relationship key(s) for each as of date -#}
 candidate_rows AS (
     SELECT *
-    {%- if target.type not in ['sqlserver', 'postgres'] %}
+    {%- if target.type not in ['sqlserver', 'postgres', 'fabric'] %}
     FROM all_rows
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY

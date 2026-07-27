@@ -62,7 +62,7 @@
                                                                                  start_timestamp=start_stop_dates.start_date,
                                                                                  stop_timestamp=start_stop_dates.stop_date,
                                                                                  offset=0, period=period) %}
-        {% if target.type in ['postgres', 'sqlserver'] %}
+        {% if target.type in ['postgres', 'sqlserver', 'fabric'] %}
             {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
 
@@ -141,7 +141,7 @@
 
             {# In databricks and sqlserver a temporary view/table can only be dropped by #}
             {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
-            {% if target.type in ['databricks', 'sqlserver'] %}
+            {% if target.type in ['databricks', 'sqlserver', 'fabric'] %}
                 {{ automate_dv.drop_temporary_special(tmp_relation) }}
             {% else %}
                 {% do to_drop.append(tmp_relation) %}
@@ -203,6 +203,11 @@
 {%- endmaterialization %}
 
 {% materialization vault_insert_by_period, adapter='sqlserver' %}
+
+{{ automate_dv.currently_disabled_error(func_name='vault_insert_by_period') }}
+
+{% endmaterialization %}
+{% materialization vault_insert_by_period, adapter='fabric' %}
 
 {{ automate_dv.currently_disabled_error(func_name='vault_insert_by_period') }}
 

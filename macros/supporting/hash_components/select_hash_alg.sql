@@ -180,3 +180,24 @@
     {%- endif -%}
 
 {% endmacro %}
+
+
+{%- macro fabric__hash_alg_md5() -%}
+
+    {{ automate_dv.sqlserver__hash_alg_md5() }}
+
+{%- endmacro -%}
+
+
+{%- macro fabric__hash_alg_sha256() -%}
+
+    {{ automate_dv.sqlserver__hash_alg_sha256() }}
+
+{%- endmacro -%}
+
+
+{%- macro fabric__hash_alg_sha1() -%}
+
+    {{ automate_dv.sqlserver__hash_alg_sha1() }}
+
+{%- endmacro -%}

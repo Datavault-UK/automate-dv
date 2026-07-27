@@ -7,7 +7,7 @@
 
   {%- set full_refresh_mode = should_full_refresh() -%}
 
-  {% if target.type == "sqlserver" %}
+  {% if target.type in ["sqlserver", "fabric"] %}
       {%- set target_relation = this.incorporate(type='table') -%}
   {%  else %}
       {%- set target_relation = this -%}
@@ -40,7 +40,7 @@
              from_relation=tmp_relation,
              to_relation=target_relation) -%}
       {%- set build_sql = automate_dv.incremental_pit_replace(tmp_relation, target_relation) -%}
-      {% if target.type == "sqlserver" %}
+      {% if target.type in ["sqlserver", "fabric"] %}
           {%- do to_drop.append(tmp_relation) -%}
       {% endif %}
 {%- endif -%}
