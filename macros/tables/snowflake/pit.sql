@@ -300,7 +300,6 @@ SELECT DISTINCT * FROM pit
             {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
 
             {% if enable_ghost_record %}
-
             COALESCE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }},
                     {{ automate_dv.binary_ghost(none, hash) }})
             AS {{ sat_name }}_{{ sat_pk_name }},
@@ -317,7 +316,6 @@ SELECT DISTINCT * FROM pit
             COALESCE({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }},
                     {{ automate_dv.cast_date(ghost_date, as_string=true, datetime=true) }})
             AS {{ sat_name }}_{{ sat_ldts_name }}
-
             {%- endif -%}
 
             {%- if not loop.last -%},{%- endif -%}
@@ -360,7 +358,6 @@ SELECT DISTINCT * FROM pit
             {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
 
             {% if enable_ghost_record %}
-
             COALESCE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }},
                     {{ automate_dv.binary_ghost(none, hash) }})
             AS {{ sat_name }}_{{ sat_pk_name }},
@@ -368,9 +365,7 @@ SELECT DISTINCT * FROM pit
             COALESCE({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }},
                     {{ automate_dv.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
             AS {{ sat_name }}_{{ sat_ldts_name }}
-
             {%- else %}
-
             COALESCE({{ sat_name | lower ~ '_src' }}.{{ sat_pk }},
                     {{ automate_dv.cast_binary(column_str=ghost_pk, quote=true) }})
             AS {{ sat_name }}_{{ sat_pk_name }},
@@ -378,7 +373,6 @@ SELECT DISTINCT * FROM pit
             COALESCE({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }},
                     {{ automate_dv.cast_date(ghost_date, as_string=true, datetime=true) }})
             AS {{ sat_name }}_{{ sat_ldts_name }}
-
             {%- endif -%}
 
             {%- if not loop.last -%},{%- endif -%}
