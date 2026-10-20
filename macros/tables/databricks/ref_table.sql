@@ -5,6 +5,10 @@
 
 {%- macro databricks__ref_table(src_pk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
+{%- if source_model is string -%}
+    {%- set source_model = [source_model] -%}
+{%- endif -%}
+
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_extra_columns, src_ldts, src_source]) %}
 
 WITH source_data AS (
@@ -12,7 +16,7 @@ WITH source_data AS (
     SELECT DISTINCT
         {{ automate_dv.prefix(source_cols, 'a') }}
     FROM {{ ref(src) }} AS a
-    WHERE a.{{ src_pk }} IS NOT NULL
+    WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
     {%- endfor %}
 ),
 
